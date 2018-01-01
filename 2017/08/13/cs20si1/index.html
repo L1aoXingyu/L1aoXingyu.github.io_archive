@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="TensorFlow,cs20si," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="今年一月份，Stanford大学新开了一门课专门讲如何用tensorflow做科研，这门课从最基础的计算图讲起，扩展到非常流行的算法，如neural style，seq2seq等等，通过课程和作业，能够掌握tensorflow大部分的用法。因为太久没有使用tensorflow了，所以决定学学这门课重新复习一下，这是课程网址和github，没有官方的视频，youtube和b站上有其他人根据slide">
+<meta name="keywords" content="TensorFlow,cs20si">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cs20si：tensorflow for research 学习笔记1">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/08/13/cs20si1/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="今年一月份，Stanford大学新开了一门课专门讲如何用tensorflow做科研，这门课从最基础的计算图讲起，扩展到非常流行的算法，如neural style，seq2seq等等，通过课程和作业，能够掌握tensorflow大部分的用法。因为太久没有使用tensorflow了，所以决定学学这门课重新复习一下，这是课程网址和github，没有官方的视频，youtube和b站上有其他人根据slide">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-410267585c558052.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-5babbbcce36260b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T03:19:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cs20si：tensorflow for research 学习笔记1">
+<meta name="twitter:description" content="今年一月份，Stanford大学新开了一门课专门讲如何用tensorflow做科研，这门课从最基础的计算图讲起，扩展到非常流行的算法，如neural style，seq2seq等等，通过课程和作业，能够掌握tensorflow大部分的用法。因为太久没有使用tensorflow了，所以决定学学这门课重新复习一下，这是课程网址和github，没有官方的视频，youtube和b站上有其他人根据slide">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-410267585c558052.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/08/13/cs20si1/"/>
+
+
+
+
+
+  <title>cs20si：tensorflow for research 学习笔记1 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/08/13/cs20si1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cs20si：tensorflow for research 学习笔记1</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-13T12:00:00+08:00">
+                2017-08-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今年一月份，Stanford大学新开了一门课专门讲如何用tensorflow做科研，这门课从最基础的计算图讲起，扩展到非常流行的算法，如neural style，seq2seq等等，通过课程和作业，能够掌握tensorflow大部分的用法。因为太久没有使用tensorflow了，所以决定学学这门课重新复习一下，这是<a href="https://web.stanford.edu/class/cs20si/index.html" target="_blank" rel="external">课程网址</a>和<a href="https://github.com/chiphuyen/stanford-tensorflow-tutorials" target="_blank" rel="external">github</a>，没有官方的视频，youtube和b站上有其他人根据slide录的视频。<br><a id="more"></a><br>我会学习这门课，然后记录笔记，完成github上的代码作为练习，同时会对代码中一些错误进行修正。</p>
+<p>下面是lecture1的学习笔记。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>深度学习后面的数学概念已经存在10多年，但是深度学习框架是最近几年才出来的。现在大量的框架在灵活性上和便于工业界使用上做了权衡，灵活性对于科研非常重要，但是对于工业界太慢了，但是换句话说，足够快，能够用于分布式的框架只适用于特别的网络结构，这对科研又不够灵活。这留给了使用者一个矛盾的境地：我们是否应该尝试用没有那么灵活的框架做科研，这样当应用于工业界的时候，我们不必再重新用另外一个框架复现代码；或者是我们是否应该在做研究的时候使用一个框架，在工业界应用的时候使用另外一个完全不同的框架呢？</p>
+<p>如果选择前者，那么做研究的时候并不方便尝试很多不同类型的网络，如果选择后者，我们必须要重新复现代码，这容易导致实验结果和工业应用上不同，我们也需要付出很多精力去学习。</p>
+<p>TensorFlow的出现希望解决这个矛盾的事情。</p>
+<h2 id="什么是TensorFlow？"><a href="#什么是TensorFlow？" class="headerlink" title="什么是TensorFlow？"></a>什么是TensorFlow？</h2><ul>
+<li><p>使用数据流和图来做数值计算的开源软件，用于机器智能</p>
+</li>
+<li><p>主要是由Google Brain团队开发用于机器学习和深度神经网络的研究</p>
+</li>
+<li><p>能够应用于广泛的领域</p>
+</li>
+</ul>
+<p>虽然TensorFlow是开源的，但是只有GitHub上的部分是开源的，Google还有一个内部版本，官方说法是Google的内部版本有很多转为其定制的工具和服务，大众没有需求使用，并不是Google的开源没有诚意，希望如此吧。</p>
+<h2 id="为什么使用TensorFlow？"><a href="#为什么使用TensorFlow？" class="headerlink" title="为什么使用TensorFlow？"></a>为什么使用TensorFlow？</h2><ul>
+<li><p>Python API，这是大多数深度学习框架都有的</p>
+</li>
+<li><p>能够使用多个CPU和GPU，最重要的是能够很容易部署到服务器上和移动端，这是很多框架不能做的事</p>
+</li>
+<li><p>足够灵活，非常低层</p>
+</li>
+<li><p>tensorboard可视化非常好</p>
+</li>
+<li><p>Checkpoints作为实验管理，能够随时保存模型</p>
+</li>
+<li><p>自动微分</p>
+</li>
+<li><p>庞大的社区</p>
+</li>
+<li><p>大量优秀的项目正在使用TensorFlow</p>
+</li>
+</ul>
+<h2 id="Getting-Started"><a href="#Getting-Started" class="headerlink" title="Getting Started"></a>Getting Started</h2><h3 id="tensor"><a href="#tensor" class="headerlink" title="tensor"></a>tensor</h3><p>0-d tensor：标量，1-d tensor：向量，2-d tensor：矩阵</p>
+<h3 id="数据流图"><a href="#数据流图" class="headerlink" title="数据流图"></a>数据流图</h3><p><img src="http://upload-images.jianshu.io/upload_images/3623720-410267585c558052.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="screenshot.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">a = tf.add(<span class="number">3</span>, <span class="number">5</span>)</div><div class="line">print(a)</div><div class="line">&gt;&gt; Tensor(<span class="string">"Add: 0"</span>, shape=(), dtype=int32)</div></pre></td></tr></table></figure>
+<p>并不能得到8，需要开启session，在session中操作能够被执行，Tensor能够被计算，这点有点反人类，跟一般的推断式编程是不同的，比如PyTorch</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">a = tf.add(<span class="number">3</span>, <span class="number">5</span>)</div><div class="line">sess = tf.Session()</div><div class="line">print(sess.run(a))</div><div class="line">sess.close()</div><div class="line">&gt;&gt; <span class="number">8</span></div></pre></td></tr></table></figure>
+<p>当然可以使用一种更高效的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">a = tf.add(<span class="number">3</span>, <span class="number">5</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(a))</div></pre></td></tr></table></figure>
+<p>当然可以建立更复杂的计算图如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">x = <span class="number">2</span></div><div class="line">y = <span class="number">3</span></div><div class="line">add_op = tf.add(x, y)</div><div class="line">mul_op = tf.mul(x, y)</div><div class="line">useless = tf.mul(x, add_op)</div><div class="line">pow_op = tf.pow(add_op, mul_op)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    z, not_useless = sess.run([pow_op, useless])</div></pre></td></tr></table></figure>
+<p>在<code>sess.run</code>调用的时候使用[]来得到多个结果。</p>
+<p>也可以将图分成很多小块，让他们在多个CPU和GPU下并行</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-5babbbcce36260b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="screenshot.png"></p>
+<p>可以将计算图的一部分放在特定的GPU或者CPU下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.device(<span class="string">'/gpu:2'</span>):</div><div class="line">    a = tf.constant([[<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">3.0</span>], [<span class="number">4.0</span>, <span class="number">5.0</span>, <span class="number">6.0</span>]], name=<span class="string">'a'</span>)</div><div class="line">    b = tf.constant([[<span class="number">1.0</span>, <span class="number">2.0</span>], [<span class="number">3.0</span>, <span class="number">4.0</span>], [<span class="number">5.0</span>, <span class="number">6.0</span>]], name=<span class="string">'b'</span>)</div><div class="line">    c = tf.matmul(a, b)</div><div class="line"></div><div class="line">sess = tf.Session(config=tf.ConfigProto(log_device_placement=<span class="keyword">True</span>))</div><div class="line">print(sess.run(c))</div></pre></td></tr></table></figure>
+<p>尽量不要使用多个计算图，因为每个计算图需要一个session，而每个session会使用所有的显卡资源，必须要用python/numpy才能在两个图之间传递数据，最好在一个图中建立两个不联通的子图</p>
+<h2 id="为什么使用Graph"><a href="#为什么使用Graph" class="headerlink" title="为什么使用Graph"></a>为什么使用Graph</h2><ol>
+<li><p>节约计算资源，每次运算仅仅只需运行与结果有关的子图</p>
+</li>
+<li><p>可以将图分成小块进行自动微分</p>
+</li>
+<li><p>方便部署在多个设备上</p>
+</li>
+<li><p>很多机器学习算法都能够被可视化为图的结构</p>
+</li>
+</ol>
+<p>以上就是第一个lecture的学习笔记。</p>
+<hr>
+<p>本文的内容和代码都在该<a href="https://github.com/SherlockLiao/tensorflow-beginner" target="_blank" rel="external">github</a>上</p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          
+            <a href="/tags/cs20si/" rel="tag"># cs20si</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/27/summary-forward/" rel="next" title="深度学习总结、资源与规划">
+                <i class="fa fa-chevron-left"></i> 深度学习总结、资源与规划
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/21/cs20si2/" rel="prev" title="cs20si：tensorflow for research 学习笔记2">
+                cs20si：tensorflow for research 学习笔记2 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是TensorFlow？"><span class="nav-number">2.</span> <span class="nav-text">什么是TensorFlow？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么使用TensorFlow？"><span class="nav-number">3.</span> <span class="nav-text">为什么使用TensorFlow？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Getting-Started"><span class="nav-number">4.</span> <span class="nav-text">Getting Started</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tensor"><span class="nav-number">4.1.</span> <span class="nav-text">tensor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据流图"><span class="nav-number">4.2.</span> <span class="nav-text">数据流图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么使用Graph"><span class="nav-number">5.</span> <span class="nav-text">为什么使用Graph</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

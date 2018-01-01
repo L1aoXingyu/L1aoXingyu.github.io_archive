@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="homework," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="这次的作业是希望复现一篇论文，这篇论文的题目是Fast Global Image Smoothing Based on Weighted Least Squares。在这篇论文中，主要将全局光滑问题转换为一个加权二次能量函数，最小化这个能量函数从而实现图片光滑的效果，而这个最优化问题，可以转化为一个线性方程组的求解问题，在求解效率和求解时间上都有明显的优势，同时这还是一个全局最优的线性系统。 本次">
+<meta name="keywords" content="homework">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fast Global Image Smoothing的实现">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/11/03/Fast Global Smooth/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="这次的作业是希望复现一篇论文，这篇论文的题目是Fast Global Image Smoothing Based on Weighted Least Squares。在这篇论文中，主要将全局光滑问题转换为一个加权二次能量函数，最小化这个能量函数从而实现图片光滑的效果，而这个最优化问题，可以转化为一个线性方程组的求解问题，在求解效率和求解时间上都有明显的优势，同时这还是一个全局最优的线性系统。 本次">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-2458ab21c9f6cabc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-0ca1b8ea03868df5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-050f0470685961c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-60248f75e06e2782.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-bdf0e6bce797e0b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-299e9b81ad2574c5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-f1a835effa1c17b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-17aff4574c7fe69d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-dd286fab83d5f246.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-fb51bbead4de932a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-11-03T13:00:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fast Global Image Smoothing的实现">
+<meta name="twitter:description" content="这次的作业是希望复现一篇论文，这篇论文的题目是Fast Global Image Smoothing Based on Weighted Least Squares。在这篇论文中，主要将全局光滑问题转换为一个加权二次能量函数，最小化这个能量函数从而实现图片光滑的效果，而这个最优化问题，可以转化为一个线性方程组的求解问题，在求解效率和求解时间上都有明显的优势，同时这还是一个全局最优的线性系统。 本次">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-2458ab21c9f6cabc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/11/03/Fast Global Smooth/"/>
+
+
+
+
+
+  <title>Fast Global Image Smoothing的实现 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/11/03/Fast Global Smooth/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Fast Global Image Smoothing的实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-03T20:58:02+08:00">
+                2017-11-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这次的作业是希望复现一篇论文，这篇论文的题目是<a href="http://ieeexplore.ieee.org/document/6942220/" target="_blank" rel="external">Fast Global Image Smoothing Based on Weighted Least Squares</a>。在这篇论文中，主要将全局光滑问题转换为一个加权二次能量函数，最小化这个能量函数从而实现图片光滑的效果，而这个最优化问题，可以转化为一个线性方程组的求解问题，在求解效率和求解时间上都有明显的优势，同时这还是一个全局最优的线性系统。</p>
+<p>本次作业主要对论文的基本算法<strong>Separable global smoother for 2D iamge smoothing</strong>进行了复现，使用python语言，为了加快计算速度，使用mxnet.ndarray在GPU上进行运算。</p>
+<a id="more"></a>
+<h3 id="1D-Fast-Global-Smoother"><a href="#1D-Fast-Global-Smoother" class="headerlink" title="1D Fast Global Smoother"></a>1D Fast Global Smoother</h3><p>对于二维的问题，我们可以将其分解为1维的情况，所以先求解1维的线性系统。</p>
+<p>对于1D的情况，可以定义一个WLS能量函数如下</p>
+<script type="math/tex; mode=display">
+J(u) = \sum_{x} ((u_x^h - f_x^h)^2 + \lambda_t \sum_{i \in N_h(x)} w_{x, i}(g^h)(u_x^h - u_i^h)^2)</script><p>需要极小化这个能量函数，相当于$\Delta J(u) = 0$，可以等价于求解下面的线性系统:</p>
+<script type="math/tex; mode=display">
+(I_h + \lambda_t A_h) u_h = f_h</script><p><strong>使用下面的迭代方法</strong></p>
+<p>首先计算向前方向</p>
+<script type="math/tex; mode=display">
+\tilde{c_x} = c_x / (b_x - \tilde{c_{x-1}} a_x) \\
+\tilde{f^h_x} = (f_x^h - \tilde{f_{x-1}^h} a_x)  /  (b_x - \tilde{c_{x-1}} a_x)  \\
+(x = 1, \cdots, W-1)</script><p>然后计算向后方向</p>
+<script type="math/tex; mode=display">
+u_x^h = \tilde{f^h_x} - \tilde{c_x} u_{x+1}^h \quad(x = W - 2, \cdots, 0) \\
+u_{W-1}^h = \tilde{f_{W-1}^h}</script><p>首先计算相似度权重函数$w_{p, q}(g)$如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 定义计算相似度权重函数</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">cw_1d</span><span class="params">(p, q, g, sigma)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    计算1d上曲线g上不同位置p和q的相似性，使用sigma作为一个范围度量</span></div><div class="line"><span class="string">    g: ndarray，W</span></div><div class="line"><span class="string">    p: int</span></div><div class="line"><span class="string">    q: int</span></div><div class="line"><span class="string">    sigma: float</span></div><div class="line"><span class="string">    '''</span></div><div class="line">    norm = nd.norm(g[p] - g[q])</div><div class="line">    <span class="keyword">return</span> nd.exp(-norm/sigma)</div></pre></td></tr></table></figure>
+<p>为了避免streaking，每次迭代需要修改$\lambda$的值，计算公式为</p>
+<script type="math/tex; mode=display">
+\lambda_t = \frac{2}{3} \frac{4^{T - t}}{4^T -1 }\lambda</script><p>计算lambda的代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 每次迭代计算lambda</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_lamb</span><span class="params">(t, T, lamb_base)</span>:</span></div><div class="line">    <span class="keyword">return</span> <span class="number">1.5</span> * <span class="number">4</span>**(T-t) / (<span class="number">4</span> ** T - <span class="number">1</span>) * lamb_base</div></pre></td></tr></table></figure>
+<h4 id="求解一阶全局光滑线性系统"><a href="#求解一阶全局光滑线性系统" class="headerlink" title="求解一阶全局光滑线性系统"></a>求解一阶全局光滑线性系统</h4><p>求解1D情况主要使用上图的(3)和(4)这两个数学公式，代码实现如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 求解一维的全局光滑线性系统</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_1d_fast_global_smoother</span><span class="params">(lamb, f, g, sigma, ctx)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    求解1d fast global smoother，给出lambda, f和g，进行前向和反向的递归求解</span></div><div class="line"><span class="string">    '''</span></div><div class="line">    w = f.shape[<span class="number">0</span>]</div><div class="line">    _c = nd.zeros(shape=w<span class="number">-1</span>, ctx=ctx)</div><div class="line">    _c[<span class="number">0</span>] = -lamb * cw_1d(<span class="number">0</span>, <span class="number">1</span>, g, sigma) / (<span class="number">1</span> + lamb * cw_1d(<span class="number">0</span>, <span class="number">1</span>, g, sigma))</div><div class="line">    _f = nd.zeros(shape=f.shape, ctx=ctx)</div><div class="line">    _f[<span class="number">0</span>] = f[<span class="number">0</span>] / (<span class="number">1</span> + lamb * cw_1d(<span class="number">0</span>, <span class="number">1</span>, g, sigma))</div><div class="line">    <span class="comment"># 递归前向计算</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, w<span class="number">-1</span>):</div><div class="line">        _c[i] = -lamb * cw_1d(i, i + <span class="number">1</span>, g, sigma) / (</div><div class="line">            <span class="number">1</span> + lamb * (cw_1d(i, i - <span class="number">1</span>, g, sigma) + cw_1d(i, i + <span class="number">1</span>, g, sigma)) +</div><div class="line">            lamb * _c[i - <span class="number">1</span>] * cw_1d(i, i - <span class="number">1</span>, g, sigma))</div><div class="line">        _f[i] = (f[i] + _f[i - <span class="number">1</span>] * lamb * cw_1d(i, i - <span class="number">1</span>, g, sigma)) / (</div><div class="line">            <span class="number">1</span> + lamb * (cw_1d(i, i - <span class="number">1</span>, g, sigma) + cw_1d(i, i + <span class="number">1</span>, g, sigma)) +</div><div class="line">            lamb * _c[i - <span class="number">1</span>] * cw_1d(i, i - <span class="number">1</span>, g, sigma))</div><div class="line">    _f[w<span class="number">-1</span>] = (f[w<span class="number">-1</span>] + _f[w<span class="number">-2</span>] * lamb * cw_1d(w<span class="number">-1</span>, w<span class="number">-2</span>, g, sigma)) / (</div><div class="line">            <span class="number">1</span> + lamb * (cw_1d(w<span class="number">-1</span>, w<span class="number">-2</span>, g, sigma)) +</div><div class="line">            lamb * _c[w<span class="number">-2</span>] * cw_1d(w<span class="number">-1</span>, w<span class="number">-2</span>, g, sigma))</div><div class="line">    u = nd.zeros(shape=f.shape, ctx=ctx)</div><div class="line">    u[w - <span class="number">1</span>] = _f[w - <span class="number">1</span>]</div><div class="line">    <span class="comment"># 递归向后计算</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(w - <span class="number">2</span>, <span class="number">-1</span>, <span class="number">-1</span>):</div><div class="line">        u[i] = _f[i] - _c[i] * u[i + <span class="number">1</span>]</div><div class="line">    <span class="keyword">return</span> u.asnumpy()</div></pre></td></tr></table></figure>
+<h4 id="完成了一维的全局光滑线性系统的求解，验证一下其是否有效"><a href="#完成了一维的全局光滑线性系统的求解，验证一下其是否有效" class="headerlink" title="完成了一维的全局光滑线性系统的求解，验证一下其是否有效"></a>完成了一维的全局光滑线性系统的求解，验证一下其是否有效</h4><p>首先构造一个一维的波动输入，画出图像如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x1 = np.random.normal(scale=<span class="number">0.2</span>, size=(<span class="number">100</span>))</div><div class="line">x2 = np.random.normal(<span class="number">4</span>, <span class="number">0.2</span>, size=(<span class="number">100</span>))</div><div class="line">x = np.concatenate((x1, x2))</div><div class="line">plt.plot(np.arange(x.shape[<span class="number">0</span>]), x)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-2458ab21c9f6cabc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_8_1.png"></p>
+<p>通过一维全局光滑线性系统的求解，给出参数$\lambda=900, \sigma=0.07$，得到光滑之后的图像如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">u = compute_1d_fast_global_smoother(<span class="number">900</span>, nd.array(x, ctx=mx.gpu(<span class="number">0</span>)), nd.array(x, mx.gpu(<span class="number">0</span>)), <span class="number">0.07</span>, mx.gpu(<span class="number">0</span>))</div><div class="line">plt.plot(np.arange(u.shape[<span class="number">0</span>]), u)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-0ca1b8ea03868df5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_10_1.png"></p>
+<p>可以明显看出能够对输入的一阶波动进行有效地光滑化，对比于论文里面的其他结果，我们认为fast global smooth具有计算时间短，优化更好的特点。</p>
+<h3 id="2D-image-separable-fast-global-smooth"><a href="#2D-image-separable-fast-global-smooth" class="headerlink" title="2D image separable fast global smooth"></a>2D image separable fast global smooth</h3><p>对于一张2D的图片，问题非常简单，分别在水平和竖直上应用1D的solver就能够求解，只是需要注意，在计算$w_{p, q}(g)$的时候，如果是一张RGB的图片，需要在 channel 维度的向量上计算相似度。对于这种可分的方法，虽然很直观，但是会出现streaking artifact的问题，为了解决这个问题，在每一次的迭代中，可以修改$\lambda$的值，因为这个值在每次迭代中对稀疏光滑具有显著的减少。</p>
+<p>下面是可分离全局光滑的代码实现，只需要不断在行和列上进行计算即可，同时需要注意，如果是RGB三通道的图片，需要在每个通道上分别计算</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#可分离的全局图片光滑</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">Separable_global_smoother</span><span class="params">(f, T, lamb_base, sigma, ctx)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    全局图片光滑算法，输入是f和g，f是2D image, 3 channels</span></div><div class="line"><span class="string">    '''</span></div><div class="line">    print(<span class="string">'origin lamb is &#123;&#125;'</span>.format(lamb_base))</div><div class="line">    print(<span class="string">'sigma is &#123;&#125;'</span>.format(sigma))</div><div class="line">    H, W, C = f.shape</div><div class="line">    u = f.copy()</div><div class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">1</span>, T+<span class="number">1</span>):</div><div class="line">        <span class="comment"># 计算每一步迭代的lambda_t</span></div><div class="line">        lamb_t = compute_lamb(t, T, lamb_base)</div><div class="line">        <span class="comment"># horizontal</span></div><div class="line">        <span class="keyword">for</span> y <span class="keyword">in</span> range(<span class="number">0</span>, W):</div><div class="line">            g = u[:, y, :]</div><div class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> range(C):</div><div class="line">                f_h = u[:, y, c]</div><div class="line">                u[:, y, c] = compute_1d_fast_global_smoother(lamb_t, f_h, g, sigma, ctx)</div><div class="line">        <span class="comment"># vertical</span></div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">0</span>, H):</div><div class="line">            g = u[x, :, :]</div><div class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> range(C):</div><div class="line">                f_v = u[x, :, c]</div><div class="line">                u[x, :, c] = compute_1d_fast_global_smoother(lamb_t, f_v, g, sigma, ctx)</div><div class="line">    <span class="keyword">return</span> u</div></pre></td></tr></table></figure>
+<p>完成代码之后，我们读入一张图片，进行multi-scale manipulate测试</p>
+<p>首先读入原图，大小是200x200</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">origin_img = Image.open(<span class="string">'./jay.jpg'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">plt.figure(figsize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">plt.title(<span class="string">'origin image'</span>)</div><div class="line">plt.imshow(origin_img)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-050f0470685961c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_15_1.png"></p>
+<h4 id="对小尺度的图片做fast-global-smooth"><a href="#对小尺度的图片做fast-global-smooth" class="headerlink" title="对小尺度的图片做fast global smooth"></a>对小尺度的图片做fast global smooth</h4><p>接着将图片缩小尺度为100 x 100的图片，下面是缩小之后的图片，可以发现图片变得更加模糊，有很多噪点</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">img_100 = origin_img.resize((<span class="number">100</span>, <span class="number">100</span>))</div><div class="line">plt.figure(figsize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">plt.title(<span class="string">'50 x 50 image'</span>)</div><div class="line">plt.imshow(img_100)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-60248f75e06e2782.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_17_1.png"></p>
+<p>接着我们进行一次迭代</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">lamb_base = <span class="number">30</span>**<span class="number">2</span></div><div class="line">sigma = <span class="number">255</span> * <span class="number">0.03</span></div><div class="line">ctx = mx.gpu(<span class="number">0</span>)</div><div class="line">img = np.array(img_100)</div><div class="line">img = nd.array(img, ctx=ctx)</div></pre></td></tr></table></figure>
+<p>下面是一次迭代的结果，可以发现图片已经变得比较光滑，但是会出现条纹，具体可以看看下面红框的部分</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">T = <span class="number">1</span></div><div class="line">u1 = Separable_global_smoother(img, T, lamb_base, sigma, ctx)</div><div class="line">show_u = u1.astype(<span class="string">'uint8'</span>).asnumpy()</div><div class="line">plt.figure(figsize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">plt.title(<span class="string">'1 iteration smooth result'</span>)</div><div class="line">plt.imshow(show_u)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-bdf0e6bce797e0b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_20_2.png"></p>
+<p>经过第二次迭代，下面是迭代结果，关注于两张图片的红框部分，可以发现两次迭代具有比较好的改善效果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">T = <span class="number">2</span></div><div class="line">u2 = Separable_global_smoother(img, T, lamb_base, sigma, ctx)</div><div class="line">show_u = u2.astype(<span class="string">'uint8'</span>).asnumpy()</div><div class="line">plt.figure(figsize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">plt.title(<span class="string">'2 iteration smooth result'</span>)</div><div class="line">plt.imshow(show_u)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-299e9b81ad2574c5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_22_2.png"></p>
+<p>三面是三次迭代之后的结果，可以发现图片更加光滑了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">T = <span class="number">3</span></div><div class="line">u3 = Separable_global_smoother(img, T, lamb_base, sigma, ctx)</div><div class="line">show_u = u3.astype(<span class="string">'uint8'</span>).asnumpy()</div><div class="line">plt.figure(figsize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">plt.title(<span class="string">'3 iteration smooth result'</span>)</div><div class="line">plt.imshow(show_u)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-f1a835effa1c17b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_24_2.png"></p>
+<h4 id="对原始图片做-fast-global-smooth"><a href="#对原始图片做-fast-global-smooth" class="headerlink" title="对原始图片做 fast global smooth"></a>对原始图片做 fast global smooth</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">lamb_base = <span class="number">30</span>**<span class="number">2</span></div><div class="line">sigma = <span class="number">255</span> * <span class="number">0.03</span></div><div class="line">ctx = mx.gpu(<span class="number">0</span>)</div><div class="line">img = np.array(origin_img)</div><div class="line">img = nd.array(img, ctx=ctx)</div></pre></td></tr></table></figure>
+<p>经过一次迭代之后的结果，虽然仍然存在条纹，但是比小尺度的图片效果好，这是因为小尺度的图片有更多的噪声和不光滑性</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">T = <span class="number">1</span></div><div class="line">u1 = Separable_global_smoother(img, T, lamb_base, sigma, ctx)</div><div class="line">show_u = u1.astype(<span class="string">'uint8'</span>).asnumpy()</div><div class="line">plt.figure(figsize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">plt.title(<span class="string">'1 iteration smooth result'</span>)</div><div class="line">plt.imshow(show_u)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-17aff4574c7fe69d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_28_2.png"></p>
+<p>经过第二次迭代之后的结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">T = <span class="number">2</span></div><div class="line">u2 = Separable_global_smoother(img, T, lamb_base, sigma, ctx)</div><div class="line">show_u = u2.astype(<span class="string">'uint8'</span>).asnumpy()</div><div class="line">plt.figure(figsize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">plt.title(<span class="string">'2 iteration smooth result'</span>)</div><div class="line">plt.imshow(show_u)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-dd286fab83d5f246.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_30_2.png"></p>
+<p>下面是三次迭代之后的结果，可以发现图片越来越光滑</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">T = <span class="number">3</span></div><div class="line">u3 = Separable_global_smoother(img, T, lamb_base, sigma, ctx)</div><div class="line">show_u = u3.astype(<span class="string">'uint8'</span>).asnumpy()</div><div class="line">plt.figure(figsize=(<span class="number">5</span>, <span class="number">5</span>))</div><div class="line">plt.title(<span class="string">'3 iteration smooth result'</span>)</div><div class="line">plt.imshow(show_u)</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-fb51bbead4de932a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="output_32_2.png"></p>
+<h3 id="与Guided-Image-Filter的对比"><a href="#与Guided-Image-Filter的对比" class="headerlink" title="与Guided Image Filter的对比"></a>与Guided Image Filter的对比</h3><p>fast global image smooth是隐式求解，其将问题转移为一个优化问题，然后再转移为一个线性系统的求解，而线性系统的求解有比较成熟的解法，从而在计算效率和时间上有所提升，同时这还是一个全局最优的解法。</p>
+<p>反观guided image filter，这篇文章我并没有非常仔细地阅读，通过大概的阅读，我发现其是一种显示的求解，通过局部的线性关系，将guided image的光滑性质转移到源图片上，通过最小化源图片与光滑图片之间的差异，将问题转移为一个岭回归问题(linear ridge regression)，显示计算出双边滤波的数值，通过其进行光滑化。因为其模型的构建是在局部上进行，所以其存在解的局限性。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过本次作业，了解到光滑化图片的一些方法总结，复现了第一篇论文的算法，比较简单，没有过多的阅读论文的扩展内容。对于guided image filter，没有太过仔细的阅读，只是大体看了一下论文的核心想法，所以理解可能还不到位，有一些误解。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/homework/" rel="tag"># homework</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/03/Face Morph/" rel="next" title="Face Morph">
+                <i class="fa fa-chevron-left"></i> Face Morph
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/05/用Gluon炼丹小结/" rel="prev" title="用Gluon炼丹体验">
+                用Gluon炼丹体验 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1D-Fast-Global-Smoother"><span class="nav-number">1.</span> <span class="nav-text">1D Fast Global Smoother</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#求解一阶全局光滑线性系统"><span class="nav-number">1.1.</span> <span class="nav-text">求解一阶全局光滑线性系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完成了一维的全局光滑线性系统的求解，验证一下其是否有效"><span class="nav-number">1.2.</span> <span class="nav-text">完成了一维的全局光滑线性系统的求解，验证一下其是否有效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2D-image-separable-fast-global-smooth"><span class="nav-number">2.</span> <span class="nav-text">2D image separable fast global smooth</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对小尺度的图片做fast-global-smooth"><span class="nav-number">2.1.</span> <span class="nav-text">对小尺度的图片做fast global smooth</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对原始图片做-fast-global-smooth"><span class="nav-number">2.2.</span> <span class="nav-text">对原始图片做 fast global smooth</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与Guided-Image-Filter的对比"><span class="nav-number">3.</span> <span class="nav-text">与Guided Image Filter的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

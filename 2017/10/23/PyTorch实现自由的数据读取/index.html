@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="pytorch io," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="很多前人曾说过，深度学习好比炼丹，框架就是丹炉，网络结构及算法就是单方，而数据集则是原材料，为了能够炼好丹，首先需要一个使用称手的丹炉，同时也要有好的单方和原材料，最后就需要炼丹师们有着足够的经验和技巧掌握火候和时机，这样方能炼出绝世好丹。">
+<meta name="keywords" content="pytorch io">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch实现自由的数据读取">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/10/23/PyTorch实现自由的数据读取/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="很多前人曾说过，深度学习好比炼丹，框架就是丹炉，网络结构及算法就是单方，而数据集则是原材料，为了能够炼好丹，首先需要一个使用称手的丹炉，同时也要有好的单方和原材料，最后就需要炼丹师们有着足够的经验和技巧掌握火候和时机，这样方能炼出绝世好丹。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-772b294c32ea3b3d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-b886c6b17090ec9b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-235599af888f7658.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-8f06c28bb4791948.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-152f511860a3bb04.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-10-23T13:21:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PyTorch实现自由的数据读取">
+<meta name="twitter:description" content="很多前人曾说过，深度学习好比炼丹，框架就是丹炉，网络结构及算法就是单方，而数据集则是原材料，为了能够炼好丹，首先需要一个使用称手的丹炉，同时也要有好的单方和原材料，最后就需要炼丹师们有着足够的经验和技巧掌握火候和时机，这样方能炼出绝世好丹。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-772b294c32ea3b3d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/10/23/PyTorch实现自由的数据读取/"/>
+
+
+
+
+
+  <title>PyTorch实现自由的数据读取 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/10/23/PyTorch实现自由的数据读取/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PyTorch实现自由的数据读取</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-23T19:33:49+08:00">
+                2017-10-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>很多前人曾说过，深度学习好比炼丹，框架就是丹炉，网络结构及算法就是单方，而数据集则是原材料，为了能够炼好丹，首先需要一个使用称手的丹炉，同时也要有好的单方和原材料，最后就需要炼丹师们有着足够的经验和技巧掌握火候和时机，这样方能炼出绝世好丹。</p>
+<a id="more"></a>
+<p>对于刚刚进入炼丹行业的炼丹师，网上都有一些前人总结的炼丹技巧，同时也有很多炼丹师的心路历程以及丹师对整个炼丹过程的记录，有了这些，无疑能够非常快速知道如何炼丹。但是现在市面上的入门炼丹手册往往都是将原材料帮你放到了丹炉中，你只需要将丹炉开启，然后进行简单的调试，便能出丹。这样做无疑减少了大家入门的难度，但是往往到了自己真正炼丹的时候便会手足无措，不知道如何将原材料放入丹炉。</p>
+<p>本篇炼丹入门指导便是使用PyTorch这个丹炉，教你如何将原材料放入丹炉，虽然这一步并不涉及太多算法，但是却是炼丹开始非常重要的一步。</p>
+<h2 id="PyTorch数据读入函数介绍"><a href="#PyTorch数据读入函数介绍" class="headerlink" title="PyTorch数据读入函数介绍"></a>PyTorch数据读入函数介绍</h2><h3 id="ImageFolder"><a href="#ImageFolder" class="headerlink" title="ImageFolder"></a>ImageFolder</h3><p>在PyTorch中有一个现成实现的数据读取方法，是<code>torchvision.datasets.ImageFolder</code>，这个api是仿照keras写的，主要是做分类问题，将每一类数据放到同一个文件夹中，比如有10个类别，那么就在一个大的文件夹下面建立10个子文件夹，每个子文件夹里面放的是同一类的数据。</p>
+<p>通过这个函数能够很简单的建立一个数据I/O，但是问题来了，如果我要处理的数据不是这样一个简单的分类问题，比如我要做机器翻译，那么我的输入和输出都是一个句子，这样该怎么进行数据读入呢？</p>
+<p>这个问题非常容易解决，我们可以看看ImageFolder的<a href="https://github.com/pytorch/vision/blob/master/torchvision/datasets/folder.py" target="_blank" rel="external">实现</a>，可以发现其是<code>torch.utils.data.Dataset</code>的子类，所以下面我们介绍一下<code>torch.utils.data.Dataset</code>这个类。</p>
+<h3 id="Dataset"><a href="#Dataset" class="headerlink" title="Dataset"></a>Dataset</h3><p>我们可以发现Dataset的定义是下面这样</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-772b294c32ea3b3d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>这里注释是说这是一个代表着数据集的抽象类，所有关于数据集的类都可以定义为其子类，只需要重写<code>__getitem__</code>和<code>__len__</code>就可以了。我们再回去看看ImageFolder的实现，确实是这样的，那么现在问题就变得很简单，对于机器翻译问题，我们只需要定义整个数据集的长度，同时定义取出其中一个索引的元素即可。</p>
+<p>那么定义好了数据集我们不可能将所有的数据集都放到内存，这样内存肯定就爆了，我们需要定义一个迭代器，每一步产生一个batch，这里PyTorch已经为我们实现好了，就是下面的<code>torch.utils.data.DataLoader</code>。</p>
+<h3 id="DataLoader"><a href="#DataLoader" class="headerlink" title="DataLoader"></a>DataLoader</h3><p>DataLoader能够为我们自动生成一个多线程的迭代器，只要传入几个参数进行就可以了，第一个参数就是上面定义的数据集，后面几个参数就是batch size的大小，是否打乱数据，读取数据的线程数目等等，这样一来，我们就建立了一个多线程的I/O。</p>
+<p>读到这里，你可能觉得PyTorch真的太方便了，这个丹炉真的好用，然后便迫不及待的尝试了一下，然后有可能性就报错了，而且你也是一步一步按着实现来的，怎么就报错了呢？不用着急，下面就来讲一下为什么会报错，以及这一块pyhon实现的解读，这样你就能够真正知道如何进行自定义的数据读入。</p>
+<h2 id="问题来源"><a href="#问题来源" class="headerlink" title="问题来源"></a>问题来源</h2><p>通过上面的实现，可能会遇到各种不同的问题，Dataset非常简单，一般都不会有错，只要Dataset实现正确，那么问题的来源只有一个，那就是<code>torch.utils.data.DataLoader</code>中的一个参数<code>collate_fn</code>，这里我们需要找到DataLoader的<a href="https://github.com/pytorch/pytorch/blob/master/torch/utils/data/dataloader.py" target="_blank" rel="external">源码</a>进行查看这个参数到底是什么。</p>
+<p>可以看到<code>collate_fn</code>默认是等于<code>default_collate</code>，那么这个函数的定义如下。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-b886c6b17090ec9b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>是不是看着有点头大，没有关系，我们先搞清楚他的输入是什么。这里可以看到他的输入被命名为batch，但是我们还是不知道到底是什么，可以猜测应该是一个batch size的数据。我们继续往后找，可以找到这个<a href="https://github.com/pytorch/pytorch/blob/master/torch/utils/data/dataloader.py#L180" target="_blank" rel="external">地方</a>。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-235599af888f7658.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>我们可以从这里看到<code>collate_fn</code>在这里进行了调用，那么他的输入我们就找到了，从这里看这就是一个list，list中的每个元素就是<code>self.data[i]</code>，如果你在往上看，可以看到这个<code>self.data</code>就是我们需要预先定义的Dataset，那么这里<code>self.data[i]</code>就等价于我们在Dataset里面定义的<code>__getitem__</code>这个函数。</p>
+<p>所以我们知道了<code>collate_fn</code>这个函数的输入就是一个list，list的长度是一个batch size，list中的每个元素都是<code>__getitem__</code>得到的结果。</p>
+<p>这时我们再去看看<code>collate_fn</code>这个函数，其实可以看到非常简单，就是通过对一些情况的排除，然后最后输出结果，比如第一个if，如果我们的输入是一个tensor，那么最后会将一个batch size的tensor重新stack在一起，比如输入的tensor是一张图片，3x30x30，如果batch size是32，那么按第一维stack之后的结果就是32x3x30x30，这里stack和concat有一点区别就是会增加一维。</p>
+<p>所以通过上面的源码解读我们知道了数据读入具体是如何操作的，那么我们就能够实现自定义的数据读入了，我们需要自己按需要重新定义<code>collate_fn</code>这个函数，下面举个例子。</p>
+<h2 id="自定义数据读入的举例实现"><a href="#自定义数据读入的举例实现" class="headerlink" title="自定义数据读入的举例实现"></a>自定义数据读入的举例实现</h2><p>下面我们来举一个麻烦的例子，比如做文本识别，需要将一张图片上的字符识别出来，比如下面这些图片</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-8f06c28bb4791948.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>那么这个问题的输入就是一张一张的图片，他的label就是一串字符，但是由于长度是变化的，所以这个问题比较麻烦。</p>
+<p>下面我们就来简单实现一下。</p>
+<p>我们有一个train.txt的文件，上面有图片的名称和对应的label，首先我们需要定义一个Dataset。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">custom_dset</span><span class="params">(Dataset)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></div><div class="line"><span class="function"><span class="params">                 img_path,</span></span></div><div class="line"><span class="function"><span class="params">                 txt_path,</span></span></div><div class="line"><span class="function"><span class="params">                 img_transform=None,</span></span></div><div class="line"><span class="function"><span class="params">                 loader=default_loader)</span>:</span></div><div class="line">        <span class="keyword">with</span> open(txt_path, <span class="string">'r'</span>) <span class="keyword">as</span> f:</div><div class="line">            lines = f.readlines()</div><div class="line">            self.img_list = [</div><div class="line">                os.path.join(img_path, i.split()[<span class="number">0</span>]) <span class="keyword">for</span> i <span class="keyword">in</span> lines</div><div class="line">            ]</div><div class="line">            self.label_list = [i.split()[<span class="number">1</span>] <span class="keyword">for</span> i <span class="keyword">in</span> lines]</div><div class="line">        self.img_transform = img_transform</div><div class="line">        self.loader = loader</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, index)</span>:</span></div><div class="line">        img_path = self.img_list[index]</div><div class="line">        label = self.label_list[index]</div><div class="line">        <span class="comment"># img = self.loader(img_path)</span></div><div class="line">        img = img_path</div><div class="line">        <span class="keyword">if</span> self.img_transform <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            img = self.img_transform(img)</div><div class="line">        <span class="keyword">return</span> img, label</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> len(self.label_list)</div></pre></td></tr></table></figure>
+<p>这里非常简单，就是将txt文件打开，然后分别读取图片名和label，由于存放图片的文件夹我并没有放上去，因为数据太大，所以读取图片以及对图片做一些变换的操作就不进行了。</p>
+<p>接着我们自定义一个<code>collate_fn</code>，这里可以使用任何名字，只要在DataLoader里面传入就可以了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">collate_fn</span><span class="params">(batch)</span>:</span></div><div class="line">    batch.sort(key=<span class="keyword">lambda</span> x: len(x[<span class="number">1</span>]), reverse=<span class="keyword">True</span>)</div><div class="line">    img, label = zip(*batch)</div><div class="line">    pad_label = []</div><div class="line">    lens = []</div><div class="line">    max_len = len(label[<span class="number">0</span>])</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(label)):</div><div class="line">        temp_label = [<span class="number">0</span>] * max_len</div><div class="line">        temp_label[:len(label[i])] = label[i]</div><div class="line">        pad_label.append(temp_label)</div><div class="line">        lens.append(len(label[i]))</div><div class="line">    <span class="keyword">return</span> img, pad_label, lens</div></pre></td></tr></table></figure>
+<p>代码的细节就不详细说了，总体来讲就是先按label长度进行排序，然后进行长度的pad，最后输出图片，label以及每个label的长度的list。</p>
+<p>下面我们可以验证一下，得到如下的结果。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-152f511860a3bb04.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>具体的操作大家可以去玩一下，改一改，能够实现任何你想要的输出，比如图片输出为一个32x3x30x30的tensor，将label中的字母转化为数字标示，然后也可以输出为tensor，任何你想要的操作都可以在上面显示的程序中执行。</p>
+<p>以上就是本文所有的内容，后面的例子不是很完整，讲得也不是很详细，因为图片数据太大，不好传到github上，当然通过看代码能够更快的学习。通过本文的阅读，大家应该都能够掌握任何需要的数据读入，如果有问题欢迎评论留言。</p>
+<hr>
+<p><a href="https://github.com/SherlockLiao/pytorch-beginner/tree/master/12-data%20io" target="_blank" rel="external">完整代码</a></p>
+<p>欢迎关注我的知乎专栏<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/pytorch-io/" rel="tag"># pytorch io</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/13/数字图像处理对图像的基本操作/" rel="next" title="数字图像处理对图像的基本操作">
+                <i class="fa fa-chevron-left"></i> 数字图像处理对图像的基本操作
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/03/Face Morph/" rel="prev" title="Face Morph">
+                Face Morph <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PyTorch数据读入函数介绍"><span class="nav-number">1.</span> <span class="nav-text">PyTorch数据读入函数介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ImageFolder"><span class="nav-number">1.1.</span> <span class="nav-text">ImageFolder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dataset"><span class="nav-number">1.2.</span> <span class="nav-text">Dataset</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DataLoader"><span class="nav-number">1.3.</span> <span class="nav-text">DataLoader</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题来源"><span class="nav-number">2.</span> <span class="nav-text">问题来源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义数据读入的举例实现"><span class="nav-number">3.</span> <span class="nav-text">自定义数据读入的举例实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

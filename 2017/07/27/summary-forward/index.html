@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Personal," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="终于可以放假回家了，虽然只有半个月，但是还是可以好好地做个休整(陪女朋友)。 这学期作为一个学数学的咸鱼，从今年4月份开始入坑深度学习，4月初写了第一篇文章，4月初正式入坑github和PyTorch，过程中写了一些简单的教程和自己学习中的总结，非常感谢大家一路以来对我这个写作能力和表达能力都不是特别好的理工男的支持，万万没想到我写的PyTorch小白教程居然也在github上有了快70个star">
+<meta name="keywords" content="Personal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习总结、资源与规划">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/07/27/summary-forward/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="终于可以放假回家了，虽然只有半个月，但是还是可以好好地做个休整(陪女朋友)。 这学期作为一个学数学的咸鱼，从今年4月份开始入坑深度学习，4月初写了第一篇文章，4月初正式入坑github和PyTorch，过程中写了一些简单的教程和自己学习中的总结，非常感谢大家一路以来对我这个写作能力和表达能力都不是特别好的理工男的支持，万万没想到我写的PyTorch小白教程居然也在github上有了快70个star">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-7f1cd128543046f5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-dbc6ea74211b1357.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-ef23c20b566fc317.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-03fc41edca76afb0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T03:27:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习总结、资源与规划">
+<meta name="twitter:description" content="终于可以放假回家了，虽然只有半个月，但是还是可以好好地做个休整(陪女朋友)。 这学期作为一个学数学的咸鱼，从今年4月份开始入坑深度学习，4月初写了第一篇文章，4月初正式入坑github和PyTorch，过程中写了一些简单的教程和自己学习中的总结，非常感谢大家一路以来对我这个写作能力和表达能力都不是特别好的理工男的支持，万万没想到我写的PyTorch小白教程居然也在github上有了快70个star">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-7f1cd128543046f5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/07/27/summary-forward/"/>
+
+
+
+
+
+  <title>深度学习总结、资源与规划 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/07/27/summary-forward/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深度学习总结、资源与规划</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-27T12:00:00+08:00">
+                2017-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>终于可以放假回家了，虽然只有半个月，但是还是可以好好地做个休整(陪女朋友)。</p>
+<p>这学期作为一个学数学的咸鱼，从今年4月份开始入坑深度学习，4月初写了第一篇文章<keras初体验>，4月初正式入坑github和PyTorch，过程中写了一些简单的教程和自己学习中的总结，非常感谢大家一路以来对我这个写作能力和表达能力都不是特别好的理工男的支持，万万没想到我写的PyTorch小白教程居然也在github上有了快70个star，真的是给了我这个初用github的小白极大的鼓励。<br><a id="more"></a><br>一晃都快4个月了，在学校里做的第一个跟深度学习有关的项目也接近尾声，从项目中深深地了解到了自己的不足，所以决定对机器学习、深度学习进行一次系统性的学习，下面准备开一些新坑，以前经常开很多坑，但是真正填完的没有几个，这次决定开几个大坑慢慢填。</keras初体验></p>
+<p>第一个坑是关于编程的，作为学数学出生的人，没有受过太多计算机科学的训练，所以在写代码上一直存在一些问题，知乎编程大神<strong>萧井陌</strong>写过一个<a href="https://zhuanlan.zhihu.com/p/19959253?columnSlug=xiao-jing-mo" target="_blank" rel="external">编程入门指南</a>，这在我学习编程初期给了我莫大的帮助，通过学习MIT 6.00.1x(<a href="http://www.xuetangx.com/courses/course-v1:MITx+6_00_1x+sp/about" target="_blank" rel="external">计算机科学和python编程导论</a>)让我们在初期很快地爱上了编程。</p>
+<p>之后由于时间的关系，后面的学习也就一直没有继续下去了，但是心里一直记着一本书，叫做SICP(Structure and Interpretation of Computer Programs)(计算机程序的构造和解释)，这本书被称为神书。萧大神说过，学完此书编程能力会有一个巨大的飞跃，所以心里一直想着要找时间学完此书，但是美中不足的是这本书的教学语言是Scheme，虽然SICP会从头教你如何用Scheme，但是对于一门陌生的语言，还是一直拖着我开始这本书的学习。</p>
+<p>直到最近我发现了一门神课，Berkeley开的暑期课程<a href="https://cs61a.org/" target="_blank" rel="external">CS61A</a>，这么课将以python作为教学语言学SICP，同时开课的教授还会针对python重新一本SICP的<a href="http://composingprograms.com/pages/11-getting-started.html" target="_blank" rel="external">在线教材</a>，这本教材还在不断地更新中，直到8月10号该课结束。这对于我来讲真的是雪中送炭，虽然没有课程的视频，但是有lecture和作业也是极好的，所以我决定开的第一个坑就是CS61A，如果之后有时间会开SICP的坑，将书学了，书后的习题做了。同时各位对编程痴狂的小伙伴不妨按着萧大神的编程指南，将里面的内容都学了，那么就达到萧井陌大神所谓的「入门」水平了，我觉得你会有「会当凌绝顶」的感觉。(我是暂时体会不到了)</p>
+<p>第二个坑是关于深度学习和机器学习的系统性学习，此前只是零零散散看了一些内容，但是并没有做笔记，也没有深刻地进行理解，所以之后决定系统性的学一些课程，看一些书，当然在此之前肯定是要做一个合理的规划了，所以便有了<a href="https://github.com/SherlockLiao/Roadmap-of-DL-and-ML" target="_blank" rel="external">Roadmap of DL and ML</a>，这是我对目前我了解到的深度学习和机器学习的课程，书籍，论文的总结，里面有很出名的课程，如cs229，机器学习基石和技法，cs231n等等，也有最新的课程，比如Berkeley的 Deep Reinfrcement Learning， MIT的 Deep Learning for Self-Driving Cars 等，还有一些优化的课程和线性代数的课程。</p>
+<p>除此之外还有一门极其牛逼的课程，这门课程牛逼到我单独拿出来说，那就是MXNet主要开发者之一的陈天奇在华盛顿大学开的一门课 Deep Learning System，陈天奇还开发了一个极其牛逼的框架，可能你已经用了很久了，只是你不知道是他开发的，那就是<a href="https://github.com/dmlc/xgboost" target="_blank" rel="external">XGBoost</a>，所以这门课可以说是一个系统设计的天才将他对系统设计的理解教给你。你说牛不牛逼，当你学完之后，你会对现在深度学习主流框架如tensorflow等有了完备的理解，当然学完之后距离你自己开发一套框架还是有一定的距离。(ps 我还没学呢，很想学……）。</p>
+<p>另外github里面的内容还在不断更新，我会慢慢放上我的学习笔记，骗一波star啦。当然，也欢迎各位小伙伴上传一些自己推荐的学习资料和笔记，萧伯纳说：「你有一个苹果，我有一个苹果，我们交换一下，一人还是一个苹果；你有一个思想，我有一个思想，我们交换一下，一人就有两个思想。」</p>
+<p>最后开第三个坑，这个坑纯属被骗入坑的，至于如何被骗入坑，且听我从今年CVPR2017慢慢道来。</p>
+<p>看过我之前文章的人都知道我一直用的是PyTorch，当然用起来也非常的愉快，之前耳闻MXNet特别厉害，不仅在显存上更为节省，最主要的是速度更快，而是自动并行和分布式，听着就很牛逼，有木有。于是满眼星星准备入坑，谁知道文档做得太差了，很多API都找不到，而且也没有论坛，遇到问题大家都去issue里面提问，搞得issue里面也很混乱，同时对于issue也没有太多的人维护，所以没有办法，只好弃坑了。</p>
+<p>就在我Pytorch用得好好的，我看到了李沐大神开了一个<a href="https://github.com/mli/cvpr17" target="_blank" rel="external">repo</a>，发现了一个新的东西叫gluon。同时还出现了一张图片。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-7f1cd128543046f5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>看着好牛逼，于是充满着极客精神的我手贱地点开了第一张<a href="https://github.com/mli/cvpr17/blob/master/gluon_part1.pdf" target="_blank" rel="external">slide</a>，前面几页列出了目前主流的深度学习框架的优缺点，比如符号式编程的代表，tensorflow，caffe，虽然便携高效，但是不够直挂灵活，代码没有易读性，bug不好找；命令式编程的代表PyTorch，Chainer，灵活，但是对于复杂网络速度很慢。然后列出了MXNet的优势，在网络的定义上采用符号式编程，在tensor计算上采用命令式编程，用这种混合编程的方式完美的解决了前面两种框架的问题，看到这里你是不是觉得MXNet牛逼啊，准备入坑了。然而现实会残忍地打醒你，因为MXNet的文档对新手实在是太不友好了，所以你肯定入不了这个坑。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-dbc6ea74211b1357.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="screenshot.png"></p>
+<p>于是我想着李沐大神，别吹逼了，快去完善文档，修bug吧，MXNet是挺牛逼的，但是没有完善的教程和文档，新手怎么入坑啊。但是心细的读者肯定发现了右下角有一个’not good enough’。没错，这个时候主角gluon登场了。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-ef23c20b566fc317.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="screenshot.png"></p>
+<p>最后总结一波gluon的优势，有下面的车做了一个形象的比喻，原来我以前开的一直是迷你电动车啊，虽然开不了F1，但是开个奥迪宝马应该没问题吧？</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-03fc41edca76afb0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="screenshot.png"></p>
+<p>李沐大神确实很有煽动性，就几页slide，成功引起了我对gluon的关注，于是我去了gluon的<a href="http://gluon.mxnet.io/index.html" target="_blank" rel="external">文档</a>看了看，现在gluon只是预览版，还没有出正式版，但是没有tutorial对新手还是不友好啊，于是我又发现一个<a href="https://github.com/zackchase/mxnet-the-straight-dope" target="_blank" rel="external">repo</a>，全套教程，惊呆了，从简单的线性回归到目标检测，自然语言处理，GANs，DQN，一应俱全，虽然目前这个repo的已经完成的内容比较少，但是在不断地更新中，非常期待全套教程的更新完成。</p>
+<p>而且点进几个notebook看了看，发现定义网络的方式跟PyTorch简直不要太像，这样的话从PyTorch迁移过来的成本也不会太高，虽然目前听使用的人说还是有些bug，不稳定，但是我算是成功入坑了，希望MXNet的开发者不要辜负大家的期望，努力去完善与开发，给我们提供更方便和快捷的深度学习框架。（我应该找AWS要广告费）</p>
+<p>写了这么多，逻辑都有些混乱了，最后希望我能够填完这些大坑吧，也祝各位读者生活、学习、工作、科研都顺利吧。</p>
+<p>以上</p>
+<hr>
+<p>欢迎关注我的<a href="https://github.com/SherlockLiao" target="_blank" rel="external">github</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Personal/" rel="tag"># Personal</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/23/deep_dream_code/" rel="next" title="DeepDream的代码实现">
+                <i class="fa fa-chevron-left"></i> DeepDream的代码实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/13/cs20si1/" rel="prev" title="cs20si：tensorflow for research 学习笔记1">
+                cs20si：tensorflow for research 学习笔记1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="什么是自动编码器自动编码器(AutoEncoder)最开始作为一种数据的压缩方法，其特点有: 1)跟数据相关程度很高，这意味着自动编码器只能压缩与训练数据相似的数据，这个其实比较显然，因为使用神经网络提取的特征一般是高度相关于原始的训练集，使用人脸训练出来的自动编码器在压缩自然界动物的图片是表现就会比较差，因为它只学习到了人脸的特征，而没有能够学习到自然界图片的特征； 2)压缩后数据是有损的，这是">
+<meta name="keywords" content="DeepLearning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="花式解释AutoEncoder与VAE">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/06/24/vae/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="什么是自动编码器自动编码器(AutoEncoder)最开始作为一种数据的压缩方法，其特点有: 1)跟数据相关程度很高，这意味着自动编码器只能压缩与训练数据相似的数据，这个其实比较显然，因为使用神经网络提取的特征一般是高度相关于原始的训练集，使用人脸训练出来的自动编码器在压缩自然界动物的图片是表现就会比较差，因为它只学习到了人脸的特征，而没有能够学习到自然界图片的特征； 2)压缩后数据是有损的，这是">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-5e46977d7f8905f9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-bd0d08ba74bd762e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-176290abf11d59eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-672ce701c4b7f90a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-ddf8d127a7aa06a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T03:28:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="花式解释AutoEncoder与VAE">
+<meta name="twitter:description" content="什么是自动编码器自动编码器(AutoEncoder)最开始作为一种数据的压缩方法，其特点有: 1)跟数据相关程度很高，这意味着自动编码器只能压缩与训练数据相似的数据，这个其实比较显然，因为使用神经网络提取的特征一般是高度相关于原始的训练集，使用人脸训练出来的自动编码器在压缩自然界动物的图片是表现就会比较差，因为它只学习到了人脸的特征，而没有能够学习到自然界图片的特征； 2)压缩后数据是有损的，这是">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-5e46977d7f8905f9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/06/24/vae/"/>
+
+
+
+
+
+  <title>花式解释AutoEncoder与VAE | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/06/24/vae/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">花式解释AutoEncoder与VAE</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-24T12:00:00+08:00">
+                2017-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="什么是自动编码器"><a href="#什么是自动编码器" class="headerlink" title="什么是自动编码器"></a>什么是自动编码器</h3><p>自动编码器(AutoEncoder)最开始作为一种数据的压缩方法，其特点有:</p>
+<p>1)跟数据相关程度很高，这意味着自动编码器只能压缩与训练数据相似的数据，这个其实比较显然，因为使用神经网络提取的特征一般是高度相关于原始的训练集，使用人脸训练出来的自动编码器在压缩自然界动物的图片是表现就会比较差，因为它只学习到了人脸的特征，而没有能够学习到自然界图片的特征；</p>
+<p>2)压缩后数据是有损的，这是因为在降维的过程中不可避免的要丢失掉信息；<br><a id="more"></a><br>到了2012年，人们发现在卷积网络中使用自动编码器做逐层预训练可以训练更加深层的网络，但是很快人们发现良好的初始化策略要比费劲的逐层预训练有效地多，2014年出现的Batch Normalization技术也是的更深的网络能够被被有效训练，到了15年底，通过残差(ResNet)我们基本可以训练任意深度的神经网络。</p>
+<p>所以现在自动编码器主要应用有两个方面，第一是数据去噪，第二是进行可视化降维。然而自动编码器还有着一个功能就是生成数据。</p>
+<p>我们之前讲过GAN，它与GAN相比有着一些好处，同时也有着一些缺点。我们先来讲讲其跟GAN相比有着哪些优点。</p>
+<p>第一点，我们使用GAN来生成图片有个很不好的缺点就是我们生成图片使用的随机高斯噪声，这意味着我们并不能生成任意我们指定类型的图片，也就是说我们没办法决定使用哪种随机噪声能够产生我们想要的图片，除非我们能够把初始分布全部试一遍。但是使用自动编码器我们就能够通过输出图片的编码过程得到这种类型图片的编码之后的分布，相当于我们是知道每种图片对应的噪声分布，我们就能够通过选择特定的噪声来生成我们想要生成的图片。</p>
+<p>第二点，这既是生成网络的优点同时又有着一定的局限性，这就是生成网络通过对抗过程来区分“真”的图片和“假”的图片，然而这样得到的图片只是尽可能像真的，但是这并不能保证图片的内容是我们想要的，换句话说，有可能生成网络尽可能的去生成一些背景图案使得其尽可能真，但是里面没有实际的物体。</p>
+<h3 id="自动编码器的结构"><a href="#自动编码器的结构" class="headerlink" title="自动编码器的结构"></a>自动编码器的结构</h3><p>首先我们给出自动编码器的一般结构</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-5e46977d7f8905f9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="autoencoder.png"></p>
+<p>从上面的图中，我们能够看到两个部分，第一个部分是编码器(Encoder)，第二个部分是解码器(Decoder)，编码器和解码器都可以是任意的模型，通常我们使用神经网络模型作为编码器和解码器。输入的数据经过神经网络降维到一个编码(code)，接着又通过另外一个神经网络去解码得到一个与输入原数据一模一样的生成数据，然后通过去比较这两个数据，最小化他们之间的差异来训练这个网络中编码器和解码器的参数。当这个过程训练完之后，我们可以拿出这个解码器，随机传入一个编码(code)，希望通过解码器能够生成一个和原数据差不多的数据，上面这种图这个例子就是希望能够生成一张差不多的图片。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-bd0d08ba74bd762e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="decoder.png"></p>
+<p>这件事情能不能实现呢？其实是可以的，下面我们会用PyTorch来简单的实现一个自动编码器。</p>
+<p>首先我们构建一个简单的多层感知器来实现一下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">autoencoder</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super(autoencoder, self).__init__()</div><div class="line">        self.encoder = nn.Sequential(</div><div class="line">            nn.Linear(<span class="number">28</span>*<span class="number">28</span>, <span class="number">128</span>),</div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.Linear(<span class="number">128</span>, <span class="number">64</span>),</div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.Linear(<span class="number">64</span>, <span class="number">12</span>),</div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.Linear(<span class="number">12</span>, <span class="number">3</span>)</div><div class="line">        )</div><div class="line">        self.decoder = nn.Sequential(</div><div class="line">            nn.Linear(<span class="number">3</span>, <span class="number">12</span>),</div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.Linear(<span class="number">12</span>, <span class="number">64</span>),</div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.Linear(<span class="number">64</span>, <span class="number">128</span>),</div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.Linear(<span class="number">128</span>, <span class="number">28</span>*<span class="number">28</span>),</div><div class="line">            nn.Tanh()</div><div class="line">        )</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></div><div class="line">        x = self.encoder(x)</div><div class="line">        x = self.decoder(x)</div><div class="line">        <span class="keyword">return</span> x</div></pre></td></tr></table></figure>
+<p>这里我们定义了一个简单的４层网络作为编码器，中间使用ReLU激活函数，最后输出的维度是３维的，定义的解码器，输入三维的编码，输出一个　$28\times 28$　的图像数据，特别要注意最后使用的激活函数是Tanh，这个激活函数能够将最后的输出转换到-1 $\thicksim$ 1之间，这是因为我们输入的图片已经变换到了-1 $\thicksim$ 1之间了，这里的输出必须和其对应。</p>
+<p>训练过程也比较简单，我们使用最小均方误差来作为损失函数，比较生成的图片与原始图片的每个像素点的差异。</p>
+<p>同时我们也可以将多层感知器换成卷积神经网络，这样对图片的特征提取有着更好的效果。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">autoencoder</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super(autoencoder, self).__init__()</div><div class="line">        self.encoder = nn.Sequential(</div><div class="line">            nn.Conv2d(<span class="number">1</span>, <span class="number">16</span>, <span class="number">3</span>, stride=<span class="number">3</span>, padding=<span class="number">1</span>),  <span class="comment"># b, 16, 10, 10</span></div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.MaxPool2d(<span class="number">2</span>, stride=<span class="number">2</span>),  <span class="comment"># b, 16, 5, 5</span></div><div class="line">            nn.Conv2d(<span class="number">16</span>, <span class="number">8</span>, <span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>),  <span class="comment"># b, 8, 3, 3</span></div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.MaxPool2d(<span class="number">2</span>, stride=<span class="number">1</span>)  <span class="comment"># b, 8, 2, 2</span></div><div class="line">        )</div><div class="line">        self.decoder = nn.Sequential(</div><div class="line">            nn.ConvTranspose2d(<span class="number">8</span>, <span class="number">16</span>, <span class="number">3</span>, stride=<span class="number">2</span>),  <span class="comment"># b, 16, 5, 5</span></div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.ConvTranspose2d(<span class="number">16</span>, <span class="number">8</span>, <span class="number">5</span>, stride=<span class="number">3</span>, padding=<span class="number">1</span>),  <span class="comment"># b, 8, 15, 15</span></div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.ConvTranspose2d(<span class="number">8</span>, <span class="number">1</span>, <span class="number">2</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>),  <span class="comment"># b, 1, 28, 28</span></div><div class="line">            nn.Tanh()</div><div class="line">        )</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></div><div class="line">        x = self.encoder(x)</div><div class="line">        x = self.decoder(x)</div><div class="line">        <span class="keyword">return</span> x</div></pre></td></tr></table></figure>
+<p>这里使用了<code>nn.ConvTranspose2d()</code>，这可以看作是卷积的反操作，可以在某种意义上看作是反卷积。</p>
+<p>我们使用卷积网络得到的最后生成的图片效果会更好，具体的图片效果我就不再这里放了，可以在我们的<a href="https://github.com/SherlockLiao/pytorch-beginner/tree/master/08-AutoEncoder" target="_blank" rel="external">github</a>上看到图片的展示。</p>
+<h3 id="变分自动编码器-Variational-Autoencoder"><a href="#变分自动编码器-Variational-Autoencoder" class="headerlink" title="变分自动编码器(Variational Autoencoder)"></a>变分自动编码器(Variational Autoencoder)</h3><p>变分编码器是自动编码器的升级版本，其结构跟自动编码器是类似的，也由编码器和解码器构成。</p>
+<p>回忆一下我们在自动编码器中所做的事，我们需要输入一张图片，然后将一张图片编码之后得到一个隐含向量，这比我们随机取一个随机噪声更好，因为这包含着原图片的信息，然后我们隐含向量解码得到与原图片对应的照片。</p>
+<p>但是这样我们其实并不能任意生成图片，因为我们没有办法自己去构造隐藏向量，我们需要通过一张图片输入编码我们才知道得到的隐含向量是什么，这时我们就可以通过变分自动编码器来解决这个问题。</p>
+<p>其实原理特别简单，只需要在编码过程给它增加一些限制，迫使其生成的隐含向量能够粗略的遵循一个标准正态分布，这就是其与一般的自动编码器最大的不同。</p>
+<p>这样我们生成一张新图片就很简单了，我们只需要给它一个标准正态分布的随机隐含向量，这样通过解码器就能够生成我们想要的图片，而不需要给它一张原始图片先编码。</p>
+<p>在实际情况中，我们需要在模型的准确率上与隐含向量服从标准正态分布之间做一个权衡，所谓模型的准确率就是指解码器生成的图片与原图片的相似程度。我们可以让网络自己来做这个决定，非常简单，我们只需要将这两者都做一个loss，然后在将他们求和作为总的loss，这样网络就能够自己选择如何才能够使得这个总的loss下降。另外我们要衡量两种分布的相似程度，如何看过之前一片GAN的数学推导，你就知道会有一个东西叫KL divergence来衡量两种分布的相似程度，这里我们就是用KL divergence来表示隐含向量与标准正态分布之间差异的loss，另外一个loss仍然使用生成图片与原图片的均方误差来表示。</p>
+<p>我们可以给出KL divergence 的公式</p>
+<script type="math/tex; mode=display">
+D_{KL} (P || Q) = \int_{-\infty}^{\infty} p(x) \log \frac{p(x)}{q(x)} dx</script><p>这里变分编码器使用了一个技巧“重新参数化”来解决KL divergence的计算问题。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-176290abf11d59eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="vae.png"></p>
+<p>这时不再是每次产生一个隐含向量，而是生成两个向量，一个表示均值，一个表示标准差，然后通过这两个统计量来合成隐含向量，这也非常简单，用一个标准正态分布先乘上标准差再加上均值就行了，这里我们默认编码之后的隐含向量是服从一个正态分布的。这个时候我们是想让均值尽可能接近0，标准差尽可能接近1。而论文里面有详细的推导如何得到这个loss的计算公式，有兴趣的同学可以去看看<a href="https://arxiv.org/pdf/1606.05908.pdf" target="_blank" rel="external">推导</a></p>
+<p>下面是PyTorch的实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">reconstruction_function = nn.BCELoss(size_average=<span class="keyword">False</span>)  <span class="comment"># mse loss</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">loss_function</span><span class="params">(recon_x, x, mu, logvar)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    recon_x: generating images</span></div><div class="line"><span class="string">    x: origin images</span></div><div class="line"><span class="string">    mu: latent mean</span></div><div class="line"><span class="string">    logvar: latent log variance</span></div><div class="line"><span class="string">    """</span></div><div class="line">    BCE = reconstruction_function(recon_x, x)</div><div class="line">    <span class="comment"># loss = 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)</span></div><div class="line">    KLD_element = mu.pow(<span class="number">2</span>).add_(logvar.exp()).mul_(<span class="number">-1</span>).add_(<span class="number">1</span>).add_(logvar)</div><div class="line">    KLD = torch.sum(KLD_element).mul_(<span class="number">-0.5</span>)</div><div class="line">    <span class="comment"># KL divergence</span></div><div class="line">    <span class="keyword">return</span> BCE + KLD</div></pre></td></tr></table></figure>
+<p>另外变分编码器除了可以让我们随机生成隐含变量，还能够提高网络的泛化能力。</p>
+<p>最后是VAE的代码实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">VAE</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super(VAE, self).__init__()</div><div class="line"></div><div class="line">        self.fc1 = nn.Linear(<span class="number">784</span>, <span class="number">400</span>)</div><div class="line">        self.fc21 = nn.Linear(<span class="number">400</span>, <span class="number">20</span>)</div><div class="line">        self.fc22 = nn.Linear(<span class="number">400</span>, <span class="number">20</span>)</div><div class="line">        self.fc3 = nn.Linear(<span class="number">20</span>, <span class="number">400</span>)</div><div class="line">        self.fc4 = nn.Linear(<span class="number">400</span>, <span class="number">784</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">encode</span><span class="params">(self, x)</span>:</span></div><div class="line">        h1 = F.relu(self.fc1(x))</div><div class="line">        <span class="keyword">return</span> self.fc21(h1), self.fc22(h1)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reparametrize</span><span class="params">(self, mu, logvar)</span>:</span></div><div class="line">        std = logvar.mul(<span class="number">0.5</span>).exp_()</div><div class="line">        <span class="keyword">if</span> torch.cuda.is_available():</div><div class="line">            eps = torch.cuda.FloatTensor(std.size()).normal_()</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            eps = torch.FloatTensor(std.size()).normal_()</div><div class="line">        eps = Variable(eps)</div><div class="line">        <span class="keyword">return</span> eps.mul(std).add_(mu)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(self, z)</span>:</span></div><div class="line">        h3 = F.relu(self.fc3(z))</div><div class="line">        <span class="keyword">return</span> F.sigmoid(self.fc4(h3))</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></div><div class="line">        mu, logvar = self.encode(x)</div><div class="line">        z = self.reparametrize(mu, logvar)</div><div class="line">        <span class="keyword">return</span> self.decode(z), mu, logvar</div></pre></td></tr></table></figure>
+<p>VAE的结果比普通的自动编码器要好很多，下面是结果</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-672ce701c4b7f90a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image_0.png"><br><img src="http://upload-images.jianshu.io/upload_images/3623720-ddf8d127a7aa06a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image_80.png"></p>
+<p>VAE的缺点也很明显，他是直接计算生成图片和原始图片的均方误差而不是像GAN那样去对抗来学习，这就使得生成的图片会有点模糊。现在已经有一些工作是将VAE和GAN结合起来，使用VAE的结构，但是使用对抗网络来进行训练，具体可以参考一下这篇<a href="https://arxiv.org/pdf/1512.09300.pdf" target="_blank" rel="external">论文</a>。</p>
+<p>参考内容: <a href="http://kvfrans.com/variational-autoencoders-explained/" target="_blank" rel="external">kvfrans blog</a></p>
+<hr>
+<p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/pytorch-beginner/tree/master/08-AutoEncoder" target="_blank" rel="external">github</a>上</p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/20/gan_math/" rel="next" title="Gan的数学推导">
+                <i class="fa fa-chevron-left"></i> Gan的数学推导
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/29/tensorboard/" rel="prev" title="PyTorch中如何使用tensorboard可视化">
+                PyTorch中如何使用tensorboard可视化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是自动编码器"><span class="nav-number">1.</span> <span class="nav-text">什么是自动编码器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动编码器的结构"><span class="nav-number">2.</span> <span class="nav-text">自动编码器的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变分自动编码器-Variational-Autoencoder"><span class="nav-number">3.</span> <span class="nav-text">变分自动编码器(Variational Autoencoder)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

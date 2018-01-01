@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,PyTorch Tutorial," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="之前有很多小伙伴私信我说文章思想能看懂，但是pytorch的部分因为没有看过pytorch教程所以一脸懵逼。对此我也表示很无奈，既然大家不愿意去官网看教程，那么我就将我学习pytorch的经验写出来，一步一步从0开始让大家学会pytorch，教程比官网的更加简单，同时也增加了更多简单的例子让大家快速上手pytorch，愉快地开始炼丹。">
+<meta name="keywords" content="DeepLearning,PyTorch Tutorial">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10分钟快速入门PyTorch (0)">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/05/01/pytorch_tutorial_0/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="之前有很多小伙伴私信我说文章思想能看懂，但是pytorch的部分因为没有看过pytorch教程所以一脸懵逼。对此我也表示很无奈，既然大家不愿意去官网看教程，那么我就将我学习pytorch的经验写出来，一步一步从0开始让大家学会pytorch，教程比官网的更加简单，同时也增加了更多简单的例子让大家快速上手pytorch，愉快地开始炼丹。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-057dc7a6a7e23fdb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-e8f8b92e783dc336.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-e1d6191842ff2c69.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-1b996d1c43bffcca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-b4f6e2ed7985b578.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-56cdc4095aaa9ef8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T03:26:42.475Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10分钟快速入门PyTorch (0)">
+<meta name="twitter:description" content="之前有很多小伙伴私信我说文章思想能看懂，但是pytorch的部分因为没有看过pytorch教程所以一脸懵逼。对此我也表示很无奈，既然大家不愿意去官网看教程，那么我就将我学习pytorch的经验写出来，一步一步从0开始让大家学会pytorch，教程比官网的更加简单，同时也增加了更多简单的例子让大家快速上手pytorch，愉快地开始炼丹。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-057dc7a6a7e23fdb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/05/01/pytorch_tutorial_0/"/>
+
+
+
+
+
+  <title>10分钟快速入门PyTorch (0) | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/05/01/pytorch_tutorial_0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">10分钟快速入门PyTorch (0)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-01T12:00:00+08:00">
+                2017-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前有很多小伙伴私信我说文章思想能看懂，但是pytorch的部分因为没有看过pytorch教程所以一脸懵逼。对此我也表示很无奈，既然大家不愿意去官网看教程，那么我就将我学习pytorch的经验写出来，一步一步从0开始让大家学会pytorch，教程比官网的更加简单，同时也增加了更多简单的例子让大家快速上手pytorch，愉快地开始炼丹。<br><a id="more"></a><br>什么？你还不知道pytorch是啥，快点去看看专栏里面的pytorch介绍吧。</p>
+<p>推荐在电脑端阅读本篇文章。</p>
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>首先当然是需要安装pytorch了，目前pytorch只支持mac和linux，如果你的电脑是windows，装虚拟机或者双系统。如果想要愉快地炼丹，那么强烈推荐使用linux系统，因为所有的深度学习框架在linux上都有很好的支持，远远好于windows系统，而且linux也没有大家想象中的那么难学，目前linux系统的图形界面让大家上手的时候更加容易。</p>
+<p>装完了系统之后就需要安装环境了，首推Anaconda，这是一个科学计算的集成环境，安装完这之后基本所需要的包都有了，而且还提供交互式的jupyter notebook，可以说为我们做实验提供了很好的交互。如果去Anaconda的官网下载速度比较慢，可以去清华镜像下载。</p>
+<p>安装完Anaconda之后我们就可以安装pytorch了，进入<a href="http://pytorch.org/" target="_blank" rel="external">主页</a>，一步一步来就行了，如果要装GPU版的，需要cuda和cudnn，这个网上有很多教程，可以去看看，如果你只是为了快速上手玩玩pytorch，那么可以不用废时间装GPU版。</p>
+<h3 id="pytorch基础"><a href="#pytorch基础" class="headerlink" title="pytorch基础"></a>pytorch基础</h3><p>装好了pytorch之后，正式进入我们的教程，pytorch基础部分，这个部分主要是介绍一下pytorch处理的对象以及操作。</p>
+<p><strong>Tensor</strong></p>
+<p>首先介绍里面最基本的操作对象，tensor</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-057dc7a6a7e23fdb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>tensor就是张量的英文，表示多维的矩阵，比如一维就是向量，二维就是一般的矩阵等等，pytorch里面处理的单位就是一个一个的tensor</p>
+<p>可以显示的得到其大小</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-e8f8b92e783dc336.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>这个和numpy很相似，同时tensor和numpy.array之间也可以相互转换</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-e1d6191842ff2c69.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>tensor的运算也很简单，一般的四则运算都是支持的</p>
+<p><strong>Variable</strong></p>
+<p>pytorch和numpy不一样的地方就来了，就是其提供了自动求导功能，也就是可以自动给你你要的参数的梯度，这个操作又另外一个基本元素提供，Variable</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-1b996d1c43bffcca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>本质上Variable和Tensor没有区别，不过Variabel会放入一个计算图，然后进行前向传播，反向传播以及自动求导</p>
+<p>一个Variable里面包含着三个属性，data，grad和creator，其中creator表示得到这个Variabel的操作，比如乘法或者加法等等，grad表示方向传播的梯度，data表示取出这个Variabel里面的数据</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-b4f6e2ed7985b578.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>这就是一个简单的计算图的例子</p>
+<p><strong>神经网络</strong></p>
+<p>前面讲了两个操作对象，最后讲一下pytorch里面的模型建立，模型的建立主要依赖于torch.nn，torch.nn包含这个所有神经网络的层的结构<br><img src="http://upload-images.jianshu.io/upload_images/3623720-56cdc4095aaa9ef8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>这就是构建所有神经网络的模板，不管你想构建卷积神经网络还是循环神经网络或者是生成对抗网络都依赖于这个结构</p>
+<p>本文所有代码以及后续的教程代码都在<a href="https://github.com/SherlockLiao/pytorch-beginner" target="_blank" rel="external">github</a>上，强烈推荐进入github下载全部代码进行学习</p>
+<p>ok，这次介绍了安装环境，引入了基本的pytorch处理单元，相信大家对pytorch也有了一个基本了解，下节内容预告 线性回归和logistic回归</p>
+<hr>
+<p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/pytorch-beginner" target="_blank" rel="external">github</a>上</p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/PyTorch-Tutorial/" rel="tag"># PyTorch Tutorial</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/01/p0/" rel="next" title="DeepLearning项目之旅-Start">
+                <i class="fa fa-chevron-left"></i> DeepLearning项目之旅-Start
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/01/nn/" rel="prev" title="10分钟快速入门PyTorch (3)">
+                10分钟快速入门PyTorch (3) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境配置"><span class="nav-number">1.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pytorch基础"><span class="nav-number">2.</span> <span class="nav-text">pytorch基础</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

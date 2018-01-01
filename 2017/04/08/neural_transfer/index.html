@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,PyTorch,neural style transfer," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="背景介绍不知道大家是否用过prisma，就算没有用过，也一定看见别人用过这个软件，下面是一张这个软件得到的一个效果图">
+<meta name="keywords" content="DeepLearning,PyTorch,neural style transfer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DeepLearning-风格迁移">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/04/08/neural_transfer/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="背景介绍不知道大家是否用过prisma，就算没有用过，也一定看见别人用过这个软件，下面是一张这个软件得到的一个效果图">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://gcdn.neuralprisma.com/feedapi.neuralprisma.com/post/fc3bf53c-982d-4b45-a33d-7a398f98a569/image">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-a375362c3385c31d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-8dafd75932d7b82a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-dba6069fbc6c36ce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-25T05:24:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DeepLearning-风格迁移">
+<meta name="twitter:description" content="背景介绍不知道大家是否用过prisma，就算没有用过，也一定看见别人用过这个软件，下面是一张这个软件得到的一个效果图">
+<meta name="twitter:image" content="https://gcdn.neuralprisma.com/feedapi.neuralprisma.com/post/fc3bf53c-982d-4b45-a33d-7a398f98a569/image">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/04/08/neural_transfer/"/>
+
+
+
+
+
+  <title>DeepLearning-风格迁移 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/04/08/neural_transfer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DeepLearning-风格迁移</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-08T12:00:00+08:00">
+                2017-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>不知道大家是否用过prisma，就算没有用过，也一定看见别人用过这个软件，下面是一张这个软件得到的一个效果图<br><img src="https://gcdn.neuralprisma.com/feedapi.neuralprisma.com/post/fc3bf53c-982d-4b45-a33d-7a398f98a569/image" alt="example"><br><a id="more"></a><br>官方宣传的卖点是一秒钟让你的作品拥有名家风格，什么毕加索，梵高，都不在话下。通过这个效果再将你的照片发到朋友圈，是不是效果爆棚，简直是各种装逼界的一股清流，秒杀各种修图ps好吗。而且可以完美的掩饰掉一些瑕疵，又比ps更自然，更有逼格，是不是很棒。</p>
+<p>这个软件将使用的方法发了一篇论文，并且这个软件在发布的时候就取得了上千万的融资，是不是瞬间感觉现在学习了知识也能成为千万富豪了。如今在这个高速发展的时代，知识付费的时代确实已经到来了，所以我们现在努力学习各种知识就是在赚钱啊，有木有。这样大家的学习的时候就能够有着更大的动力了。</p>
+<p>这篇<a href="https://arxiv.org/pdf/1508.06576.pdf" target="_blank" rel="external">论文</a>感兴趣的同学可以去查看一下，里面主要涉及的是卷积神经网络。今天这篇文章要做的是什么呢？我们希望自己能够简单的实现这个风格迁移算法，并且用自己的算法来得到新的风格图片。一想到我们放到朋友圈的照片是自己写的算法来实现的就感觉成就感爆棚，有没有。</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>废话不多说，我们先来看看需要的基本配置。首先需要python环境，建议使用anaconda；然后我们使用的深度学习框架是pytorch，当然你也可以用tensorflow，具体框架的介绍可以去看看之前写的文章，需要安装pytorch和torchvision，<a href="http://pytorch.org/" target="_blank" rel="external">这里</a>查看安装帮助；同时需要一些其他的包，如果缺什么就pip安装就好。</p>
+<p>这篇文章主要参考于pytorch的官方<a href="http://pytorch.org/tutorials/advanced/neural_style_tutorial.html#sphx-glr-advanced-neural-style-tutorial-py" target="_blank" rel="external">tutorial</a>，感兴趣的同学可以直接移步至官方教程的地方，这篇文章我会说一些自己的理解，代码部分基本都是参考这个教程，但是我会做一些说明，力求更加清楚。</p>
+<h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><p>其实要实现的东西很清晰，就是需要将两张图片融合在一起，这个时候就需要定义怎么才算融合在一起。首先需要的就是内容上是相近的，然后风格上是相似的。这样来我们就知道我们需要做的事情是什么了，我们需要计算融合图片和内容图片的相似度，或者说差异性，然后尽可能降低这个差异性；同时我们也需要计算融合图片和风格图片在风格上的差异性，然后也降低这个差异性就可以了。这样我们就能够量化我们的目标了。</p>
+<p>对于内容的差异性我们该如何定义呢？其实我们能够很简答的想到就是两张图片每个像素点进行比较，也就是求一下差，因为简单的计算他们之间的差会有正负，所以我们可以加一个平方，使得差全部是正的，也可以加绝对值，但是数学上绝对值会破坏函数的可微性，所以大家都用平方，这个地方不理解也没关系，记住普遍都是使用平方就行了。</p>
+<p>对于风格的差异性我们该如何定义呢？这才是一个难点。这也是这篇文章提出的创新点，引入了Gram矩阵计算风格的差异。我尽量不使用数学的语言来解释，而使用通俗的语言。<br>首先需要的预先知识是卷积网络的知识，这里不细讲了，不了解的同学可以看之前的卷积网络的文章。我们知道一张图片通过卷积网络之后可以的到一个特征图，Gram矩阵就是在这个特征图上面定义出来的。每个特征图的大小一般是 MxNxC 或者是 CxMxN 这种大小，这里C表示的时候厚度，放在前面和后面都可以，MxN 表示的是一个矩阵的大小，其实就是有 C 个 MxN 这样的矩阵叠在一起。</p>
+<p>Gram矩阵是如何定义的呢？首先Gram矩阵的大小是有特征图的厚度决定的，等于 CxC，那么每一个Gram矩阵的元素，也就是 Gram(i, j) 等于多少呢？先把特征图中第 i 层和第 j 层取出来，这样就得到了两个 MxN的矩阵，然后将这两个矩阵对应元素相乘然后求和就得到了 Gram(i, j)，同理 Gram 的所有元素都可以通过这个方式得到。这样 Gram 中每个元素都可以表示两层特征图的一种组合，就可以定义为它的风格。</p>
+<p>然后风格的差异就是两幅图的 Gram 矩阵的差异，就像内容的差异的计算方法一样，计算一下这两个矩阵的差就可以量化风格的差异。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>以下的内容都是用pytorch实现的，如果对pytorch不熟悉的同学可以看一下我之前的pytorch介绍文章，看看官方教程，如果不想了解pytorch的同学可以用自己熟悉的框架实现这个算法，理论部分前面已经讲完了。</p>
+<h3 id="内容差异的loss定义"><a href="#内容差异的loss定义" class="headerlink" title="内容差异的loss定义"></a>内容差异的loss定义</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Content_Loss</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, target, weight)</span>:</span></div><div class="line">        super(Content_Loss, self).__init__()</div><div class="line">        self.weight = weight</div><div class="line">        self.target = target.detach() * self.weight</div><div class="line">        <span class="comment"># 必须要用detach来分离出target，这时候target不再是一个Variable，这是为了动态计算梯度，否则forward会出错，不能向前传播</span></div><div class="line">        self.criterion = nn.MSELoss()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, input)</span>:</span></div><div class="line">        self.loss = self.criterion(input * self.weight, self.target)</div><div class="line">        out = input.clone()</div><div class="line">        <span class="keyword">return</span> out</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, retain_variabels=True)</span>:</span></div><div class="line">        self.loss.backward(retain_variables=retain_variabels)</div><div class="line">        <span class="keyword">return</span> self.loss</div></pre></td></tr></table></figure>
+<p>其中有个变量weight，这个是表示权重，内容和风格你可以选择一个权重，比如你想风格上更像，内容上多一点差别没关系，那么内容的权重你可以定义小一点，风格的权重可以定义大一点；反之你可以把风格的权重定义小一点，内容的权重定义大一点。</p>
+<h3 id="风格差异的loss定义"><a href="#风格差异的loss定义" class="headerlink" title="风格差异的loss定义"></a>风格差异的loss定义</h3><h4 id="Gram-矩阵的定义"><a href="#Gram-矩阵的定义" class="headerlink" title="Gram 矩阵的定义"></a>Gram 矩阵的定义</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Gram</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super(Gram, self).__init__()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, input)</span>:</span></div><div class="line">        a, b, c, d = input.size()</div><div class="line">        feature = input.view(a * b, c * d)</div><div class="line">        gram = torch.mm(feature, feature.t())</div><div class="line">        gram /= (a * b * c * d)</div><div class="line">        <span class="keyword">return</span> gram</div></pre></td></tr></table></figure>
+<h4 id="style-loss定义"><a href="#style-loss定义" class="headerlink" title="style loss定义"></a>style loss定义</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Style_Loss</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, target, weight)</span>:</span></div><div class="line">        super(Style_Loss, self).__init__()</div><div class="line">        self.weight = weight</div><div class="line">        self.target = target.detach() * self.weight</div><div class="line">        self.gram = Gram()</div><div class="line">        self.criterion = nn.MSELoss()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, input)</span>:</span></div><div class="line">        G = self.gram(input) * self.weight</div><div class="line">        self.loss = self.criterion(G, self.target)</div><div class="line">        out = input.clone()</div><div class="line">        <span class="keyword">return</span> out</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, retain_variabels=True)</span>:</span></div><div class="line">        self.loss.backward(retain_variables=retain_variabels)</div><div class="line">        <span class="keyword">return</span> self.loss</div></pre></td></tr></table></figure>
+<h3 id="建立模型"><a href="#建立模型" class="headerlink" title="建立模型"></a>建立模型</h3><p>使用19层的 vgg 作为提取特征的卷积网络，并且定义哪几层为需要的特征。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">vgg = models.vgg19(pretrained=<span class="keyword">True</span>).features</div><div class="line">vgg = vgg.cuda()</div><div class="line"></div><div class="line">content_layers_default = [<span class="string">'conv_4'</span>]</div><div class="line">style_layers_default = [<span class="string">'conv_1'</span>, <span class="string">'conv_2'</span>, <span class="string">'conv_3'</span>, <span class="string">'conv_4'</span>, <span class="string">'conv_5'</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_style_model_and_loss</span><span class="params">(style_img, content_img, cnn=vgg,</span></span></div><div class="line"><span class="function"><span class="params">                             style_weight=<span class="number">1000</span>,</span></span></div><div class="line"><span class="function"><span class="params">                             content_weight=<span class="number">1</span>,</span></span></div><div class="line"><span class="function"><span class="params">                             content_layers=content_layers_default,</span></span></div><div class="line"><span class="function"><span class="params">                             style_layers=style_layers_default)</span>:</span></div><div class="line"></div><div class="line">    content_loss_list = []</div><div class="line">    style_loss_list = []</div><div class="line"></div><div class="line">    model = nn.Sequential()</div><div class="line">    model = model.cuda()</div><div class="line">    gram = loss.Gram()</div><div class="line">    gram = gram.cuda()</div><div class="line"></div><div class="line">    i = <span class="number">1</span></div><div class="line">    <span class="keyword">for</span> layer <span class="keyword">in</span> cnn:</div><div class="line">        <span class="keyword">if</span> isinstance(layer, nn.Conv2d):</div><div class="line">            name = <span class="string">'conv_'</span> + str(i)</div><div class="line">            model.add_module(name, layer)</div><div class="line"></div><div class="line">            <span class="keyword">if</span> name <span class="keyword">in</span> content_layers_default:</div><div class="line">                target = model(content_img)</div><div class="line">                content_loss = loss.Content_Loss(target, content_weight)</div><div class="line">                model.add_module(<span class="string">'content_loss_'</span> + str(i), content_loss)</div><div class="line">                content_loss_list.append(content_loss)</div><div class="line"></div><div class="line">            <span class="keyword">if</span> name <span class="keyword">in</span> style_layers_default:</div><div class="line">                target = model(style_img)</div><div class="line">                target = gram(target)</div><div class="line">                style_loss = loss.Style_Loss(target, style_weight)</div><div class="line">                model.add_module(<span class="string">'style_loss_'</span> + str(i), style_loss)</div><div class="line">                style_loss_list.append(style_loss)</div><div class="line"></div><div class="line">            i += <span class="number">1</span></div><div class="line">        <span class="keyword">if</span> isinstance(layer, nn.MaxPool2d):</div><div class="line">            name = <span class="string">'pool_'</span> + str(i)</div><div class="line">            model.add_module(name, layer)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> isinstance(layer, nn.ReLU):</div><div class="line">            name = <span class="string">'relu'</span> + str(i)</div><div class="line">            model.add_module(name, layer)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> model, style_loss_list, content_loss_list</div></pre></td></tr></table></figure>
+<h3 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_input_param_optimier</span><span class="params">(input_img)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line"><span class="string">    input_img is a Variable</span></div><div class="line"><span class="string">    """</span></div><div class="line">    input_param = nn.Parameter(input_img.data)</div><div class="line">    optimizer = optim.LBFGS([input_param])</div><div class="line">    <span class="keyword">return</span> input_param, optimizer</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_style_transfer</span><span class="params">(content_img, style_img, input_img,</span></span></div><div class="line"><span class="function"><span class="params">                       num_epoches=<span class="number">300</span>)</span>:</span></div><div class="line">    print(<span class="string">'Building the style transfer model..'</span>)</div><div class="line">    model, style_loss_list, content_loss_list = get_style_model_and_loss(</div><div class="line">        style_img, content_img</div><div class="line">    )</div><div class="line">    input_param, optimizer = get_input_param_optimier(input_img)</div><div class="line"></div><div class="line">    print(<span class="string">'Opimizing...'</span>)</div><div class="line">    epoch = [<span class="number">0</span>]</div><div class="line">    <span class="keyword">while</span> epoch[<span class="number">0</span>] &lt; num_epoches:</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">closure</span><span class="params">()</span>:</span></div><div class="line">            input_param.data.clamp_(<span class="number">0</span>, <span class="number">1</span>)</div><div class="line"></div><div class="line">            model(input_param)</div><div class="line">            style_score = <span class="number">0</span></div><div class="line">            content_score = <span class="number">0</span></div><div class="line"></div><div class="line">            optimizer.zero_grad()</div><div class="line">            <span class="keyword">for</span> sl <span class="keyword">in</span> style_loss_list:</div><div class="line">                style_score += sl.backward()</div><div class="line">            <span class="keyword">for</span> cl <span class="keyword">in</span> content_loss_list:</div><div class="line">                content_score += cl.backward()</div><div class="line"></div><div class="line">            epoch[<span class="number">0</span>] += <span class="number">1</span></div><div class="line">            <span class="keyword">if</span> epoch[<span class="number">0</span>] % <span class="number">50</span> == <span class="number">0</span>:</div><div class="line">                print(<span class="string">'run &#123;&#125;'</span>.format(epoch))</div><div class="line">                print(<span class="string">'Style Loss: &#123;:.4f&#125; Content Loss: &#123;:.4f&#125;'</span>.format(</div><div class="line">                    style_score.data[<span class="number">0</span>], content_score.data[<span class="number">0</span>]</div><div class="line">                ))</div><div class="line">                print()</div><div class="line"></div><div class="line">            <span class="keyword">return</span> style_score + content_score</div><div class="line"></div><div class="line">        optimizer.step(closure)</div><div class="line"></div><div class="line">        input_param.data.clamp_(<span class="number">0</span>, <span class="number">1</span>)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> input_param.data</div></pre></td></tr></table></figure>
+<p>需要特别注意的是这个模型里面参数不再是网络里面的参数，因为网络使用的是已经预训练好的 vgg 网络，这个算法里面的参数是合成图片里面的每个像素点，我们可以将内容图片直接 copy 成合成图片，然后训练使得他的风格和我们的风格图片相似，同时也可以随机化一张图片作为合成图片，然后训练他使得他与内容图片以及风格图片具有相似性。</p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>我们使用的风格图片为</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-a375362c3385c31d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="style.png"></p>
+<p>内容图片为</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-8dafd75932d7b82a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="content.png"></p>
+<p>得到的合成效果为</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-dba6069fbc6c36ce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="demo.png"></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>通过这篇文章，我们利用pytorch实现了基本的风格转移算法，得到的效果也是满意的，所以我们可以把自己的图片通过这个算法做一个风格转移，实现你想要的作品的风格，逼格满满，大家学习之后肯定会有特别大的成就感，在完成项目的同时也学习到了新的知识，同时也会对这个产生更浓厚的感兴趣，兴趣才是各种的动力，比任何鸡汤都有用，希望大家都能够找到自己的兴趣，热爱自己所做的事。</p>
+<hr>
+<p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/neural-transfer" target="_blank" rel="external">github</a>上</p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/PyTorch/" rel="tag"># PyTorch</a>
+          
+            <a href="/tags/neural-style-transfer/" rel="tag"># neural style transfer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/01/pytorch/" rel="next" title="Pytorch 初体验（一个优雅的框架）">
+                <i class="fa fa-chevron-left"></i> Pytorch 初体验（一个优雅的框架）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/15/keras1/" rel="prev" title="小白学CNN以及Keras的速成(1)">
+                小白学CNN以及Keras的速成(1) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境配置"><span class="nav-number">2.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理分析"><span class="nav-number">3.</span> <span class="nav-text">原理分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">4.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内容差异的loss定义"><span class="nav-number">4.1.</span> <span class="nav-text">内容差异的loss定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#风格差异的loss定义"><span class="nav-number">4.2.</span> <span class="nav-text">风格差异的loss定义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Gram-矩阵的定义"><span class="nav-number">4.2.1.</span> <span class="nav-text">Gram 矩阵的定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#style-loss定义"><span class="nav-number">4.2.2.</span> <span class="nav-text">style loss定义</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建立模型"><span class="nav-number">4.3.</span> <span class="nav-text">建立模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#训练模型"><span class="nav-number">4.4.</span> <span class="nav-text">训练模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果"><span class="nav-number">4.5.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

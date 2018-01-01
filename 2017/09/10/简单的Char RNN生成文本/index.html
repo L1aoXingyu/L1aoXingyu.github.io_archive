@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="RNN, PyTorch," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="我来钱庙复知世依，似我心苦难归久，相须莱共游来愁报远。近王只内蓉者征衣同处，规廷去岂无知草木飘。 你可能以为上面的诗句是某个大诗人所作，事实上上面所有的内容都是循环神经网络写的，是不是感觉很神奇呢？其实这里面的原理非常简单，只需要对循环神经网络有个清楚的理解，那么就能够实现上面的效果，在读完本篇文章之后，大家都能够学会如何使用循环神经网络来创作文本。">
+<meta name="keywords" content="RNN, PyTorch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单的Char RNN生成文本">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/09/10/简单的Char RNN生成文本/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="我来钱庙复知世依，似我心苦难归久，相须莱共游来愁报远。近王只内蓉者征衣同处，规廷去岂无知草木飘。 你可能以为上面的诗句是某个大诗人所作，事实上上面所有的内容都是循环神经网络写的，是不是感觉很神奇呢？其实这里面的原理非常简单，只需要对循环神经网络有个清楚的理解，那么就能够实现上面的效果，在读完本篇文章之后，大家都能够学会如何使用循环神经网络来创作文本。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-4df22aa95167b96c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-e7dae53e0166e809.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-09-10T06:35:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简单的Char RNN生成文本">
+<meta name="twitter:description" content="我来钱庙复知世依，似我心苦难归久，相须莱共游来愁报远。近王只内蓉者征衣同处，规廷去岂无知草木飘。 你可能以为上面的诗句是某个大诗人所作，事实上上面所有的内容都是循环神经网络写的，是不是感觉很神奇呢？其实这里面的原理非常简单，只需要对循环神经网络有个清楚的理解，那么就能够实现上面的效果，在读完本篇文章之后，大家都能够学会如何使用循环神经网络来创作文本。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-4df22aa95167b96c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/09/10/简单的Char RNN生成文本/"/>
+
+
+
+
+
+  <title>简单的Char RNN生成文本 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/09/10/简单的Char RNN生成文本/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">简单的Char RNN生成文本</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-10T14:30:08+08:00">
+                2017-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我来钱庙复知世依，似我心苦难归久，相须莱共游来愁报远。近王只内蓉者征衣同处，规廷去岂无知草木飘。</p>
+<p>你可能以为上面的诗句是某个大诗人所作，事实上上面所有的内容都是循环神经网络写的，是不是感觉很神奇呢？其实这里面的原理非常简单，只需要对循环神经网络有个清楚的理解，那么就能够实现上面的效果，在读完本篇文章之后，大家都能够学会如何使用循环神经网络来创作文本。<br><a id="more"></a></p>
+<h2 id="Char-RNN的原理"><a href="#Char-RNN的原理" class="headerlink" title="Char RNN的原理"></a>Char RNN的原理</h2><p>在之前的文章中介绍过RNN的基本结构，其非常擅长处理序列问题，那么对于文本而言，其相当于也是一个序列，因为每句话都是由单词或汉字按照顺序组成的，所以也能够使用RNN对其进行处理，但是如何使用RNN进行文本生成呢？其实原理非常简单，下面我们就介绍一下Char RNN。</p>
+<h3 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h3><p>一般而言，RNN的输入和输出存在着多种关系，比如1对多，多对多等等，不同的输入输出关系对应着不同的应用，网上也有很多这方面的文章可以去看看，这里我们要讲的Char RNN在训练网络的时候是相同长度的多对多的类型，也就是输入一个序列，输出一个相同的长度的序列。</p>
+<p>具体的网络结构就是下面这个样子</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-4df22aa95167b96c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="screenshot.png"></p>
+<p>输入一句话作为输入序列，这句话中的每个字符都按照顺序进入RNN，每个字符传入RNN之后都能够得到一个输出，而这个输出就是这个字符在这句话中紧跟其后的一个字符，可以通过上面的图示清晰地看到这一点。这里要注意的是，一个序列最后一个输入对应的输出可以有多种选择，上面的图示是将这个序列的最开始的字符作为其输出，当然也可以将最后一个输入作为输出，以上面的例子说明就是’光’的输出就是’光’本身。</p>
+<h3 id="生成文本过程"><a href="#生成文本过程" class="headerlink" title="生成文本过程"></a>生成文本过程</h3><p>在预测的时候需要给网络一段初始的序列进行预热，预热的过程并不需要实际的输出结果，只是为了生成具有记忆的隐藏状态，然后将隐藏状态保留，传入之后的网络，不断地更新句子，直到达到要求的输出长度，具体可以看下面的图示</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-e7dae53e0166e809.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="screenshot.png"></p>
+<p>生成文本的过程就是每个字不断输入网络，然后将输出作为下一次的输出，不断循环递归，因为其会不限循环下去，所以可以设置一个长度让其停止。</p>
+<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>这里我们使用PyToch作为例子进行讲解，同时也提供了MXNet-Gluon的版本，因为他们的语法非常相似，所以实现两个几乎没有太大的区别，如果你不知道Gluon是什么，可以看看之前的一篇文章<a href="https://zhuanlan.zhihu.com/p/28752061" target="_blank" rel="external">介绍</a>。同时github也能找到tensorflow的实现。</p>
+<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>在进行网络构建之前，需要对数据进行预处理，其实大体的思路很简单，就是建立字符的数字表示，因为字符没有办法直接输入到网络中，所以需要用不同的数字去代表不同的字符，同时可以设定一个最大字符数，如果文本中读取到的所有不重复的字符数超过了这个最大字符数，就按照字符出现的频率截取掉最后的部分。</p>
+<p>实现的代码也非常简单</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(text_path, <span class="string">'r'</span>) <span class="keyword">as</span> f:</div><div class="line">    text_file = f.readlines()</div><div class="line">word_list = [v <span class="keyword">for</span> s <span class="keyword">in</span> text_file <span class="keyword">for</span> v <span class="keyword">in</span> s]</div><div class="line">vocab = set(word_list)</div><div class="line"><span class="comment"># 如果单词超过最长限制，则按单词出现频率去掉最小的部分</span></div><div class="line">vocab_count = &#123;&#125;</div><div class="line"><span class="keyword">for</span> word <span class="keyword">in</span> vocab:</div><div class="line">    vocab_count[word] = <span class="number">0</span></div><div class="line"><span class="keyword">for</span> word <span class="keyword">in</span> word_list:</div><div class="line">    vocab_count[word] += <span class="number">1</span></div><div class="line">vocab_count_list = []</div><div class="line"><span class="keyword">for</span> word <span class="keyword">in</span> vocab_count:</div><div class="line">    vocab_count_list.append((word, vocab_count[word]))</div><div class="line">vocab_count_list.sort(key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>], reverse=<span class="keyword">True</span>)</div><div class="line"><span class="keyword">if</span> len(vocab_count_list) &gt; max_vocab:</div><div class="line">    vocab_count_list = vocab_count_list[:max_vocab]</div><div class="line">vocab = [x[<span class="number">0</span>] <span class="keyword">for</span> x <span class="keyword">in</span> vocab_count_list]</div><div class="line">self.vocab = vocab</div><div class="line"></div><div class="line">self.word_to_int_table = &#123;c: i <span class="keyword">for</span> i, c <span class="keyword">in</span> enumerate(self.vocab)&#125;</div><div class="line">self.int_to_word_table = dict(enumerate(self.vocab))</div></pre></td></tr></table></figure>
+<p>建立好一个字典用于字符和数字的相互转换之后，我们可以使用PyTorch中的Dataset类进行自定义我们的数据集合，只需要重载<code>__getitem__</code>和<code>__len__</code>这两个函数就可以了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextData</span><span class="params">(data.Dataset)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, text_path, n_step, arr_to_idx)</span>:</span></div><div class="line">        self.n_step = n_step</div><div class="line"></div><div class="line">        <span class="keyword">with</span> open(text_path, <span class="string">'r'</span>) <span class="keyword">as</span> f:</div><div class="line">            data = f.readlines()</div><div class="line">        text = [v <span class="keyword">for</span> s <span class="keyword">in</span> data <span class="keyword">for</span> v <span class="keyword">in</span> s]</div><div class="line">        num_seq = int(len(text) / n_step)</div><div class="line">        self.num_seq = num_seq</div><div class="line">        text = text[:num_seq * n_step]  <span class="comment"># 截去最后不够长的部分</span></div><div class="line">        arr = arr_to_idx(text)</div><div class="line">        arr = arr.reshape((num_seq, <span class="number">-1</span>))</div><div class="line">        self.arr = torch.from_numpy(arr)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, index)</span>:</span></div><div class="line">        x = self.arr[index, :]</div><div class="line">        y = torch.zeros(x.size())</div><div class="line">        y[:<span class="number">-1</span>], y[<span class="number">-1</span>] = x[<span class="number">1</span>:], x[<span class="number">0</span>]</div><div class="line">        <span class="keyword">return</span> x, y</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.num_seq</div></pre></td></tr></table></figure>
+<h3 id="网络定义"><a href="#网络定义" class="headerlink" title="网络定义"></a>网络定义</h3><p>处理好数据之后，就可以进行网络的定义了，非常简单，网络只需要定义三层就可以了，第一层是word embedding，也就是词嵌入层，第二层是RNN层，第三层是线性映射，因为最后是一个分类问题，所以将结果的位数隐射到类别数目。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">CharRNN</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num_classes, embed_dim, hidden_size, num_layers,</span></span></div><div class="line"><span class="function"><span class="params">                 dropout)</span>:</span></div><div class="line">        super(CharRNN, self).__init__()</div><div class="line">        self.num_layers = num_layers</div><div class="line">        self.hidden_size = hidden_size</div><div class="line"></div><div class="line">        self.word_to_vec = nn.Embedding(num_classes, embed_dim)</div><div class="line">        self.rnn = nn.GRU(embed_dim, hidden_size, num_layers, dropout)</div><div class="line">        self.proj = nn.Linear(hidden_size, num_classes)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, hs=None)</span>:</span></div><div class="line">        batch = x.size(<span class="number">0</span>)</div><div class="line">        <span class="keyword">if</span> hs <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">            hs = Variable(</div><div class="line">                torch.zeros(self.num_layers, batch, self.hidden_size))</div><div class="line">            <span class="keyword">if</span> torch.cuda.is_available():</div><div class="line">                hs = hs.cuda()</div><div class="line">        word_embed = self.word_to_vec(x)  <span class="comment"># batch x len x embed</span></div><div class="line">        word_embed = word_embed.permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>)  <span class="comment"># len x batch x embed</span></div><div class="line">        out, h0 = self.rnn(word_embed, hs)  <span class="comment"># len x batch x hidden</span></div><div class="line">        le, mb, hd = out.size()</div><div class="line">        out = out.view(le * mb, hd)</div><div class="line">        out = self.proj(out)</div><div class="line">        out = out.view(le, mb, <span class="number">-1</span>)</div><div class="line">        out = out.permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>).contiguous()  <span class="comment"># batch x len x hidden</span></div><div class="line">        <span class="keyword">return</span> out.view(<span class="number">-1</span>, out.size(<span class="number">2</span>)), h0</div></pre></td></tr></table></figure>
+<p>在向前传播的时候，我们可以指定传入的隐藏状态，虽然训练中可以不用特别指定，但是在生成文本的时候是需要指定的，同时里面有一些小细节，需要将数据的维度进行调换和处理，这是因为PyTorch中RNN的输入有要求。</p>
+<p>另外在最后网络输出的时候，我们会将输出进行<code>out.view(-1, out.size(1))</code>这个操作，这个操作是为了将所有的序列拼起来，比如现在的输出是(batch, length)，通过这个操作之后就变成了(batch x length, 1)，这样做是为了方便loss的计算。</p>
+<h3 id="进行训练"><a href="#进行训练" class="headerlink" title="进行训练"></a>进行训练</h3><p>训练过程非常简单，只需要把序列扔到网络中即可，这里有两个小细节，第一个是将label y进行<code>y.view(-1)</code>，这对应于前面网络输出结构的操作，第二个细节是通过<code>nn.utils.clip_grad_norm()</code>对网络进行梯度裁剪，因为RNN中容易出现梯度爆炸的问题。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> batch <span class="keyword">in</span> dataloader:</div><div class="line">    x, y = batch</div><div class="line">    y = y.type(torch.LongTensor)</div><div class="line">    mb_size = x.size(<span class="number">0</span>)</div><div class="line">    <span class="keyword">if</span> use_gpu:</div><div class="line">        x = x.cuda()</div><div class="line">        y = y.cuda()</div><div class="line">    x, y = Variable(x), Variable(y)</div><div class="line">    out, _ = model(x)</div><div class="line">    batch_loss = criterion(out, y.view(<span class="number">-1</span>))</div><div class="line">    <span class="comment"># 反向传播</span></div><div class="line">    optimizer.zero_grad()</div><div class="line">    batch_loss.backward()</div><div class="line">    nn.utils.clip_grad_norm(model.parameters(), <span class="number">5</span>)</div><div class="line">    optimizer.step()</div></pre></td></tr></table></figure>
+<h3 id="生成文本"><a href="#生成文本" class="headerlink" title="生成文本"></a>生成文本</h3><p>在生成文本中，为了增加随机性，我们会将预测概率最高的前五个依概率进行选择，并不是每次都选择概率最大的，相关的代码如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">pick_top_n</span><span class="params">(preds, top_n=<span class="number">5</span>)</span>:</span></div><div class="line">    top_pred_prob, top_pred_label = torch.topk(preds, top_n, <span class="number">1</span>)</div><div class="line">    top_pred_prob /= torch.sum(top_pred_prob)</div><div class="line">    top_pred_prob = top_pred_prob.squeeze(<span class="number">0</span>).cpu().numpy()</div><div class="line">    top_pred_label = top_pred_label.squeeze(<span class="number">0</span>).cpu().numpy()</div><div class="line">    c = np.random.choice(top_pred_label, size=<span class="number">1</span>, p=top_pred_prob)</div><div class="line">    <span class="keyword">return</span> c</div></pre></td></tr></table></figure>
+<p>在生成文本的时候，先通过一句话对网络进行预热，主要是为了得到预热后的隐藏状态，然后将这句话的最后一个词和预热之后的隐藏状态作为网络的第一个输入，得到结果，然后将结果作为下一步的输入，不断循环，直到达到最后的要求的长度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">model.load_state_dict(torch.load(checkpoint))</div><div class="line">model.eval()</div><div class="line">samples = [convert(c) <span class="keyword">for</span> c <span class="keyword">in</span> prime]</div><div class="line">input_txt = torch.LongTensor(samples).unsqueeze(<span class="number">0</span>)</div><div class="line"><span class="keyword">if</span> use_gpu:</div><div class="line">    input_txt = input_txt.cuda()</div><div class="line">input_txt = Variable(input_txt)</div><div class="line">_, init_state = model(input_txt) <span class="comment"># 预热</span></div><div class="line">result = samples</div><div class="line">model_input = input_txt[:, <span class="number">-1</span>].unsqueeze(<span class="number">1</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(text_len):</div><div class="line">    <span class="comment"># out是输出的字符，大小为1 x vocab</span></div><div class="line">    <span class="comment"># init_state是RNN传递的hidden state</span></div><div class="line">    out, init_state = model(model_input, init_state)</div><div class="line">    pred = pick_top_n(out.data)</div><div class="line">    model_input = Variable(torch.LongTensor(pred)).unsqueeze(<span class="number">0</span>)</div><div class="line">    <span class="keyword">if</span> use_gpu:</div><div class="line">        model_input = model_input.cuda()</div><div class="line">    result.append(pred[<span class="number">0</span>])</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过训练之后的网络，我们能够生成一些有意思的文本，比如可以将小说，歌曲，诗歌等等输入训练，然后可以生成一个相对应的文本，非常有意思，国外就有一个人使用Char RNN对《权利的游戏》进行了续写。</p>
+<p>有趣归有趣，但是读完本篇文章，大家对Char RNN的原理有了深入的理解之后，发现这本质上其实只是一种语句逻辑的学习，比如前面的字符是”你的“，那么后面紧跟的一个字符就很大概率是一个名词，而不太可能是一个动词，这样不断的递归形成了一个又一个完整的句子，但是因为RNN长时依赖的问题，比较久之前的内容RNN其实已经遗忘，所以Char RNN并没有办法像作家一样创造出一片文章来表达一个观点，其只不过是对逻辑通顺语句的不断累加而已，所以这只是一个简单有趣的算法。</p>
+<p>关于RNN的应用非常多，比如机器翻译，问答系统等等，都是用了seq2seq的模型，所以下一篇文章应该会将一下seq2seq的模型，并且实现一个简单的聊天机器人。</p>
+<hr>
+<p><a href="https://github.com/SherlockLiao/Char-RNN-PyTorch" target="_blank" rel="external">PyTorch完整代码</a></p>
+<p><a href="https://github.com/SherlockLiao/Char-RNN-Gluon" target="_blank" rel="external">Gluon完整代码</a></p>
+<p>欢迎关注我的知乎专栏<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RNN-PyTorch/" rel="tag"># RNN, PyTorch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/02/如何在linux下制作gif图片/" rel="next" title="如何在ubuntu下制作GIF图片">
+                <i class="fa fa-chevron-left"></i> 如何在ubuntu下制作GIF图片
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/22/cs20si-tensorflow-for-research学习笔记4/" rel="prev" title="cs20si: tensorflow for research学习笔记4">
+                cs20si: tensorflow for research学习笔记4 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Char-RNN的原理"><span class="nav-number">1.</span> <span class="nav-text">Char RNN的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#训练过程"><span class="nav-number">1.1.</span> <span class="nav-text">训练过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成文本过程"><span class="nav-number">1.2.</span> <span class="nav-text">生成文本过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现细节"><span class="nav-number">2.</span> <span class="nav-text">实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据预处理"><span class="nav-number">2.1.</span> <span class="nav-text">数据预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络定义"><span class="nav-number">2.2.</span> <span class="nav-text">网络定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进行训练"><span class="nav-number">2.3.</span> <span class="nav-text">进行训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成文本"><span class="nav-number">2.4.</span> <span class="nav-text">生成文本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

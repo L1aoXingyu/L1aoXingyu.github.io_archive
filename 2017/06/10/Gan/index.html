@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,PyTorch Tutorial," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前面我们已经讲完了一般的深层网络，适用于图像的卷积神经网络，适用于序列的循环神经网络。但是要知道Lecun提出第一代卷积网络Lenet的时间是1998年，而循环神经网络提出的时间更早，是在1986年。这些网络在当时并没有火起来，如今随着计算能力的加强，数据集的增多，深度学习逐渐火了起来，随着越来越多的人的研究，各种各样的神经网络都在不断进步，CNN里面出现了inception net，resnet">
+<meta name="keywords" content="DeepLearning,PyTorch Tutorial">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10分钟快速入门PyTorch (10)">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/06/10/Gan/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="前面我们已经讲完了一般的深层网络，适用于图像的卷积神经网络，适用于序列的循环神经网络。但是要知道Lecun提出第一代卷积网络Lenet的时间是1998年，而循环神经网络提出的时间更早，是在1986年。这些网络在当时并没有火起来，如今随着计算能力的加强，数据集的增多，深度学习逐渐火了起来，随着越来越多的人的研究，各种各样的神经网络都在不断进步，CNN里面出现了inception net，resnet">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-be9f7136a08353aa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-63186f595144147d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-d51bce02083371a0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-c1ad96c807da92c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-dc65f71bdcff977c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-0fa1a633683f1d2a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-51bc8bcb4a2633db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-dae1e7b762fefccc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-a69712bad46a43ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-984eba1e8730afc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-465a18f18f45a235.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-d138fbc5ebf24927.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-25T05:28:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10分钟快速入门PyTorch (10)">
+<meta name="twitter:description" content="前面我们已经讲完了一般的深层网络，适用于图像的卷积神经网络，适用于序列的循环神经网络。但是要知道Lecun提出第一代卷积网络Lenet的时间是1998年，而循环神经网络提出的时间更早，是在1986年。这些网络在当时并没有火起来，如今随着计算能力的加强，数据集的增多，深度学习逐渐火了起来，随着越来越多的人的研究，各种各样的神经网络都在不断进步，CNN里面出现了inception net，resnet">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-be9f7136a08353aa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/06/10/Gan/"/>
+
+
+
+
+
+  <title>10分钟快速入门PyTorch (10) | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/06/10/Gan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">10分钟快速入门PyTorch (10)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-10T12:00:00+08:00">
+                2017-06-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前面我们已经讲完了一般的深层网络，适用于图像的卷积神经网络，适用于序列的循环神经网络。但是要知道Lecun提出第一代卷积网络Lenet的时间是1998年，而循环神经网络提出的时间更早，是在1986年。这些网络在当时并没有火起来，如今随着计算能力的加强，数据集的增多，深度学习逐渐火了起来，随着越来越多的人的研究，各种各样的神经网络都在不断进步，CNN里面出现了inception net，resnet等等，RNN演变了LSTM和GRU，虽然神经网络不断在发展，但是本质上仍然是在CNN和RNN的基础上。</p>
+<p>直到2014年，深度学习三巨头之一 Ian Goodfellow 提出了生成对抗网络(Generative Adversarial Networks, GANs)，刚开始的时候并没有引起轰动，直到16年，学界、业界对其的兴趣出现了“井喷”，多篇重磅文章陆续发表，Lecun也形容GANs“adversarial training is the coolest thing since sliced bread.” 16年12月NIPS大会上，Goodfellow做了GANs的专题报告，使得GANs成为了当今最炙手可热的研究领域，等你看完了这篇文章你就会知道为什么GANs能够成为当今人工智能领域的主要课题之一。<br><a id="more"></a></p>
+<h2 id="GANs"><a href="#GANs" class="headerlink" title="GANs"></a>GANs</h2><p>GANs的全称叫做生成对抗网络，根据这个名字，你就可以猜测这个网络是由两部分组成的，第一部分是生成，第二部分是对抗。那么你已经基本猜对了，这个网络第一部分是生成网络，第二部分对抗模型严格来讲是一个判别器，简单来说呢，就是让两个网络相互竞争，生成网络来生成假的数据，对抗网络通过判别器去判别真伪，最后希望生成器生成的数据能够以假乱真。</p>
+<p>可以用这个图来简单的看一看这两个过程。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-be9f7136a08353aa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1.png"></p>
+<p>下面我们就来依次介绍。</p>
+<h3 id="Discriminator-Network"><a href="#Discriminator-Network" class="headerlink" title="Discriminator Network"></a>Discriminator Network</h3><p>首先我们来讲一下对抗过程，因为这个过程更加简单。</p>
+<p>对抗过程简单来说就是一个判断真假的判别器，相当于一个二分类问题，我们输入一张真的图片希望判别器输出的结果是1，输入一张假的图片希望判别器输出的结果是0。这其实已经和原图片的label没有关系了，不管原图片到底是一个多少类别的图片，他们都统一称为真的图片，label是1表示真实的；而生成的假的图片的label是0表示假的。</p>
+<p>我们训练的过程就是希望这个判别器能够正确的判出真的图片和假的图片，这其实就是一个简单的二分类问题，对于这个问题可以用我们前面讲过的很多方法去处理，比如logistic回归，深层网络，卷积神经网络，循环神经网络都可以。</p>
+<h3 id="Generative-Network"><a href="#Generative-Network" class="headerlink" title="Generative Network"></a>Generative Network</h3><p>接着我们要看看如何生成一张假的图片。首先给出一个简单的高维的正态分布的噪声向量，如上图所示的D-dimensional noise vector，这个时候我们可以通过仿射变换，也就是xw+b将其映射到一个更高的维度，然后将他重新排列成一个矩形，这样看着更像一张图片，接着进行一些卷积、池化、激活函数处理，最后得到了一个与我们输入图片大小一模一样的噪音矩阵，这就是我们所说的假的图片，这个时候我们如何去训练这个生成器呢？就是通过判别器来得到结果，然后希望增大判别器判别这个结果为真的概率，在这一步我们不会更新判别器的参数，只会更新生成器的参数。</p>
+<p>如下图所示</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-63186f595144147d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>以上的过程已经简单的阐述了生成对抗网络的学习过程，如果仍然不太清楚这个过程，下面我们会通过代码来更清晰地展示整个过程。</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>我们会使用mnist手写数字来做数据集，通过生成对抗网络我们希望生成一些“以假乱真”的手写字体。为了加快训练过程，我们不使用卷积网络来做判别器，我们使用简单的多层网络来进行判别。</p>
+<h3 id="Discriminator-Network-1"><a href="#Discriminator-Network-1" class="headerlink" title="Discriminator Network"></a>Discriminator Network</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">discriminator</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super(discriminator, self).__init__()</div><div class="line">        self.dis = nn.Sequential(</div><div class="line">            nn.Linear(<span class="number">784</span>, <span class="number">256</span>),</div><div class="line">            nn.LeakyReLU(<span class="number">0.2</span>),</div><div class="line">            nn.Linear(<span class="number">256</span>, <span class="number">256</span>),</div><div class="line">            nn.LeakyReLU(<span class="number">0.2</span>),</div><div class="line">            nn.Linear(<span class="number">256</span>, <span class="number">1</span>),</div><div class="line">            nn.Sigmoid()</div><div class="line">        )</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></div><div class="line">        x = self.dis(x)</div><div class="line">        <span class="keyword">return</span> x</div></pre></td></tr></table></figure>
+<p>以上这个网络是一个简单的多层神经网络，将图片28x28展开成784，然后通过多层感知器，中间经过斜率设置为0.2的LeakyReLU激活函数，最后接sigmoid激活函数得到一个0到1之间的概率进行二分类。之所以使用LeakyRelu而不是用ReLU激活函数是因为经过实验LeakyReLU的表现更好。</p>
+<h3 id="Generative-Network-1"><a href="#Generative-Network-1" class="headerlink" title="Generative Network"></a>Generative Network</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">generator</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self， input_size)</span>:</span></div><div class="line">        super(generator, self).__init__()</div><div class="line">        self.gen = nn.Sequential(</div><div class="line">            nn.Linear(input_size, <span class="number">256</span>),</div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.Linear(<span class="number">256</span>, <span class="number">256</span>),</div><div class="line">            nn.ReLU(<span class="keyword">True</span>),</div><div class="line">            nn.Linear(<span class="number">256</span>, <span class="number">784</span>),</div><div class="line">            nn.Tanh()</div><div class="line">        )</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></div><div class="line">        x = self.gen(x)</div><div class="line">        <span class="keyword">return</span> x</div></pre></td></tr></table></figure>
+<p>输入一个100维的0～1之间的高斯分布，然后通过第一层线性变换将其映射到256维，然后通过LeakyReLU激活函数，接着进行一个线性变换，再经过一个LeakyReLU激活函数，然后经过线性变换将其变成784维，最后经过Tanh激活函数是希望生成的假的图片数据分布能够在-1～1之间。</p>
+<h3 id="Discriminator-Train"><a href="#Discriminator-Train" class="headerlink" title="Discriminator Train"></a>Discriminator Train</h3><p>判别器的训练由两部分组成，第一部分是真的图像判别为真，第二部分是假的图片判别为假，在这两个过程中，生成器的参数不参与更新。</p>
+<p>首先我们需要定义loss的度量方式和优化函数，loss度量使用二分类的交叉熵，油画函数注意使用的学习率是0.0003</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">criterion = nn.BCELoss()</div><div class="line">d_optimizer = torch.optim.Adam(D.parameters(), lr=<span class="number">0.0003</span>)</div><div class="line">g_optimizer = torch.optim.Adam(G.parameters(), lr=<span class="number">0.0003</span>)</div></pre></td></tr></table></figure>
+<p>接着进入训练<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">img = img.view(num_img, <span class="number">-1</span>)  <span class="comment"># 将图片展开乘28x28=784</span></div><div class="line">real_img = Variable(img).cuda()  <span class="comment"># 将tensor变成Variable放入计算图中</span></div><div class="line">real_label = Variable(torch.ones(num_img)).cuda()  <span class="comment"># 定义真实label为1</span></div><div class="line">fake_label = Variable(torch.zeros(num_img)).cuda()  <span class="comment"># 定义假的label为0</span></div><div class="line"></div><div class="line"><span class="comment"># compute loss of real_img</span></div><div class="line">real_out = D(real_img)  <span class="comment"># 将真实的图片放入判别器中</span></div><div class="line">d_loss_real = criterion(real_out, real_label)  <span class="comment"># 得到真实图片的loss</span></div><div class="line">real_scores = real_out  <span class="comment"># 真实图片放入判别器输出越接近1越好</span></div><div class="line"></div><div class="line"><span class="comment"># compute loss of fake_img</span></div><div class="line">z = Variable(torch.randn(num_img, z_dimension)).cuda()  <span class="comment"># 随机生成一些噪声</span></div><div class="line">fake_img = G(z)  <span class="comment"># 放入生成网络生成一张假的图片</span></div><div class="line">fake_out = D(fake_img)  <span class="comment"># 判别器判断假的图片</span></div><div class="line">d_loss_fake = criterion(fake_out, fake_label)  <span class="comment"># 得到假的图片的loss</span></div><div class="line">fake_scores = fake_out  <span class="comment"># 假的图片放入判别器越接近0越好</span></div><div class="line"></div><div class="line"><span class="comment"># bp and optimize</span></div><div class="line">d_loss = d_loss_real + d_loss_fake  <span class="comment"># 将真假图片的loss加起来</span></div><div class="line">d_optimizer.zero_grad()  <span class="comment"># 归0梯度</span></div><div class="line">d_loss.backward()  <span class="comment"># 反向传播</span></div><div class="line">d_optimizer.step()  <span class="comment"># 更新参数</span></div></pre></td></tr></table></figure></p>
+<p>我已经把每一步都注释在了代码上，这样更加便于大家阅读，这是一个判别器的训练过程，我们希望判别器能够正确辨别出真假图片。</p>
+<h3 id="Generative-Train"><a href="#Generative-Train" class="headerlink" title="Generative Train"></a>Generative Train</h3><p>在生成网络的训练中，我们希望生成一张假的图片，然后经过判别器之后希望他能够判断为真的图片，在这个过程中，我们将判别器固定，将假的图片传入判别器的结果与真实label对应，反向传播更新的参数是生成网络里面的参数，这样我们就可以通过跟新生成网络里面的参数来使得判别器判断生成的假的图片为真，这样就达到了生成对抗的作用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># compute loss of fake_img</span></div><div class="line">z = Variable(torch.randn(num_img, z_dimension)).cuda()  <span class="comment"># 得到随机噪声</span></div><div class="line">fake_img = G(z)  <span class="comment"># 生成假的图片</span></div><div class="line">output = D(fake_img)  <span class="comment"># 经过判别器得到结果</span></div><div class="line">g_loss = criterion(output, real_label)  <span class="comment"># 得到假的图片与真实图片label的loss</span></div><div class="line"></div><div class="line"><span class="comment"># bp and optimize</span></div><div class="line">g_optimizer.zero_grad()  <span class="comment"># 归0梯度</span></div><div class="line">g_loss.backward()  <span class="comment"># 反向传播</span></div><div class="line">g_optimizer.step()  <span class="comment"># 更新生成网络的参数</span></div></pre></td></tr></table></figure>
+<p>这样我们就写好了一个简单的生成网络，通过不断地训练我们希望能够生成很真的图片。</p>
+<h3 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h3><p>通过不断训练，我们可以得到下面的图片</p>
+<p>这是真实图片</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-d51bce02083371a0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="real_images.png"></p>
+<p>第1幅为第一次生成的噪声图片，之后分别是跑完15次生成的图片，跑完30次，跑完50次，跑完70次，最后一个是跑完100次生成的图片</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-c1ad96c807da92c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fake_images-1.png"><br><img src="http://upload-images.jianshu.io/upload_images/3623720-dc65f71bdcff977c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fake_images-15.png"><br><img src="http://upload-images.jianshu.io/upload_images/3623720-0fa1a633683f1d2a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fake_images-30.png"><br><img src="http://upload-images.jianshu.io/upload_images/3623720-51bc8bcb4a2633db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fake_images-50.png"><br><img src="http://upload-images.jianshu.io/upload_images/3623720-dae1e7b762fefccc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fake_images-70.png"><br><img src="http://upload-images.jianshu.io/upload_images/3623720-a69712bad46a43ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fake_images-100.png"></p>
+<p>怎么样，是不是特别神奇，我们居然可以生成一副看着很真的图片，这里我们只是用了简单的多层感知器来生成和判别模型，我们可以用更复杂的卷积神经网络来做同样的事情，代码将和本文的代码放在一起，有兴趣的同学可以自己去看看，然后放几张卷积网络生成的图片</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-984eba1e8730afc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fake_images-1.png"><br><img src="http://upload-images.jianshu.io/upload_images/3623720-465a18f18f45a235.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fake_images-7.png"><br><img src="http://upload-images.jianshu.io/upload_images/3623720-d138fbc5ebf24927.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="fake_images-12.png"></p>
+<p>可以发现产生的噪声更少了，训练也更加稳定，主要是里面引入了Batchnormalization，另外gan的训练过程是特别困难的，两个对偶网络相互学习，这个时候有一些训练技巧可以使得训练生成更加稳定，详细见一下<a href="https://github.com/soumith/ganhacks" target="_blank" rel="external">github</a></p>
+<p>最后我们来说一下为何Gans能够成为最近20年来机器学习以及深度学习界革命性的发现。这是因为不管是深度学习还是机器学习仍然很大一部分是监督学习，但是创建这么多有label的数据集所需要的人力物力是极大的，同时遇到的新的任务时我们很容易得到原始的没有label的数据集，这是我们需要花大量的时间去给其标定label，所以很多人都认为无监督学习才是机器学习的未来，这个时候Gans的出现为无监督学习提供了有力的支持，这当然引起了学界的大量关注，同时基于Gans的应用也越来越多，业界对其也非常狂热。</p>
+<p>最后引用Yan Lecun的话:”它(Gans)为创建无监督学习模型提供了强有力的算法框架，有望帮助我们为 AI 加入常识（common sense）。我们认为，沿着这条路走下去，有不小的成功机会能开发出更智慧的 AI 。”</p>
+<p>以上我们简单的介绍了Gans，通过网络实现了手写字体的生成，当然还有更多的变形和应用，有兴趣的同学可以自己阅读相关论文深入了解。</p>
+<p>下一章我们将进入pytorch教程的最后一个部分，也是和AI联系最为紧密的一个部分，reinforcement learning，增强学习。</p>
+<hr>
+<p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/pytorch-beginner" target="_blank" rel="external">github</a>上</p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/PyTorch-Tutorial/" rel="tag"># PyTorch Tutorial</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/05/lstm language/" rel="next" title="10分钟快速入门PyTorch (9)">
+                <i class="fa fa-chevron-left"></i> 10分钟快速入门PyTorch (9)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/20/gan_math/" rel="prev" title="Gan的数学推导">
+                Gan的数学推导 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GANs"><span class="nav-number">1.</span> <span class="nav-text">GANs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Discriminator-Network"><span class="nav-number">1.1.</span> <span class="nav-text">Discriminator Network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generative-Network"><span class="nav-number">1.2.</span> <span class="nav-text">Generative Network</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code"><span class="nav-number">2.</span> <span class="nav-text">Code</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Discriminator-Network-1"><span class="nav-number">2.1.</span> <span class="nav-text">Discriminator Network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generative-Network-1"><span class="nav-number">2.2.</span> <span class="nav-text">Generative Network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Discriminator-Train"><span class="nav-number">2.3.</span> <span class="nav-text">Discriminator Train</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generative-Train"><span class="nav-number">2.4.</span> <span class="nav-text">Generative Train</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Result"><span class="nav-number">2.5.</span> <span class="nav-text">Result</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

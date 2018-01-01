@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="homework," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="这学期修了一门数字图像处理的课程，虽然深度学习已经在CV领域大行其道，但是最基础的图像处理也同样需要掌握，通过这门课程，能够弥补一些图像处理的不足，这门课的作业主要会用一些matlab，python和opencv的东西。">
+<meta name="keywords" content="homework">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字图像处理对图像的基本操作">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/10/13/数字图像处理对图像的基本操作/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="这学期修了一门数字图像处理的课程，虽然深度学习已经在CV领域大行其道，但是最基础的图像处理也同样需要掌握，通过这门课程，能够弥补一些图像处理的不足，这门课的作业主要会用一些matlab，python和opencv的东西。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-9fa11e9837d5cf86.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-f81f84db83c782be.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-cf88f8cb7f7d6dee.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-f79454295d24e8d5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-3fcfda4be955fe9d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-423825c0b19f2079.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-0aa30d8482b7031e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-cfc799a8ef01b164.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-0c35145666ffe6f9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-06398b1dc5e37a52.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-139cc503dfac570e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-cb837f67d9114efa.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-3aaac435a9396ce3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-3228dba30bb3114a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-10-20T05:37:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数字图像处理对图像的基本操作">
+<meta name="twitter:description" content="这学期修了一门数字图像处理的课程，虽然深度学习已经在CV领域大行其道，但是最基础的图像处理也同样需要掌握，通过这门课程，能够弥补一些图像处理的不足，这门课的作业主要会用一些matlab，python和opencv的东西。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-9fa11e9837d5cf86.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/10/13/数字图像处理对图像的基本操作/"/>
+
+
+
+
+
+  <title>数字图像处理对图像的基本操作 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/10/13/数字图像处理对图像的基本操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数字图像处理对图像的基本操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-13T20:25:22+08:00">
+                2017-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这学期修了一门数字图像处理的课程，虽然深度学习已经在CV领域大行其道，但是最基础的图像处理也同样需要掌握，通过这门课程，能够弥补一些图像处理的不足，这门课的作业主要会用一些matlab，python和opencv的东西。<br><a id="more"></a></p>
+<h1 id="作业一"><a href="#作业一" class="headerlink" title="作业一"></a>作业一</h1><h2 id="part1"><a href="#part1" class="headerlink" title="part1"></a>part1</h2><p>读取一张color map image，将其转换成true color image，并保存为一张jpg图片。</p>
+<h3 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h3><p>color-map image本质上就是将一张图片存成两个部分，第一个部分是一个图片大小的矩阵I，第二个部分是一个color map查找表，一般是$m \times 3$，m表示color map的维度，将矩阵I中每个数字在color map中找到，然后将其替换成对应的那一行RGB即可，只是注意color map中是$0 \thicksim 1$的double类型，需要乘上255并将其变成uint8类型。</p>
+<h3 id="Implement-and-Result"><a href="#Implement-and-Result" class="headerlink" title="Implement and Result"></a>Implement and Result</h3><p>将color map image 转换为ture image的代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">[real_img ]</span> = <span class="title">transformTrueimage</span><span class="params">(img, cmap)</span></span></div><div class="line"><span class="comment">%UNTITLED Summary of this function goes here</span></div><div class="line"><span class="comment">%   Detailed explanation goes here</span></div><div class="line">[height, width] = <span class="built_in">size</span>(img);</div><div class="line">real_img = <span class="built_in">zeros</span>(height, width, <span class="number">3</span>);</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>:height</div><div class="line">    <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span>:width</div><div class="line">        idx = img(<span class="built_in">i</span>, <span class="built_in">j</span>) + <span class="number">1</span>;</div><div class="line">        real_color = cmap(idx, :) * <span class="number">255.0</span>;</div><div class="line">        real_img(<span class="built_in">i</span>, <span class="built_in">j</span>, :) = real_color;</div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">real_img = uint8(real_img);</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>文件在<code>assignment1/hw1/transfromTrueimage.m</code>中，运行<code>/assignment1/hw1/test_true.m</code>能够得到两张图片的对比，第一张为color map image，第二张为true image，最后true iamge保存为<code>hw1_true.jpg</code>，<code>test_true.m</code>的代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">clear;</div><div class="line">clc;</div><div class="line"></div><div class="line">[cimg, cmap] = imread(<span class="string">'./hw1.bmp'</span>, <span class="string">'bmp'</span>);</div><div class="line">true_img = transformTrueimage(cimg, cmap);</div><div class="line">imwrite(true_img, <span class="string">'hw1_treu.jpg'</span>);</div><div class="line"></div><div class="line">figure;</div><div class="line">image(cimg);</div><div class="line">colormap(cmap);</div><div class="line">title(<span class="string">'color map image'</span>);</div><div class="line"></div><div class="line">figure;</div><div class="line">image(true_img);</div><div class="line">title(<span class="string">'true image'</span>);</div></pre></td></tr></table></figure>
+<h3 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h3><p>这就是一个简单的重新映射的过程，得到的图片之间不会有什么差别。</p>
+<h2 id="part2"><a href="#part2" class="headerlink" title="part2"></a>part2</h2><p>设计算法将一张true color image转换成color-map image，并尽可能保留原始颜色信息。color map image的colormap维度为256。</p>
+<h3 id="Algorithm-1"><a href="#Algorithm-1" class="headerlink" title="Algorithm"></a>Algorithm</h3><p>读入一张图片I，图片的size是$m \times n \times 3$，那么将每一个像素点取出来就能够得到一个color map索引表，大小是$m<em>n \times 3$，一般来说m\</em>n都是远远大于256，所以需要设计一个算法来降低维度。</p>
+<p>这里我们想到的算法是聚类算法k-means，一共有$m * n$个数据点，每个数据点都是三维的，我们希望能够将他们分成256类，这样我们就能够将ture image中所有的像素点分到这256类上，而这256类就是我们生成的color map索引表。</p>
+<p>对于kmeans算法，假设原始数据点是${x_1, x_2, \cdots, x_n}$，我们希望将他们分成k类，首先我们随机初始化k个中心点$u_1, u_2, \cdots, u_k$，那么实现依赖于不断迭代下面公式(1)和(2)。</p>
+<script type="math/tex; mode=display">
+c^{(i)} = \mathop{arg min}_j || x^{(i)} - u_j|| ^ 2</script><script type="math/tex; mode=display">
+u_j = \frac{\sum_{i=1}^m 1\{c^{(i)}=j\} x^{(i)}}{\sum_{i=1}^m 1\{c^{(i)} = j\}}</script><p>公式(1)是说对于每个数据点，每次都找离其最近的中心点，并将其标记为该类，公式(2)是说使用该类所有点的重心作为这一类新的中心点。</p>
+<p>使用kmeans算法得到了color map之后，我们就可以将ture image中每个像素点对应于color map中的一个值，这样就得到了color map image。</p>
+<h3 id="Implement-and-Result-1"><a href="#Implement-and-Result-1" class="headerlink" title="Implement and Result"></a>Implement and Result</h3><p>kmeans的算法实现如下<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">[ u, c ]</span> = <span class="title">KMeans</span><span class="params">( x, k )</span></span></div><div class="line"><span class="comment">%Implement of Keans Algorithm for cluster colormap image</span></div><div class="line"><span class="comment">%   x is a n-dimentional data, and k means how many centers of the cluster</span></div><div class="line">[m, n] = <span class="built_in">size</span>(x);</div><div class="line">u = <span class="built_in">zeros</span>(k, n);</div><div class="line"><span class="comment">% initialize kmeans center using random uniform cutting min to max </span></div><div class="line">sort_x = sort(x, <span class="number">1</span>);</div><div class="line">min_value = sort_x(<span class="number">1</span>, :);</div><div class="line">max_value = sort_x(m, :);</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : k</div><div class="line">    u(<span class="built_in">i</span>, :) = min_value + (max_value - min_value) .* <span class="built_in">rand</span>();</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">c = <span class="built_in">zeros</span>([m, <span class="number">1</span>]);</div><div class="line">last_error = <span class="number">0</span>;</div><div class="line"><span class="comment">% iter two formula to converge</span></div><div class="line"><span class="keyword">while</span> <span class="number">1</span></div><div class="line">    total_error = <span class="number">0</span>;</div><div class="line">    <span class="comment">% fisrt formula</span></div><div class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : m</div><div class="line">        min_dist = sum((x(<span class="built_in">i</span>, :) - u(<span class="number">1</span>, :)) .^ <span class="number">2</span>);</div><div class="line">        c(<span class="built_in">i</span>) = <span class="number">1</span>;</div><div class="line">        <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span> : k</div><div class="line">            temp_dist = sum((x(<span class="built_in">i</span>, :) - u(<span class="built_in">j</span>, :)) .^ <span class="number">2</span>);</div><div class="line">            <span class="keyword">if</span> temp_dist &lt; min_dist</div><div class="line">                min_dist = temp_dist;</div><div class="line">                c(<span class="built_in">i</span>) = <span class="built_in">j</span>;</div><div class="line">            <span class="keyword">end</span></div><div class="line">        <span class="keyword">end</span></div><div class="line">        total_error = total_error + min_dist;</div><div class="line">    <span class="keyword">end</span></div><div class="line">    <span class="keyword">if</span> <span class="built_in">abs</span>(total_error - last_error) &lt; <span class="number">1</span></div><div class="line">        <span class="keyword">break</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">    last_error = total_error;</div><div class="line">    <span class="comment">% second formula</span></div><div class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : k</div><div class="line">        temp_u = <span class="built_in">zeros</span>([<span class="number">1</span>, n]);</div><div class="line">        count = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span> : m</div><div class="line">            <span class="keyword">if</span> c(<span class="built_in">j</span>) == <span class="built_in">i</span></div><div class="line">                temp_u = temp_u + x(<span class="built_in">j</span>, :);</div><div class="line">                count = count + <span class="number">1</span>;</div><div class="line">            <span class="keyword">end</span></div><div class="line">        <span class="keyword">end</span></div><div class="line">        <span class="keyword">if</span> count == <span class="number">0</span></div><div class="line">            u(<span class="built_in">i</span>, :) = min_value + (max_value - min_value) .* <span class="built_in">rand</span>();</div><div class="line">        <span class="keyword">else</span></div><div class="line">            u(<span class="built_in">i</span>, :) = temp_u ./ count;</div><div class="line">        <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
+<p>使用<code>test_kmeans.m</code>来测试了kmeans算法，随机生成三组随机点，然后使用kmeans将其分成三个聚类。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-9fa11e9837d5cf86.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="kmeans_dot.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-f81f84db83c782be.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="kmeans_result.jpg"></p>
+<p>然后得到color map image的实现如下<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">[ colormap_img, new_cmap ]</span> = <span class="title">transformColormap</span><span class="params">( img, colormap_dim )</span></span></div><div class="line"><span class="comment">%UNTITLED3 Summary of this function goes here</span></div><div class="line"><span class="comment">%   Detailed explanation goes here</span></div><div class="line"></div><div class="line">[height, width, channel] = <span class="built_in">size</span>(img);</div><div class="line">cmap = <span class="built_in">zeros</span>(height * width, <span class="number">3</span>);</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : height</div><div class="line">    <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span> : width</div><div class="line">        cmap((<span class="built_in">i</span> - <span class="number">1</span>) * width + <span class="built_in">j</span>, :) = double(img(<span class="built_in">i</span>, <span class="built_in">j</span>, :)) / <span class="number">255</span>; </div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">[new_cmap, c] = KMeans(cmap, colormap_dim);</div><div class="line"></div><div class="line">colormap_img = <span class="built_in">zeros</span>([height, width]);</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : height</div><div class="line">    <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span> : width</div><div class="line">        colormap_img(<span class="built_in">i</span>, <span class="built_in">j</span>) = c((<span class="built_in">i</span> - <span class="number">1</span>) * width + <span class="built_in">j</span>);</div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
+<p>最后使用<code>test_colormap.m</code>来测试true image和color map image，先生成两张图片进行肉眼对比，然后使用第一个作业中的函数将color map image再转换回ture image进行误差对比。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-cf88f8cb7f7d6dee.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="jim.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-f79454295d24e8d5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hw1_colormap.jpg"></p>
+<p>上面一张是true image，下面一张是color map image。</p>
+<h3 id="Discussion-1"><a href="#Discussion-1" class="headerlink" title="Discussion"></a>Discussion</h3><p>通过肉眼我们发现转换成了color map iamge之后，与true image之间的对比不存在太多的误差，同时我设计了一个误差指标，将两幅图每个像素点进行对比，然后取绝对值求和，再除以像素点的总数，这样可以得到平均每个像素点的偏差，最后得到error大约是1.4，说明每个像素点的偏移是比较小的，这也说明了转换之后信息保留得非常多。</p>
+<h1 id="作业二"><a href="#作业二" class="headerlink" title="作业二"></a>作业二</h1><h2 id="part1-1"><a href="#part1-1" class="headerlink" title="part1"></a>part1</h2><p>解释图像直方图均衡化原理，并用程序实现。</p>
+<h3 id="Algorithm-2"><a href="#Algorithm-2" class="headerlink" title="Algorithm"></a>Algorithm</h3><p>对于每张读入的图片，可以统计每一个数值的频率形成直方图，其直方图可能会呈现分布不均匀的情况，这样就使得图片没有太高的对比度，而图像直方图均衡化可以对图片中像素个数多的像素级进行展宽，对像素个数少的灰度级进行压缩，从而扩展了图片原取值范围，提高对比图，使得图片更加清晰。</p>
+<h3 id="Implement-and-Result-2"><a href="#Implement-and-Result-2" class="headerlink" title="Implement and Result"></a>Implement and Result</h3><p>图像直方图的实现如下<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">h</span> = <span class="title">compute_hist</span><span class="params">( img )</span></span></div><div class="line"><span class="comment">%compute histogram of an image</span></div><div class="line"></div><div class="line">[m, n, c] = <span class="built_in">size</span>(img);</div><div class="line">h = <span class="built_in">zeros</span>([<span class="number">256</span>, c]);</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : <span class="number">256</span></div><div class="line">    h(<span class="built_in">i</span>, :) = sum(sum(img == (<span class="built_in">i</span> - <span class="number">1</span>)));</div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
+<p>均衡化的算法实现如下</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">[ h, lut, eq_I]</span> = <span class="title">HistogramEqualization</span><span class="params">( I )</span></span></div><div class="line"><span class="comment">%HistogramEqualization</span></div><div class="line"><span class="comment">%   compute histogram of an image and do histogram equalization</span></div><div class="line">[m, n, c] = <span class="built_in">size</span>(I);</div><div class="line">h = compute_hist(I);</div><div class="line">[m_h, n_h] = <span class="built_in">size</span>(h);</div><div class="line">total = sum(h);</div><div class="line"></div><div class="line"><span class="comment">% construct lut</span></div><div class="line">lut = <span class="built_in">zeros</span>([m_h, n_h]);</div><div class="line">lut(<span class="number">1</span>, :) = h(<span class="number">1</span>, :) ./ total;</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">2</span> : m_h</div><div class="line">    lut(<span class="built_in">i</span>, :) = lut(<span class="built_in">i</span> - <span class="number">1</span>, :) + h(<span class="built_in">i</span>, :) ./ total;</div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : m_h</div><div class="line">    lut(<span class="built_in">i</span>, :) = <span class="built_in">round</span>(lut(<span class="built_in">i</span>, :) .* <span class="number">255</span>);</div><div class="line"><span class="keyword">end</span></div><div class="line">eq_I = <span class="built_in">zeros</span>(<span class="built_in">size</span>(I));</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : m</div><div class="line">    <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span> : n</div><div class="line">        <span class="keyword">for</span> k = <span class="number">1</span> : c</div><div class="line">            eq_I(<span class="built_in">i</span>, <span class="built_in">j</span>, k) = lut(I(<span class="built_in">i</span>, <span class="built_in">j</span>, k) + <span class="number">1</span>, k);</div><div class="line">        <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">eq_I = uint8(eq_I);</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>使用<code>test_eq_hist.m</code>来测试均衡化效果，下面是直方图和均衡化之后的图片。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-3fcfda4be955fe9d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="lena.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-423825c0b19f2079.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="origin_image_hist.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-0aa30d8482b7031e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hist_eq.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-cfc799a8ef01b164.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="equalization_hist.jpg"></p>
+<h3 id="Discussion-2"><a href="#Discussion-2" class="headerlink" title="Discussion"></a>Discussion</h3><p>可以发现均衡化之后的图片，直方图变得更加的均匀，同时图片也有了更高的对比度。</p>
+<h2 id="part2-1"><a href="#part2-1" class="headerlink" title="part2"></a>part2</h2><p>输入图片A与参考图片R，对A做变换得到A’，使得其统计直方图尽可能与R的统计直方图接近。</p>
+<h3 id="Algorithm-3"><a href="#Algorithm-3" class="headerlink" title="Algorithm"></a>Algorithm</h3><p>两张图片的直方图不可能完全一样，但是我们可以通过匹配分位数来实现两幅图直方图的匹配，对于输入图片I，对于每个像素点，我们先计算出其积累概率函数，然后在参考图片中寻找与这个积累概率函数最接近的像素点，然后将原图片的像素点替换成这个像素点即可，对于给出的输入图片和参考图片，我们可以构造一个查找表方便计算。</p>
+<h3 id="Implement-and-Result-3"><a href="#Implement-and-Result-3" class="headerlink" title="Implement and Result"></a>Implement and Result</h3><p>图片匹配的程序如下</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">[ K ]</span> = <span class="title">HistogramMatching</span><span class="params">( I, target )</span></span></div><div class="line"><span class="comment">%UNTITLED8 Summary of this function goes here</span></div><div class="line"><span class="comment">%   Detailed explanation goes here</span></div><div class="line">I_h = compute_hist(I);</div><div class="line">total_I = sum(I_h);</div><div class="line">target_h = compute_hist(target);</div><div class="line">total_target = sum(target_h);</div><div class="line">[m, n] = <span class="built_in">size</span>(I_h);</div><div class="line"><span class="comment">% define pdf for image I</span></div><div class="line">pdf_h = <span class="built_in">zeros</span>([m, n]);</div><div class="line">pdf_h(<span class="number">1</span>, :) = I_h(<span class="number">1</span>, :) ./ total_I;</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">2</span> : m</div><div class="line">    pdf_h(<span class="built_in">i</span>, :) = pdf_h(<span class="built_in">i</span> - <span class="number">1</span>, :) + I_h(<span class="built_in">i</span>, :) ./ total_I;</div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="comment">% define pdf for image target </span></div><div class="line">pdf_target = <span class="built_in">zeros</span>([m, n]);</div><div class="line">pdf_target(<span class="number">1</span>, :) = target_h(<span class="number">1</span>, :) ./ total_I;</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">2</span> : m</div><div class="line">    pdf_target(<span class="built_in">i</span>, :) = pdf_target(<span class="built_in">i</span> - <span class="number">1</span>, :) + target_h(<span class="built_in">i</span>, :) ./ total_target;</div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="comment">%define LUT for image transform with target</span></div><div class="line">LUT = <span class="built_in">zeros</span>([m, n]);</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : <span class="number">256</span></div><div class="line">    <span class="keyword">for</span> k = <span class="number">1</span> : <span class="number">3</span></div><div class="line">        temp = pdf_h(<span class="built_in">i</span>, k);</div><div class="line">        <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span> : <span class="number">256</span></div><div class="line">            <span class="keyword">if</span> pdf_target(<span class="built_in">j</span>, k) &gt; temp</div><div class="line">                LUT(<span class="built_in">i</span>, k) = <span class="built_in">j</span>;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">end</span></div><div class="line">        <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="comment">% get new image close to target image</span></div><div class="line">K = <span class="built_in">zeros</span>(<span class="built_in">size</span>(I));</div><div class="line">[r, g, b] = <span class="built_in">size</span>(K);</div><div class="line"><span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span> : r</div><div class="line">    <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span> : g</div><div class="line">        <span class="keyword">for</span> c = <span class="number">1</span> : b</div><div class="line">            K(<span class="built_in">i</span>, <span class="built_in">j</span>, c) = LUT(I(<span class="built_in">i</span>, <span class="built_in">j</span>, c) + <span class="number">1</span>, c);</div><div class="line">        <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">K = uint8(K);</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>使用<code>test_match.m</code>来测试匹配效果，输入两张图片，得到他们的直方图表示，然后进行图片匹配，将匹配的新图片直方图显示出来进行比较。下图就是所有的结果。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-0c35145666ffe6f9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1.jpg"><br><img src="http://upload-images.jianshu.io/upload_images/3623720-06398b1dc5e37a52.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-139cc503dfac570e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="3.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-cb837f67d9114efa.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="4.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-3aaac435a9396ce3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="5.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-3228dba30bb3114a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="6.jpg"></p>
+<h3 id="Discussion-3"><a href="#Discussion-3" class="headerlink" title="Discussion"></a>Discussion</h3><p>可以发现进行匹配之后，图片的色调有了明显的变化，同时根据直方图我们也能够看出原始图片更向参考图片靠拢。</p>
+<hr>
+<p>全部代码在<a href="https://github.com/SherlockLiao/Digital-Image-Processing/tree/master/assignment1" target="_blank" rel="external">github</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/homework/" rel="tag"># homework</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/01/Focuing-Attention论文阅读笔记/" rel="next" title="Focuing Attention论文阅读笔记">
+                <i class="fa fa-chevron-left"></i> Focuing Attention论文阅读笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/23/PyTorch实现自由的数据读取/" rel="prev" title="PyTorch实现自由的数据读取">
+                PyTorch实现自由的数据读取 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#作业一"><span class="nav-number">1.</span> <span class="nav-text">作业一</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#part1"><span class="nav-number">1.1.</span> <span class="nav-text">part1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Algorithm"><span class="nav-number">1.1.1.</span> <span class="nav-text">Algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Implement-and-Result"><span class="nav-number">1.1.2.</span> <span class="nav-text">Implement and Result</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Discussion"><span class="nav-number">1.1.3.</span> <span class="nav-text">Discussion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#part2"><span class="nav-number">1.2.</span> <span class="nav-text">part2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Algorithm-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">Algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Implement-and-Result-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">Implement and Result</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Discussion-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">Discussion</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#作业二"><span class="nav-number">2.</span> <span class="nav-text">作业二</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#part1-1"><span class="nav-number">2.1.</span> <span class="nav-text">part1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Algorithm-2"><span class="nav-number">2.1.1.</span> <span class="nav-text">Algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Implement-and-Result-2"><span class="nav-number">2.1.2.</span> <span class="nav-text">Implement and Result</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Discussion-2"><span class="nav-number">2.1.3.</span> <span class="nav-text">Discussion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#part2-1"><span class="nav-number">2.2.</span> <span class="nav-text">part2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Algorithm-3"><span class="nav-number">2.2.1.</span> <span class="nav-text">Algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Implement-and-Result-3"><span class="nav-number">2.2.2.</span> <span class="nav-text">Implement and Result</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Discussion-3"><span class="nav-number">2.2.3.</span> <span class="nav-text">Discussion</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

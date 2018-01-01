@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,Keras," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="介绍在前面一篇文章中，我们初步了解了什么是简单的神经网络，也通过keras构建了简单的神经网络，通过训练，我们实现了一个简单的预测，接下来就要进入到我们的重头戏卷积神经网络。">
+<meta name="keywords" content="DeepLearning,Keras">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小白学CNN以及Keras的速成(3)">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/05/01/keras3/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="介绍在前面一篇文章中，我们初步了解了什么是简单的神经网络，也通过keras构建了简单的神经网络，通过训练，我们实现了一个简单的预测，接下来就要进入到我们的重头戏卷积神经网络。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-561b6463004880f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-8c117e496c2fe600.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-c7e2508350eecc89.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-bf1eaa90be80e9d3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-a5fffaa55a17ceba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-59711b32316c296f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T03:23:34.106Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小白学CNN以及Keras的速成(3)">
+<meta name="twitter:description" content="介绍在前面一篇文章中，我们初步了解了什么是简单的神经网络，也通过keras构建了简单的神经网络，通过训练，我们实现了一个简单的预测，接下来就要进入到我们的重头戏卷积神经网络。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-561b6463004880f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/05/01/keras3/"/>
+
+
+
+
+
+  <title>小白学CNN以及Keras的速成(3) | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/05/01/keras3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">小白学CNN以及Keras的速成(3)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-01T12:00:00+08:00">
+                2017-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>在前面一篇文章中，我们初步了解了什么是简单的神经网络，也通过keras构建了简单的神经网络，通过训练，我们实现了一个简单的预测，接下来就要进入到我们的重头戏卷积神经网络。<br><a id="more"></a></p>
+<h3 id="卷积神经网络"><a href="#卷积神经网络" class="headerlink" title="卷积神经网络"></a>卷积神经网络</h3><p>上周的文章给大家推荐了一门好课cs231n，本篇文章也是按照这个思路来的。</p>
+<h4 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h4><p>首先解释一下什么是卷积，这个卷积当然不是数学上的卷积，这里的卷积其实表示的是一个三维的权重，这么解释起来可能不太理解，我们先看看卷积网络的基本结构。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-561b6463004880f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="regular vs conv"><br>通过上面的图我们清楚地了解到卷积网络和一般网络结构上面的差别，也可以理解为卷积网络是立体的，而一般的网络结构是平面的。</p>
+<h4 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h4><p>了解完了基本的结构之后，我们就要了解cnn最重要的一个部分，也是起最为创新的一个部分，卷积层。首先用一张图片来比较一下卷积网络到底创新在什么地方。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-8c117e496c2fe600.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="卷积层和一般层"><br>我们通过这个结构就可以清晰地看到卷积网络到底是怎么实现的。首先右边是传统的网络结构，在上一篇文章中我们已经详细的解释过了。而左边的图片，我们首先看看图中最左边的结构，你肯定会好奇为什么是32x32x3的一块立体方块。这个32x32代表的是像素点，说白了也就是图片的大小，这个大小是你可以设置的，你可以设置为50x50，也可以是256x256，这都取决与图片的大小，那么3表示什么呢？3其实表示的是RGB的三个通道，RGB也是什么？RGB表示red，green，blue，这三种颜色的各种组合叠加可以形成各种各样的颜色，所以任何一张照片都可以用左边这种图形来表示。<br>那么中间这个小方块又表示什么呢？这个就是我们要重点讲的卷积。所谓的卷积，就是这种小方块，我们设置一个小方块的大小，但是这个小方块的厚度必须和左边的这个大方块的厚度是一样的，大方块每一个像素点由一个0到255的数字表示，这样我们就可以赋予小方块权重，比如我们取小方块的大小是3x3，我们要求起厚度必须要和左边的大方块厚度一样，那么小方块的的大小就为3x3x3，我们就可以赋予其3x3x3个权重，然后我们就可以开始计算卷积的结果，将小方块从大方块的左上角开始，一个卷积小方块所覆盖的范围是3x3x3，然后我们将大方块中3x3x3的数字和小方块中的权重分别相乘相加，再加上一个偏差，就可以得到一个卷积的接过，可以抽象的写成Wx+b这种形式，这就是图上所显示的接过，然后我们可以设置小方块的滑动距离，每次滑动就可以形成一个卷积的计算结果，然后讲整张大图片滑动覆盖之后就可以形成一层卷积的结果，我们看到图中的卷积结果是很厚的，也就是设置了很多层卷积。总结来说，就是每层卷积就是一个卷积核在图片上滑动求值，然后设置多个卷积核就可以形成多层的卷积层。</p>
+<h4 id="池化层"><a href="#池化层" class="headerlink" title="池化层"></a>池化层</h4><p>讲完卷积层，接下来就要讲一下池化层。为什么会有池化层的出现呢？是因为不断的做卷积，得到的中间结果会越来越厚，卷积就相当于提取图片中的特征，所以卷积层一般会设置得越来越厚，不然你就无法从前面的接过来提取更多的特征。这样就会导致中间的结果会越来越大，计算会越来越慢，所以提出了池化层。<br>所谓的池化层，就是将图片的大小缩小的一种处理方式。我们可以先看看下面的图片。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-c7e2508350eecc89.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="池化"><br>通过这个图片，我们可以清楚地看到池化层是怎么处理的。池化层也是需要先设置一个窗口，但是这个小窗口的厚度是1，而不再是前一层输出的结果的厚度。然后有两种处理方式，一种是取这个小窗口里面所有元素的最大值来代表这个小窗口，一种是取平均值，然后将小窗口滑动，在第二的位置再做同样的处理，上层网络输出方块的每一层做完之后就进入这个大方块的下一层做同样的操作，这个处理办法就可以让整个大方块的大小变小，可以看看上面的图片的左边。右边是一个简单的一层厚度，取最大值的例子。</p>
+<h4 id="实现Lenet"><a href="#实现Lenet" class="headerlink" title="实现Lenet"></a>实现Lenet</h4><p>讲完了卷积网络的基本结构之后，你是不是已经迫不及待希望能够实现一个简单的神经网络了呢？卷积网络发展的特别迅速，最早是由Lecun提出来的Lenet成为cnn的鼻祖，接下来他的学生Alex提出了层数更深的Alexnet，然后2013年又提出了VGGnet，有16层和19层两种，这些都只是在层数上面的加深，并没有什么其他的创新，二之后google提出了inception net在网络结构上实现了创新，提出了一种inception的机构，facebook ai 实验室又提出了resnet，残差网络，实现了150层的网络结构可训练化，这些我们之后会慢慢讲到。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-bf1eaa90be80e9d3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Lenet"></p>
+<p>接下来我们就来实现一下最简单的Lenet，使用mnist手写子体作为训练集。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import keras</div><div class="line">from keras.datasets import mnist</div><div class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</div></pre></td></tr></table></figure></p>
+<p>导入必要的库和数据集</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">x_train = x_train.reshape(-1, 28, 28, 1)</div><div class="line">x_test = x_test.reshape(-1, 28, 28, 1)</div><div class="line">x_train = x_train / 255.</div><div class="line">x_test = x_test / 255.</div><div class="line">y_train = keras.utils.to_categorical(y_train)</div><div class="line">y_test = keras.utils.to_categorical(y_test)</div></pre></td></tr></table></figure>
+<p>处理数据，让数据的shape是(28, 28, 1)，然后label做一个one-hot encoding处理，比如类别是3，那么变成[0, 0, 1 ,0, 0, 0, 0, 0, 0, 0]。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">from keras.layers import Conv2D, MaxPool2D, Dense, Flatten</div><div class="line">from keras.models import Sequential</div><div class="line">lenet = Sequential()</div><div class="line">lenet.add(Conv2D(6, kernel_size=3, strides=1, padding=&apos;same&apos;, input_shape=(28, 28, 1)))</div><div class="line">lenet.add(MaxPool2D(pool_size=2, strides=2))</div><div class="line">lenet.add(Conv2D(16, kernel_size=5, strides=1, padding=&apos;valid&apos;))</div><div class="line">lenet.add(MaxPool2D(pool_size=2, strides=2))</div><div class="line">lenet.add(Flatten())</div><div class="line">lenet.add(Dense(120))</div><div class="line">lenet.add(Dense(84))</div><div class="line">lenet.add(Dense(10, activation=&apos;softmax&apos;))</div></pre></td></tr></table></figure>
+<p>构建lenet</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-a5fffaa55a17ceba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="lenet.png"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lenet.compile(&apos;sgd&apos;, loss=&apos;categorical_crossentropy&apos;, metrics=[&apos;accuracy&apos;])</div></pre></td></tr></table></figure></p>
+<p>编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lenet.fit(x_train, y_train, batch_size=64, epochs=50, validation_data=[x_test, y_test])</div></pre></td></tr></table></figure>
+<p>训练50次，得到结果如下</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-59711b32316c296f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="result"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lenet.save(&apos;myletnet.h5&apos;)</div></pre></td></tr></table></figure>
+<p>可以保存训练好的模型</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>OK， 这就是我们写的一个超级简单的Lenet，训练50次得到的训练准确率已经达到0.9939，测试准确率达到0.9852。</p>
+<p>如果有疑问，可以访问我的github，这篇文章的代码都已传到了github上。<br><a href="https://github.com/SherlockLiao/lenet" target="_blank" rel="external">https://github.com/SherlockLiao/lenet</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/Keras/" rel="tag"># Keras</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/01/language/" rel="next" title="10分钟快速入门PyTorch (7)">
+                <i class="fa fa-chevron-left"></i> 10分钟快速入门PyTorch (7)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/01/keras2/" rel="prev" title="小白学CNN以及Keras的速成(2)">
+                小白学CNN以及Keras的速成(2) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#卷积神经网络"><span class="nav-number">2.</span> <span class="nav-text">卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本结构"><span class="nav-number">2.1.</span> <span class="nav-text">基本结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卷积层"><span class="nav-number">2.2.</span> <span class="nav-text">卷积层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#池化层"><span class="nav-number">2.3.</span> <span class="nav-text">池化层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现Lenet"><span class="nav-number">2.4.</span> <span class="nav-text">实现Lenet</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

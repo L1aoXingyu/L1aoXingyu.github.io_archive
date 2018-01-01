@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PyTorch," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="接触了PyTorch这么长的时间，也玩了很多PyTorch的骚操作，都特别简单直观地实现了，但是有一个网络训练过程中的操作之前一直没有仔细去考虑过，那就是loss.backward()，看到这个大家一定都很熟悉，loss是网络的损失函数，是一个标量，你可能会说这不就是反向传播吗，有什么好讲的。 但是不知道大家思考过没有，如果loss不是一个标量，而是一个向量，那么loss.backward()是什">
+<meta name="keywords" content="PyTorch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch中的backward">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/07/10/backward/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="接触了PyTorch这么长的时间，也玩了很多PyTorch的骚操作，都特别简单直观地实现了，但是有一个网络训练过程中的操作之前一直没有仔细去考虑过，那就是loss.backward()，看到这个大家一定都很熟悉，loss是网络的损失函数，是一个标量，你可能会说这不就是反向传播吗，有什么好讲的。 但是不知道大家思考过没有，如果loss不是一个标量，而是一个向量，那么loss.backward()是什">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-8d6685ca09f0287b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-88235a73faaf8a46.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-2e1e7ef5d6818726.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-13d98d030a20337d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-71bc5cfaf3e17b03.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-1610417f9de55d94.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-69f16dded384d39c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T03:20:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PyTorch中的backward">
+<meta name="twitter:description" content="接触了PyTorch这么长的时间，也玩了很多PyTorch的骚操作，都特别简单直观地实现了，但是有一个网络训练过程中的操作之前一直没有仔细去考虑过，那就是loss.backward()，看到这个大家一定都很熟悉，loss是网络的损失函数，是一个标量，你可能会说这不就是反向传播吗，有什么好讲的。 但是不知道大家思考过没有，如果loss不是一个标量，而是一个向量，那么loss.backward()是什">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-8d6685ca09f0287b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/07/10/backward/"/>
+
+
+
+
+
+  <title>PyTorch中的backward | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/07/10/backward/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PyTorch中的backward</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-10T12:00:00+08:00">
+                2017-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>接触了PyTorch这么长的时间，也玩了很多PyTorch的骚操作，都特别简单直观地实现了，但是有一个网络训练过程中的操作之前一直没有仔细去考虑过，那就是<code>loss.backward()</code>，看到这个大家一定都很熟悉，loss是网络的损失函数，是一个标量，你可能会说这不就是反向传播吗，有什么好讲的。</p>
+<p>但是不知道大家思考过没有，如果loss不是一个标量，而是一个向量，那么<code>loss.backward()</code>是什么结果呢？<br><a id="more"></a><br>大家可以去试试，写一个简单的小程序<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> torch <span class="keyword">as</span> t</div><div class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable <span class="keyword">as</span> v</div><div class="line">x = v(t.ones(<span class="number">2</span>, <span class="number">2</span>), requires_grad=<span class="keyword">True</span>)</div><div class="line">y = x + <span class="number">1</span></div><div class="line">y.backward()</div></pre></td></tr></table></figure></p>
+<p>运行一下程序，恭喜你报错了，错误显示如下</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-8d6685ca09f0287b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="backwarderror.png"></p>
+<p>我们来读一读这个错误是什么意思。backward只能被应用在一个标量上，也就是一个一维tensor，或者传入跟变量相关的梯度。</p>
+<p>嗯，前面一句话很简单，backward应用在一个标量，平时我们也是这么使用的，但是后面一句话，with gradient w.r.t variable是什么鬼，传入一个变量相关的梯度。不理解啊不理解，看不懂没关系我们还可以做实验来解决这个问题，俗话说自己动手丰衣足食（我也想做个伸手党去看看别人写的，然后不幸地是并没有什么人写过这方面的东西）。</p>
+<p>首先我们开始做一个简单的实验，就是复习一下标量的形式<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># simple gradient</span></div><div class="line">a = v(t.FloatTensor([<span class="number">2</span>, <span class="number">3</span>]), requires_grad=<span class="keyword">True</span>)</div><div class="line">b = a + <span class="number">3</span></div><div class="line">c = b * b * <span class="number">3</span></div><div class="line">out = c.mean()</div><div class="line">out.backward()</div><div class="line">print(<span class="string">'*'</span>*<span class="number">10</span>)</div><div class="line">print(<span class="string">'=====simple gradient======'</span>)</div><div class="line">print(<span class="string">'input'</span>)</div><div class="line">print(a.data)</div><div class="line">print(<span class="string">'compute result is'</span>)</div><div class="line">print(out.data[<span class="number">0</span>])</div><div class="line">print(<span class="string">'input gradients are'</span>)</div><div class="line">print(a.grad.data)</div></pre></td></tr></table></figure></p>
+<p>很简单，我们把数学表达式写出来，传入的参数$x_1 = 2, x_2 = 3$，特别注意<code>Variable</code>里面默认的参数<code>requires_grad=False</code>，所以这里我们要重新传入<code>requires_grad=True</code>让它成为一个叶子节点。</p>
+<script type="math/tex; mode=display">
+a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3)^2) \quad out=\frac{3*((x_1+3)^2 + (x_2 + 3)^2)}{2}</script><p>那么我们对其求偏导也很简单</p>
+<script type="math/tex; mode=display">
+\frac{\partial out}{\partial x_1} = 3(x_1 + 3)|_{x_1=2}=15 \quad \frac{\partial out}{\partial x_2} = 3(x_2 + 3)|_{x_2=3} = 18</script><p>这样依靠简单的微积分知识我们就能够算出他们的结果，运行一下程序，确保结果一致，ok。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-88235a73faaf8a46.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>下面我们研究一下如何能够对非标量的情况下使用backward，下面开始做实验（瞎试）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">m = v(t.FloatTensor([[<span class="number">2</span>, <span class="number">3</span>]]), requires_grad=<span class="keyword">True</span>)</div><div class="line">n = v(t.zeros(<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">n[<span class="number">0</span>, <span class="number">0</span>] = m[<span class="number">0</span>, <span class="number">0</span>] ** <span class="number">2</span></div><div class="line">n[<span class="number">0</span>, <span class="number">1</span>] = m[<span class="number">0</span>, <span class="number">1</span>] ** <span class="number">3</span></div></pre></td></tr></table></figure>
+<p>首先我们定义好输入$m = (x_1, x_2) = (2, 3)$，然后我们做的操作就是$n = (x_1^2, x_2^3)$，这样我们就定义好了一个向量输出，结果第一项只和$x_1$有关，结果第二项只和$x_2$有关，那么求解这个梯度，我们知道$\frac{\partial n_1}{\partial x_1} = 2 x_1 = 4, \frac{\partial n_2}{\partial x_2} = 3 x_2^2 = 27$ ，下面我们开始探究如何能够让他调用backward。</p>
+<p>第一想法就是里面这个参数是要求梯度的对象，我们这样调用<code>n.backward(m.data)</code>，有有报错诶，是不是成功了，我真的是个天才，这么难的东西都能想到，等等，我好想看到了一个很神奇的结果。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-2e1e7ef5d6818726.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>这是什么鬼，这跟说好的结果不一样啊，我们想要的结果是4和27,现在给我们的结果是8和81,为什么会出现这样神奇的结果呢，想不通啊。我们看看我们传入的参数是<code>m.data</code>，这是一个(2, 3)的向量，我们希望得到的梯度是(4, 27)，好像(4x2=8, 27x3=81)，我的内心毫无波动，甚至有点想笑，似乎backward将我传入的参数<code>m.data</code>乘上了得到的梯度，既然要乘上我传入的参数，那么我就给你传入1,这样总能得到我想要的结果了吧，<code>n.backward(t.FloatTensor([[1, 1]]))</code>，看看结果呢</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-13d98d030a20337d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="backwardresult2.png"></p>
+<p>哇，跟我们想要的结果一样诶，撒花，我们解决了一个大问题，就是这么简单，扔进去一个1就可以了，这个问题也没有那么难嘛，哈哈哈。</p>
+<p>似乎又有一点不对，如果这么简单那么写PyTorch的人为什么不把这一步直接集成进去，那我们不就不会遇到这个问题了嘛。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-71bc5cfaf3e17b03.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>我们来试试另外一种情况</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">m = v(t.FloatTensor([[<span class="number">2</span>, <span class="number">3</span>]]), requires_grad=<span class="keyword">True</span>)</div><div class="line">j = t.zeros(<span class="number">2</span> ,<span class="number">2</span>)</div><div class="line">k = v(t.zeros(<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">m.grad.data.zero_()</div><div class="line">k[<span class="number">0</span>, <span class="number">0</span>] = m[<span class="number">0</span>, <span class="number">0</span>] ** <span class="number">2</span> + <span class="number">3</span> * m[<span class="number">0</span> ,<span class="number">1</span>]</div><div class="line">k[<span class="number">0</span>, <span class="number">1</span>] = m[<span class="number">0</span>, <span class="number">1</span>] ** <span class="number">2</span> + <span class="number">2</span> * m[<span class="number">0</span>, <span class="number">0</span>]</div></pre></td></tr></table></figure>
+<p>上面的代码写成数学表达式就是$m = (x_1=2, x_2=3), k = (x_1^2 + 3x_2, x_2^2+2x_1)$，么我们直接对k反向传播<code>k.backward(t.FloatTensor([[1, 1]])</code>，结果是什么呢？</p>
+<p>首先我们手动算一算结果是什么。$\frac{\partial (x_1^2 + 3x_2)}{\partial x_1 } = 2x_1=4,\  \frac{\partial (x_1^2 + 3x_2)}{\partial x_2 } = 3,\  \frac{\partial (x_2^2 + 2x_1)}{\partial x_1} = 2,\  \frac{\partial (x_2^2 + 2x_1)}{\partial x_2} = 2x_2 = 6$，我们是希望能够得到上面四个结果，这个时候你可能已经开始怀疑了，能够得到这4个结果吗？我们可以输出结果来看看</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-1610417f9de55d94.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="backwardresult3.png"></p>
+<p>非常遗憾，我们只得到了两个结果，并且数值并不对，这个时候你就会疑惑了，到底是哪里出了问题呢，为什么会得到这样的结果呢？</p>
+<p>经过不断地尝试，我终于发现了其中的奥秘，<code>k.backward(parameters)</code>接受的参数<code>parameters</code>必须要和<code>k</code>的大小一模一样，然后作为<code>k</code>的系数传回去，什么意思呢，我们通过上面的例子来解释这个问题你就知道了。</p>
+<p>我们已经知道我们得到的$k = (k_1, k_2)$，以及传入的参数是1和1，那么是如何得到这6和9这两个结果的呢？</p>
+<p>其实第一个结果是通过$1 <em> \frac{d k_1}{d x_1} + 1 </em> \frac{d k_2}{d x_1} = 2 x_1 + 2 = 6$这样得到的，是不是有点理解这个操作是怎么完成的了，我们再来看看第二个结果，$ 1 <em> \frac{d k_1}{d x_2} + 1 </em> \frac{d k_2}{d x_2} = 3+2 x_2 = 9$，这样我们就得到了这两个结果，原来我们传入的参数是每次求导的一个系数。</p>
+<p>我们知道了这个操作具体是怎么完成的，我们就可以求求我们需要的这个jacobian矩阵了，非常简单。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># jacobian</span></div><div class="line">j = t.zeros(<span class="number">2</span> ,<span class="number">2</span>)</div><div class="line">k = v(t.zeros(<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">m.grad.data.zero_()</div><div class="line">k[<span class="number">0</span>, <span class="number">0</span>] = m[<span class="number">0</span>, <span class="number">0</span>] ** <span class="number">2</span> + <span class="number">3</span> * m[<span class="number">0</span> ,<span class="number">1</span>]</div><div class="line">k[<span class="number">0</span>, <span class="number">1</span>] = m[<span class="number">0</span>, <span class="number">1</span>] ** <span class="number">2</span> + <span class="number">2</span> * m[<span class="number">0</span>, <span class="number">0</span>]</div><div class="line">k.backward(t.FloatTensor([[<span class="number">1</span>, <span class="number">0</span>]]), retain_variables=<span class="keyword">True</span>)</div><div class="line">j[:, <span class="number">0</span>] = m.grad.data</div><div class="line">m.grad.data.zero_()</div><div class="line">k.backward(t.FloatTensor([[<span class="number">0</span>, <span class="number">1</span>]]))</div><div class="line">j[:, <span class="number">1</span>] = m.grad.data</div><div class="line">print(<span class="string">'jacobian matrix is'</span>)</div><div class="line">print(j)</div></pre></td></tr></table></figure>
+<p>我们可以得到如下结果</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-69f16dded384d39c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>这里我们要注意<code>backward()</code>里面另外的一个参数<code>retain_variables=True</code>，这个参数默认是False，也就是反向传播之后这个计算图的内存会被释放，这样就没办法进行第二次反向传播了，所以我们需要设置为True，因为这里我们需要进行两次反向传播求得jacobian矩阵。</p>
+<p>最后我们再举一个矩阵乘法的例子试验一下我们的结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">x = t.FloatTensor([<span class="number">2</span>, <span class="number">1</span>]).view(<span class="number">1</span>, <span class="number">2</span>)</div><div class="line">x = v(x, requires_grad=<span class="keyword">True</span>)</div><div class="line">y = v(t.FloatTensor([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>]]))</div><div class="line"></div><div class="line">z = t.mm(x, y)</div><div class="line">jacobian = t.zeros((<span class="number">2</span>, <span class="number">2</span>))</div><div class="line">z.backward(t.FloatTensor([[<span class="number">1</span>, <span class="number">0</span>]]), retain_variables=<span class="keyword">True</span>)  <span class="comment"># dz1/dx1, dz2/dx1</span></div><div class="line">jacobian[:, <span class="number">0</span>] = x.grad.data</div><div class="line">x.grad.data.zero_()</div><div class="line">z.backward(t.FloatTensor([[<span class="number">0</span>, <span class="number">1</span>]]))  <span class="comment"># dz1/dx2, dz2/dx2</span></div><div class="line">jacobian[:, <span class="number">1</span>] = x.grad.data</div><div class="line">print(<span class="string">'=========jacobian========'</span>)</div><div class="line">print(<span class="string">'x'</span>)</div><div class="line">print(x.data)</div><div class="line">print(<span class="string">'y'</span>)</div><div class="line">print(y.data)</div><div class="line">print(<span class="string">'compute result'</span>)</div><div class="line">print(z.data)</div><div class="line">print(<span class="string">'jacobian matrix is'</span>)</div><div class="line">print(jacobian)</div></pre></td></tr></table></figure>
+<p>上面是代码，仔细阅读，作为一个小练习回顾一下本篇文章讲的内容，妈妈再也不用担心我不会用<code>backward</code>了。</p>
+<hr>
+<p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/pytorch-beginner/tree/master/11-backward" target="_blank" rel="external">github</a>上</p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PyTorch/" rel="tag"># PyTorch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/09/deep_dream/" rel="next" title="一文理解Deep Dream">
+                <i class="fa fa-chevron-left"></i> 一文理解Deep Dream
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/23/deep_dream_code/" rel="prev" title="DeepDream的代码实现">
+                DeepDream的代码实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

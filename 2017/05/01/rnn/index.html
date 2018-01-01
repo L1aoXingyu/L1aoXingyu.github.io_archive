@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,PyTorch Tutorial," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前面一节我们讲了cnn以及如何使用pytorch实现简单的多层卷积神经网络，下面我们将进入rnn，对于rnn我也涉及不多，欢迎各位高手提出宝贵的意见。 关于rnn将分成三个部分，第一个部分先介绍rnn的基本结构以及在pytorch里面api的各个参数所表示的含义，下一个部分将介绍rnn如何在MNIST数据集上做分类，最后一个部分涉及一点点自然语言处理的东西。">
+<meta name="keywords" content="DeepLearning,PyTorch Tutorial">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10分钟快速入门PyTorch (5)">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/05/01/rnn/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="前面一节我们讲了cnn以及如何使用pytorch实现简单的多层卷积神经网络，下面我们将进入rnn，对于rnn我也涉及不多，欢迎各位高手提出宝贵的意见。 关于rnn将分成三个部分，第一个部分先介绍rnn的基本结构以及在pytorch里面api的各个参数所表示的含义，下一个部分将介绍rnn如何在MNIST数据集上做分类，最后一个部分涉及一点点自然语言处理的东西。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-434b32c0947de263.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-c34d4536378fa06f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-95ad19dd00624232.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-bc478a1998e56daa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-19305fbfe8c2dbc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-0928ce8aa460d7ec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T03:27:07.210Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10分钟快速入门PyTorch (5)">
+<meta name="twitter:description" content="前面一节我们讲了cnn以及如何使用pytorch实现简单的多层卷积神经网络，下面我们将进入rnn，对于rnn我也涉及不多，欢迎各位高手提出宝贵的意见。 关于rnn将分成三个部分，第一个部分先介绍rnn的基本结构以及在pytorch里面api的各个参数所表示的含义，下一个部分将介绍rnn如何在MNIST数据集上做分类，最后一个部分涉及一点点自然语言处理的东西。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-434b32c0947de263.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/05/01/rnn/"/>
+
+
+
+
+
+  <title>10分钟快速入门PyTorch (5) | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/05/01/rnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">10分钟快速入门PyTorch (5)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-01T12:00:00+08:00">
+                2017-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前面一节我们讲了cnn以及如何使用pytorch实现简单的多层卷积神经网络，下面我们将进入rnn，对于rnn我也涉及不多，欢迎各位高手提出宝贵的意见。</p>
+<p>关于rnn将分成三个部分，第一个部分先介绍rnn的基本结构以及在pytorch里面api的各个参数所表示的含义，下一个部分将介绍rnn如何在MNIST数据集上做分类，最后一个部分涉及一点点自然语言处理的东西。<br><a id="more"></a></p>
+<h2 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h2><p>首先介绍一下什么是rnn，rnn特别擅长处理序列类型的数据，因为他是一个循环的结构</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-434b32c0947de263.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1"></p>
+<p>一个序列的数据依次进入网络A，网络A循环的往后传递。</p>
+<p>这就是RNN的基本结构类型。而最早的RNN模型，序列依次进入网络中，之前进入序列的数据会保存信息而对后面的数据产生影响，所以RNN有着记忆的特性，而同时越前面的数据进入序列的时间越早，所以对后面的数据的影响也就越弱，简而言之就是一个数据会更大程度受到其临近数据的影响。但是我们很有可能需要更长时间之前的信息，而这个能力传统的RNN特别弱，于是有了LSTM这个变体。</p>
+<h3 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h3><p><img src="http://upload-images.jianshu.io/upload_images/3623720-c34d4536378fa06f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2"></p>
+<p>这就是LSTM的模型结构，也是一个向后传递的链式模型，而现在广泛使用的RNN其实就是LSTM，序列中每个数据传入LSTM可以得到两个输出，而这两个输出和序列中下一个数据一起又作为传入LSTM的输入，然后不断地循环向后，直到序列结束。</p>
+<p>下面结合pytorch一步一步来看数据传入LSTM是怎么运算的</p>
+<p>首先需要定义好LSTM网络，需要nn.LSTM()，首先介绍一下这个函数里面的参数</p>
+<p><strong>input_size</strong> 表示的是输入的数据维数</p>
+<p><strong>hidden_size</strong> 表示的是输出维数</p>
+<p><strong>num_layers</strong> 表示堆叠几层的LSTM，默认是1</p>
+<p><strong>bias</strong> True 或者 False，决定是否使用bias</p>
+<p><strong>batch_first</strong> True 或者 False，因为nn.lstm()接受的数据输入是(序列长度，batch，输入维数)，这和我们cnn输入的方式不太一致，所以使用batch_first，我们可以将输入变成(batch，序列长度，输入维数)</p>
+<p><strong>dropout</strong> 表示除了最后一层之外都引入一个dropout</p>
+<p><strong>bidirectional</strong> 表示双向LSTM，也就是序列从左往右算一次，从右往左又算一次，这样就可以两倍的输出</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-95ad19dd00624232.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="3"></p>
+<p>第一步首先是将传入的数据$x<em>t$和前面输出的$h</em>{t-1}$，$x<em>t$是输入的维数，比如是K，$h</em>{t-1}$是网络的输出维数，比如M，因为输出的维度是M，权重w的维数就是(M, M)和(M, K)，b的维数就是(M, 1)和(M, 1)，最后经过sigmoid激活函数，得到的f的维数是(M, 1)。</p>
+<p>对于第一个数据，需要定义初始的h_0和c_0，所以nn.lstm()的输入Inputs:input, (h_0, c_0)，表示输入的数据以及h_0和c_0，这个可以自己定义，如果不定义，默认就是0</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-bc478a1998e56daa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="4"></p>
+<p>第二步也是差不多的操作，只不多是另外两个权重加上不同的激活函数，一个使用的是sigmoid，一个使用的是tanh，得到的输出$i_t$和$\tilde{C}_t$都是(M, 1)。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-19305fbfe8c2dbc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="5"></p>
+<p>接着这个乘法是矩阵每个位置对应相乘，然后将两个矩阵加起来，得到的输出$C_t$是(M, 1)。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-0928ce8aa460d7ec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="6"></p>
+<p>最后一步得到的$o_t$也是(M, 1)，然后$C_t$经过激活函数tanh，再和$o_t$每个位置相乘，得到的输出$h_t$也是(M, 1)。</p>
+<p>最后得到的输出就是$h_t$和$C_t$，维数分别都是(M, 1)，而输入$x_t$维数都是(K, 1)。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lstm = nn.LSTM(<span class="number">10</span>, <span class="number">30</span>, batch_first=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>可以通过这样定义一个一层的LSTM输入是10，输出是30</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">lstm.weight_hh_l0.size()</div><div class="line">lstm.weight_ih_l0.size()</div><div class="line">lstm.bias_hh_l0.size()</div><div class="line">lstm.bias__ih_l0.size()</div></pre></td></tr></table></figure>
+<p>可以分别得到权重的维数，注意之前我们定义的4个weights被整合到了一起，比如这个lstm，输入是10维，输出是30维，相对应的weight就是30x10，这样的权重有4个，然后pytorch将这4个组合在了一起，方便表示，也就是lstm.weight_ih_l0，所以它的维数就是120x10</p>
+<p>我们定义一个输入<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">x = Variable(torch.randn((<span class="number">50</span>, <span class="number">100</span>, <span class="number">10</span>)))</div><div class="line">h0 = Variable(torch.randn(<span class="number">1</span>, <span class="number">50</span>, <span class="number">30</span>))</div><div class="line">c0 = Variable(torch.randn(<span class="number">1</span>, <span class="number">50</span> ,<span class="number">30</span>))</div></pre></td></tr></table></figure></p>
+<p>x的三个数字分别表示batch_size为50，序列长度为100，每个数据维数为10</p>
+<p>h0的第二个参数表示batch_size为50，输出维数为30，第一个参数取决于网络层数和是否是双向的，如果双向需要乘2，如果是多层，就需要乘以网络层数</p>
+<p>c0的三个参数和h0是一致的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">out, (h_out, c_out) = lstm(x, (h0, c0))</div></pre></td></tr></table></figure>
+<p>这样就可以得到网络的输出了，和上面讲的一致，另外如果不传入h0和c0，默认的会传入相同维数的0矩阵</p>
+<p>这就是我们如何在pytorch上使用RNN的基本操作了，了解完最基本的参数我们才能够使用其来做应用。</p>
+<p>本文参考的资料来自如下<a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">博客</a></p>
+<p>更多的RNN的应用可以看这个<a href="http://distill.pub/2016/augmented-rnns/" target="_blank" rel="external">资源</a></p>
+<hr>
+<p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/pytorch-beginner" target="_blank" rel="external">github</a>上</p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/PyTorch-Tutorial/" rel="tag"># PyTorch Tutorial</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/01/rnn_classifier/" rel="next" title="10分钟快速入门PyTorch (6)">
+                <i class="fa fa-chevron-left"></i> 10分钟快速入门PyTorch (6)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/01/pytorch/" rel="prev" title="Pytorch 初体验（一个优雅的框架）">
+                Pytorch 初体验（一个优雅的框架） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RNN"><span class="nav-number">1.</span> <span class="nav-text">RNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM"><span class="nav-number">1.1.</span> <span class="nav-text">LSTM</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

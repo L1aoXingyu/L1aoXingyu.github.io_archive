@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,PyTorch Tutorial," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="上一篇教程我们基本的介绍了pytorch里面的操作单元，Tensor，以及计算图中的操作单位Variable，相信大家都已经熟悉了，下面这一部分我们就从两个最基本的机器学习，线性回归以及logistic回归来开始建立我们的计算图进行运算。">
+<meta name="keywords" content="DeepLearning,PyTorch Tutorial">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10分钟快速入门PyTorch (1)">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/05/07/pytorch_tutorial_1/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="上一篇教程我们基本的介绍了pytorch里面的操作单元，Tensor，以及计算图中的操作单位Variable，相信大家都已经熟悉了，下面这一部分我们就从两个最基本的机器学习，线性回归以及logistic回归来开始建立我们的计算图进行运算。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-93aaf8fe69548b8f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-0404cd13aaff0226.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-d33ee14f8a69e72d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-4f90547b54712c06.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-25T05:25:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10分钟快速入门PyTorch (1)">
+<meta name="twitter:description" content="上一篇教程我们基本的介绍了pytorch里面的操作单元，Tensor，以及计算图中的操作单位Variable，相信大家都已经熟悉了，下面这一部分我们就从两个最基本的机器学习，线性回归以及logistic回归来开始建立我们的计算图进行运算。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-93aaf8fe69548b8f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/05/07/pytorch_tutorial_1/"/>
+
+
+
+
+
+  <title>10分钟快速入门PyTorch (1) | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/05/07/pytorch_tutorial_1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">10分钟快速入门PyTorch (1)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-07T12:00:00+08:00">
+                2017-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上一篇教程我们基本的介绍了pytorch里面的操作单元，Tensor，以及计算图中的操作单位Variable，相信大家都已经熟悉了，下面这一部分我们就从两个最基本的机器学习，线性回归以及logistic回归来开始建立我们的计算图进行运算。<br><a id="more"></a><br>由于这个系列文章主要是将pytorch教程的，所以每个算法的太多数学背景以及推导过程就不再细讲了，需要的同学可以自己找相应的教材去了解，什么统计学习方法，prml，周志华的西瓜书以及机器学习实战都可以了解到相应内容。</p>
+<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><p>对于线性回归，相信大家都很熟悉了，各种机器学习的书第一个要讲的内容必定有线性回归，这里简单的回顾一下什么是简单的一元线性回归。即给出一系列的点，找一条直线，使得这条直线与这些点的距离之和最小。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-93aaf8fe69548b8f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1"></p>
+<p>上面这张图就简单地描绘出了线性回归的基本原理，下面我们重点讲讲如何用pytorch写一个简单的线性回归。</p>
+<h3 id="code"><a href="#code" class="headerlink" title="code"></a>code</h3><h4 id="data"><a href="#data" class="headerlink" title="data"></a>data</h4><p>首先我们需要给出一系列的点作为线性回归的数据，使用numpy来存储这些点。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">x_train = np.array([[<span class="number">3.3</span>], [<span class="number">4.4</span>], [<span class="number">5.5</span>], [<span class="number">6.71</span>], [<span class="number">6.93</span>], [<span class="number">4.168</span>],</div><div class="line">                    [<span class="number">9.779</span>], [<span class="number">6.182</span>], [<span class="number">7.59</span>], [<span class="number">2.167</span>], [<span class="number">7.042</span>],</div><div class="line">                    [<span class="number">10.791</span>], [<span class="number">5.313</span>], [<span class="number">7.997</span>], [<span class="number">3.1</span>]], dtype=np.float32)</div><div class="line"></div><div class="line">y_train = np.array([[<span class="number">1.7</span>], [<span class="number">2.76</span>], [<span class="number">2.09</span>], [<span class="number">3.19</span>], [<span class="number">1.694</span>], [<span class="number">1.573</span>],</div><div class="line">                    [<span class="number">3.366</span>], [<span class="number">2.596</span>], [<span class="number">2.53</span>], [<span class="number">1.221</span>], [<span class="number">2.827</span>],</div><div class="line">                    [<span class="number">3.465</span>], [<span class="number">1.65</span>], [<span class="number">2.904</span>], [<span class="number">1.3</span>]], dtype=np.float32)</div></pre></td></tr></table></figure></p>
+<p>显示出来就是这个样子<br><img src="http://upload-images.jianshu.io/upload_images/3623720-0404cd13aaff0226.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2"></p>
+<p>还记得pytorch里面的基本处理单元吗？Tensor，我们需要将numpy转换成Tensor，如果你还记得上一节的内容，那么你就一定记得这个函数，torch.from_numpy()</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">x_train = torch.from_numpy(x_train)</div><div class="line"></div><div class="line">y_train = torch.from_numpy(y_train)</div></pre></td></tr></table></figure>
+<p>这样我们的数据就转换成了Tensor。</p>
+<h4 id="model"><a href="#model" class="headerlink" title="model"></a>model</h4><p>上一节讲了基本的模型框架，按照这个框架就可以写出一个线性回归模型了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LinearRegression</span><span class="params">(nn.Module)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        super(LinearRegression, self).__init__()</div><div class="line">        self.linear = nn.Linear(<span class="number">1</span>, <span class="number">1</span>)  <span class="comment"># input and output is 1 dimension</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></div><div class="line">        out = self.linear(x)</div><div class="line">        <span class="keyword">return</span> out</div><div class="line">model = LinearRegression()</div></pre></td></tr></table></figure>
+<p>这里的nn.Linear表示的是 y=w*x+b，里面的两个参数都是1，表示的是x是1维，y也是1维。当然这里是可以根据你想要的输入输出维度来更改的，之前使用的别的框架的同学应该很熟悉。</p>
+<p>然后需要定义loss和optimizer，就是误差和优化函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">criterion = nn.MSELoss()</div><div class="line">optimizer = optim.SGD(model.parameters(), lr=<span class="number">1e-4</span>)</div></pre></td></tr></table></figure>
+<p>这里使用的是最小二乘loss，之后我们做分类问题更多的使用的是cross entropy loss，交叉熵。优化函数使用的是随机梯度下降，注意需要将model的参数model.parameters()传进去让这个函数知道他要优化的参数是那些。</p>
+<h4 id="train"><a href="#train" class="headerlink" title="train"></a>train</h4><p>接着开始训练<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">num_epochs = <span class="number">1000</span></div><div class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(num_epochs):</div><div class="line">    inputs = Variable(x_train)</div><div class="line">    target = Variable(y_train)</div><div class="line"></div><div class="line">    <span class="comment"># forward</span></div><div class="line">    out = model(inputs) <span class="comment"># 前向传播</span></div><div class="line">    loss = criterion(out, target) <span class="comment"># 计算loss</span></div><div class="line">    <span class="comment"># backward</span></div><div class="line">    optimizer.zero_grad() <span class="comment"># 梯度归零</span></div><div class="line">    loss.backward() <span class="comment"># 方向传播</span></div><div class="line">    optimizer.step() <span class="comment"># 更新参数</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> (epoch+<span class="number">1</span>) % <span class="number">20</span> == <span class="number">0</span>:</div><div class="line">        print(<span class="string">'Epoch[&#123;&#125;/&#123;&#125;], loss: &#123;:.6f&#125;'</span>.format(epoch+<span class="number">1</span>,</div><div class="line">                                                  num_epochs,</div><div class="line">                                                  loss.data[<span class="number">0</span>]))</div></pre></td></tr></table></figure></p>
+<p>第一个循环表示每个epoch，接着开始前向传播，然后计算loss，然后反向传播，接着优化参数，特别注意的是在每次反向传播的时候需要将参数的梯度归零，即</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">optimzier.zero_grad()</div></pre></td></tr></table></figure>
+<h4 id="validation"><a href="#validation" class="headerlink" title="validation"></a>validation</h4><p>训练完成之后我们就可以开始测试模型了<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">model.eval()</div><div class="line">predict = model(Variable(x_train))</div><div class="line">predict = predict.data.numpy()</div></pre></td></tr></table></figure></p>
+<p>特别注意的是需要用 model.eval()，让model变成测试模式，这主要是对dropout和batch normalization的操作在训练和测试的时候是不一样的</p>
+<p>最后可以得到这个结果</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-d33ee14f8a69e72d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>以及loss的结果</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-4f90547b54712c06.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>ok，在这篇文章中我们使用pytorch实现了简单的线性回归模型，掌握了pytorch的一些基本操作，下一节我们将使用logistic回归对MNIST手写字体数据集做识别。</p>
+<hr>
+<p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/pytorch-beginner" target="_blank" rel="external">github</a>上</p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/PyTorch-Tutorial/" rel="tag"># PyTorch Tutorial</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/03/pytorch_tutorial_0/" rel="next" title="10分钟快速入门PyTorch (0)">
+                <i class="fa fa-chevron-left"></i> 10分钟快速入门PyTorch (0)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/10/logistic_regression/" rel="prev" title="10分钟快速入门PyTorch (2)">
+                10分钟快速入门PyTorch (2) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#线性回归"><span class="nav-number">1.</span> <span class="nav-text">线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#code"><span class="nav-number">1.1.</span> <span class="nav-text">code</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#data"><span class="nav-number">1.1.1.</span> <span class="nav-text">data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#model"><span class="nav-number">1.1.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#train"><span class="nav-number">1.1.3.</span> <span class="nav-text">train</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#validation"><span class="nav-number">1.1.4.</span> <span class="nav-text">validation</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

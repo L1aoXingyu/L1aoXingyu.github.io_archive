@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DeepLearning,paper,ctc," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="1.论文主要思想：用卷积网络做图片分类问题的时候，无法对sequence类型的图片做处理，比如一串电话号码这样的图片集。对于这种sequence数据，我们有一个很好的工具，recurrent neural network，所以我们能不能将cnn处理图片的能力和rnn处理序列的能力结合在一起处理一些日常生活中的手写体，或者是说标示牌这些图片，然后提取出里面的字符呢？这就是这篇论文所叙述的东西。">
+<meta name="keywords" content="DeepLearning,paper,ctc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="An End-to-End Trainable Neural Network for Image-based Sequence 论文阅读">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/05/01/paper/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="1.论文主要思想：用卷积网络做图片分类问题的时候，无法对sequence类型的图片做处理，比如一串电话号码这样的图片集。对于这种sequence数据，我们有一个很好的工具，recurrent neural network，所以我们能不能将cnn处理图片的能力和rnn处理序列的能力结合在一起处理一些日常生活中的手写体，或者是说标示牌这些图片，然后提取出里面的字符呢？这就是这篇论文所叙述的东西。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-879d229c8f8b92df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-0abbf42c01a71bdb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-46482708700bbf76.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-769ba6330f23fc4b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-d6e5296245bd84c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-832945e5b7d6836e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-1b74bbf2169b6a51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T03:26:14.293Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="An End-to-End Trainable Neural Network for Image-based Sequence 论文阅读">
+<meta name="twitter:description" content="1.论文主要思想：用卷积网络做图片分类问题的时候，无法对sequence类型的图片做处理，比如一串电话号码这样的图片集。对于这种sequence数据，我们有一个很好的工具，recurrent neural network，所以我们能不能将cnn处理图片的能力和rnn处理序列的能力结合在一起处理一些日常生活中的手写体，或者是说标示牌这些图片，然后提取出里面的字符呢？这就是这篇论文所叙述的东西。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-879d229c8f8b92df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/05/01/paper/"/>
+
+
+
+
+
+  <title>An End-to-End Trainable Neural Network for Image-based Sequence 论文阅读 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/05/01/paper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">An End-to-End Trainable Neural Network for Image-based Sequence 论文阅读</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-01T12:00:00+08:00">
+                2017-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-论文主要思想："><a href="#1-论文主要思想：" class="headerlink" title="1.论文主要思想："></a>1.论文主要思想：</h3><p>用卷积网络做图片分类问题的时候，无法对sequence类型的图片做处理，比如一串电话号码这样的图片集。对于这种sequence数据，我们有一个很好的工具，recurrent neural network，所以我们能不能将cnn处理图片的能力和rnn处理序列的能力结合在一起处理一些日常生活中的手写体，或者是说标示牌这些图片，然后提取出里面的字符呢？<br>这就是这篇论文所叙述的东西。<br><a id="more"></a></p>
+<h4 id="2-pipeline："><a href="#2-pipeline：" class="headerlink" title="2.pipeline："></a>2.pipeline：</h4><h5 id="2-1-main-advantages"><a href="#2-1-main-advantages" class="headerlink" title="2.1 main advantages:"></a>2.1 main advantages:</h5><ol>
+<li>It has unconstrained length of sequence，也就是说不限制输入的长度，任何长度都可以</li>
+<li>It can be jointly trained with a loss function，cnn和rnn可以一起处理，训练，不用分开</li>
+</ol>
+<h5 id="2-2-Network-Architecture"><a href="#2-2-Network-Architecture" class="headerlink" title="2.2 Network Architecture:"></a>2.2 Network Architecture:</h5><p><img src="http://upload-images.jianshu.io/upload_images/3623720-879d229c8f8b92df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<h5 id="2-2-1-feature-sequence-extraction"><a href="#2-2-1-feature-sequence-extraction" class="headerlink" title="2.2.1 feature sequence extraction"></a>2.2.1 feature sequence extraction</h5><p><img src="http://upload-images.jianshu.io/upload_images/3623720-0abbf42c01a71bdb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>传统方法是将图片整个提取特征，但是这种办法就使得需要固定维度的输入，所以这里采取滑动卷积核的方式，可以自适应到任何长度的输入</p>
+<h5 id="2-2-2-sequence-labeling"><a href="#2-2-2-sequence-labeling" class="headerlink" title="2.2.2 sequence labeling"></a>2.2.2 sequence labeling</h5><p><img src="http://upload-images.jianshu.io/upload_images/3623720-46482708700bbf76.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="rnn.png"></p>
+<p>传统的LSTM如左图所示，改进只有LSTM输入图像特征向量，然后采用双向的顺序来训练rnn，这是因为图片周围的信息都是有用的，所以不能只考虑一边，而要考虑双侧<br>LSTM is directional, however, in the image-based sequence, contexts from both sides are very useful and comlementary for each other.</p>
+<h5 id="2-2-3-transcription"><a href="#2-2-3-transcription" class="headerlink" title="2.2.3 transcription"></a>2.2.3 transcription</h5><p>transcription is to find the label sequence with the highest probability conditioned on the per-frame predictions.<br>这一步的最终目的是想通过训练后的网络，输出正确的label的概率最大</p>
+<h5 id="2-2-3-1-probability-of-label-sequence"><a href="#2-2-3-1-probability-of-label-sequence" class="headerlink" title="2.2.3.1 probability of label sequence"></a>2.2.3.1 probability of label sequence</h5><p>关键的一步是如何将rnn的输出转换成在label序列上的条件概率分布</p>
+<h5 id="Temporal-Classification"><a href="#Temporal-Classification" class="headerlink" title="Temporal Classification"></a>Temporal Classification</h5><p>首先给出一种sequence到sequence的模型的输入和输出类型:<br>input: $X=R^m$ 是m维的实值向量，目标空间 Z=L 就是所有的目标序列，S为样本空间，包含着很多个(x, z)这种序列对，每个$x = (x_1, x_2, \dots, x_T)$，每个$z = (z_1, z_2, \dots, z_U)$，一般U&lt;T，输入的序列每个点代表着一个信息，所以得到的输出最多只能和输入的信息一样多，不能超过输入的信息<br>TC的目的是训练一个分类器h，$h: X \rightarrow Z$，使得每给一个sequence输入，可以得到一个sequence输出</p>
+<p>下面如何定义loss函数就很重要了：<br><strong>Label error rate:</strong></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-769ba6330f23fc4b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>S’ 表示的一个测试集，h(x)就是输入x，得到的输出结果，z表示目标序列，ED表示h(x)要经过调整得到z的步数<br>这是一种很自然的度量方式</p>
+<h5 id="Connectionist-Temporal-Classification"><a href="#Connectionist-Temporal-Classification" class="headerlink" title="Connectionist Temporal Classification"></a>Connectionist Temporal Classification</h5><p>CTC网络多了一层输出，softmax layer。如果真实的label用L表示，输出结果是是一个比|L|长的序列，前|L|个元素表示相应位置是L中的元素的概率，多的元素表示是空白或者说没有Label的概率，总的概率就是这些概率求和</p>
+<p>输入x是一个长为T的序列，rnn定义 $N_w: R^m \rightarrow R^n$，<br>$y = N_w(x)$，$y_k^t$ 表示在t的位置是label k的概率，这个概率定义在所有的可能label加上一个blank上面，也就是0到9这10个数字加一个空格，一共是11种可能，这个概率空间用$L’^T$表示</p>
+<p> <img src="http://upload-images.jianshu.io/upload_images/3623720-d6e5296245bd84c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>然后在序列$\pi$上面定义一个函数B，将序列B映射为label，比如将“—hh-e-l-ll-oo—”通过去重，去空格，映射到“hello”</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-832945e5b7d6836e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<h5 id="2-3-Network-Training"><a href="#2-3-Network-Training" class="headerlink" title="2.3 Network Training"></a>2.3 Network Training</h5><p>$X = { I_i, L_i}_i$，其中$I_i$表示输入图片，$L_i$表示真实的label</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-1b74bbf2169b6a51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>就是最小化这个函数，可以用backpropogation的方法</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/paper/" rel="tag"># paper</a>
+          
+            <a href="/tags/ctc/" rel="tag"># ctc</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/01/pytorch_tutorial_1/" rel="next" title="10分钟快速入门PyTorch (1)">
+                <i class="fa fa-chevron-left"></i> 10分钟快速入门PyTorch (1)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/01/p0/" rel="prev" title="DeepLearning项目之旅-Start">
+                DeepLearning项目之旅-Start <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-论文主要思想："><span class="nav-number">1.</span> <span class="nav-text">1.论文主要思想：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-pipeline："><span class="nav-number">1.1.</span> <span class="nav-text">2.pipeline：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-main-advantages"><span class="nav-number">1.1.1.</span> <span class="nav-text">2.1 main advantages:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-Network-Architecture"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.2 Network Architecture:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-1-feature-sequence-extraction"><span class="nav-number">1.1.3.</span> <span class="nav-text">2.2.1 feature sequence extraction</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-2-sequence-labeling"><span class="nav-number">1.1.4.</span> <span class="nav-text">2.2.2 sequence labeling</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-3-transcription"><span class="nav-number">1.1.5.</span> <span class="nav-text">2.2.3 transcription</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-3-1-probability-of-label-sequence"><span class="nav-number">1.1.6.</span> <span class="nav-text">2.2.3.1 probability of label sequence</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Temporal-Classification"><span class="nav-number">1.1.7.</span> <span class="nav-text">Temporal Classification</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Connectionist-Temporal-Classification"><span class="nav-number">1.1.8.</span> <span class="nav-text">Connectionist Temporal Classification</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-Network-Training"><span class="nav-number">1.1.9.</span> <span class="nav-text">2.3 Network Training</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

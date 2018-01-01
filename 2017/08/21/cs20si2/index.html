@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="TensorFlow,cs20si," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="TensorBoard 可视化tensorflow不仅仅是一个计算图软件，其还包含了tensorboard可视化工具，安装tensorflow的时候会默认安装，使用方法非常简单，使用writer = tf.summary.FileWriter(&amp;#39;./graph&amp;#39;, sess.graph)就能够创建一个文件写入器，./graph是存储目录，sess.graph表示读入的图结构。">
+<meta name="keywords" content="TensorFlow,cs20si">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cs20si：tensorflow for research 学习笔记2">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/08/21/cs20si2/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="TensorBoard 可视化tensorflow不仅仅是一个计算图软件，其还包含了tensorboard可视化工具，安装tensorflow的时候会默认安装，使用方法非常简单，使用writer = tf.summary.FileWriter(&amp;#39;./graph&amp;#39;, sess.graph)就能够创建一个文件写入器，./graph是存储目录，sess.graph表示读入的图结构。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-5989662b943015bb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T02:04:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cs20si：tensorflow for research 学习笔记2">
+<meta name="twitter:description" content="TensorBoard 可视化tensorflow不仅仅是一个计算图软件，其还包含了tensorboard可视化工具，安装tensorflow的时候会默认安装，使用方法非常简单，使用writer = tf.summary.FileWriter(&amp;#39;./graph&amp;#39;, sess.graph)就能够创建一个文件写入器，./graph是存储目录，sess.graph表示读入的图结构。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-5989662b943015bb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/08/21/cs20si2/"/>
+
+
+
+
+
+  <title>cs20si：tensorflow for research 学习笔记2 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/08/21/cs20si2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cs20si：tensorflow for research 学习笔记2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-21T12:00:00+08:00">
+                2017-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="TensorBoard-可视化"><a href="#TensorBoard-可视化" class="headerlink" title="TensorBoard 可视化"></a>TensorBoard 可视化</h2><p>tensorflow不仅仅是一个计算图软件，其还包含了tensorboard可视化工具，安装tensorflow的时候会默认安装，使用方法非常简单，使用<code>writer = tf.summary.FileWriter(&#39;./graph&#39;, sess.graph)</code>就能够创建一个文件写入器，<code>./graph</code>是存储目录，<code>sess.graph</code>表示读入的图结构。<br><a id="more"></a><br>我们可以写一个简单的小程序<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">a = tf.constant(<span class="number">2</span>)</div><div class="line">b = tf.constant(<span class="number">3</span>)</div><div class="line">x = tf.add(a, b)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    writer = tf.summary.FileWriter(<span class="string">'./graphs'</span>, sess.graph)</div><div class="line">    print(sess.run(x))</div><div class="line">writer.close()  <span class="comment"># close the writer when you’re done using it</span></div></pre></td></tr></table></figure></p>
+<p>然后打开终端，运行程序，接着输入<code>tensorboard --logdir=&quot;./graphs&quot;</code>，然后打开网页输入 <a href="http://localhost:6006/，就能够进入tensorboard，可以得到下面的结果。" target="_blank" rel="external">http://localhost:6006/，就能够进入tensorboard，可以得到下面的结果。</a></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-5989662b943015bb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="screenshot.png"></p>
+<h2 id="常数类型-Constant-types"><a href="#常数类型-Constant-types" class="headerlink" title="常数类型(Constant types)"></a>常数类型(Constant types)</h2><p>能够通过下面这个方式创造一个常数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.constant(value, dtype=<span class="keyword">None</span>, shape=<span class="keyword">None</span>, name=<span class="string">'Const'</span>, verify_shape=<span class="keyword">False</span>)</div></pre></td></tr></table></figure>
+<p>比如建立一维向量和矩阵，然后将他们乘起来</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">a = tf.constant([<span class="number">2</span>, <span class="number">2</span>], name=<span class="string">'a'</span>)</div><div class="line">b = tf.constant([[<span class="number">0</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">3</span>]], name=<span class="string">'b'</span>)</div><div class="line">x = tf.multiply(a, b, name=<span class="string">'dot_production'</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(x))</div><div class="line">&gt;&gt; [[<span class="number">0</span>, <span class="number">2</span>]</div><div class="line">    [<span class="number">4</span>, <span class="number">6</span>]]</div></pre></td></tr></table></figure>
+<p>这跟numpy里面的是差不多的，同时还有一些特殊值的常量创建。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">tf.zeros(shape, dtype=tf.float32, name=<span class="keyword">None</span>)</div><div class="line">tf.zeros_like(input_tensor, dtype=<span class="keyword">None</span>, name=<span class="keyword">None</span>, optimize=<span class="keyword">True</span>)</div><div class="line">tf.ones(shape, dtype=tf.float32, name=<span class="keyword">None</span>)</div><div class="line">tf.ones_like(input_tensor, dtype=<span class="keyword">None</span>, name=<span class="keyword">None</span>, optimize=<span class="keyword">True</span>)</div><div class="line">tf.fill(dims, value, name=<span class="keyword">None</span>)</div><div class="line">tf.fill([<span class="number">2</span>, <span class="number">3</span>], <span class="number">8</span>)</div><div class="line">&gt;&gt; [[<span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>], [<span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>]]</div></pre></td></tr></table></figure>
+<p>也有和numpy类似的序列创建</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">tf.linspace(start, stop, num, name=<span class="keyword">None</span>)</div><div class="line">tf.linspace(<span class="number">10.0</span>, <span class="number">13.0</span>, <span class="number">4</span>)</div><div class="line">&gt;&gt; [<span class="number">10.0</span>, <span class="number">11.0</span>, <span class="number">12.0</span>, <span class="number">13.0</span>]</div><div class="line">tf.range(start, limit=<span class="keyword">None</span>, delta=<span class="number">1</span>, dtype=<span class="keyword">None</span>, name=<span class="string">'range'</span>)</div><div class="line">tf.range(<span class="number">3</span>, limit=<span class="number">18</span>, delta=<span class="number">3</span>)</div><div class="line">&gt;&gt; [<span class="number">3</span>, <span class="number">6</span>, <span class="number">9</span>, <span class="number">12</span>, <span class="number">15</span>]</div></pre></td></tr></table></figure>
+<p>这和numpy最大的区别在于其不能迭代，即</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> tf.range(<span class="number">4</span>): <span class="comment"># TypeError</span></div></pre></td></tr></table></figure>
+<p>除此之外还可以产生一些随机数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">tf.random_normal(shape, mean=<span class="number">0.0</span>, stddev=<span class="number">1.0</span>, dtype=tf.float32, seed=<span class="keyword">None</span>, name=<span class="keyword">None</span>)</div><div class="line">tf.truncated_normal(shape, mean=<span class="number">0.0</span>, stddev=<span class="number">1.0</span>, dtype=tf.float32, seed=<span class="keyword">None</span>,</div><div class="line">name=<span class="keyword">None</span>)</div><div class="line">tf.random_uniform(shape, minval=<span class="number">0</span>, maxval=<span class="keyword">None</span>, dtype=tf.float32, seed=<span class="keyword">None</span>,</div><div class="line">name=<span class="keyword">None</span>)</div><div class="line">tf.random_shuffle(value, seed=<span class="keyword">None</span>, name=<span class="keyword">None</span>)</div><div class="line">tf.random_crop(value, size, seed=<span class="keyword">None</span>, name=<span class="keyword">None</span>)</div><div class="line">tf.multinomial(logits, num_samples, seed=<span class="keyword">None</span>, name=<span class="keyword">None</span>)</div><div class="line">tf.random_gamma(shape, alpha, beta=<span class="keyword">None</span>, dtype=tf.float32, seed=<span class="keyword">None</span>, name=<span class="keyword">None</span>)</div></pre></td></tr></table></figure>
+<p>另外tensorflow和numpy的数据类型可以通用，也就是说<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tf.ones([<span class="number">2</span>, <span class="number">2</span>], np.float32)</div><div class="line">&gt;&gt; [[<span class="number">1.0</span>, <span class="number">1.0</span>], [<span class="number">1.0</span>, <span class="number">1.0</span>]]</div></pre></td></tr></table></figure></p>
+<p>最好不要使用python自带的数据类型，同时在使用numpy数据类型的时候要小心，因为未来可能tensorflow的数据类型和numpy不再兼容。</p>
+<h2 id="变量-Variable"><a href="#变量-Variable" class="headerlink" title="变量(Variable)"></a>变量(Variable)</h2><p>使用常量会存在什么问题呢？常量会存在计算图的定义当中，如果常量过多，这会使得加载计算图变得非常慢，同时常量的值不可改变，所以引入了变量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a = tf.Variable(<span class="number">2</span>, name=<span class="string">'scalar'</span>)</div><div class="line">b = tf.Variable([<span class="number">2</span>, <span class="number">3</span>], name=<span class="string">'vector'</span>)</div><div class="line">c = tf.Variable([[<span class="number">0</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">3</span>]], name=<span class="string">'matrix'</span>)</div><div class="line">w = tf.Variable(tf.zeros([<span class="number">784</span>, <span class="number">10</span>]), name=<span class="string">'weight'</span>)</div></pre></td></tr></table></figure>
+<p>变量有着下面几个操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = tf.Variable()</div><div class="line">x.initializer <span class="comment"># 初始化</span></div><div class="line">x.eval() <span class="comment"># 读取里面的值</span></div><div class="line">x.assign() <span class="comment"># 分配值给这个变量</span></div></pre></td></tr></table></figure>
+<p>注意一点，在使用变量之前必须对其进行初始化，初始化可以看作是一种变量的分配值操作。最简单的初始化方式是一次性初始化所有的变量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">init = tf.global_variables_initializer()</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(init)</div></pre></td></tr></table></figure>
+<p>也可以对某一部分变量进行初始化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">init_ab = tf.variable_initializer([a, b], name=<span class="string">'init_ab'</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(init_ab)</div></pre></td></tr></table></figure>
+<p>或者是对某一个变量进行初始化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">w = tf.Variable(tf.zeros([<span class="number">784</span>, <span class="number">10</span>]))</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(w.initializer)</div></pre></td></tr></table></figure>
+<p>如果我们想取出变量的值，有两种方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">w = tf.Variable(tf.truncated_normal([<span class="number">10</span>, <span class="number">10</span>], name=<span class="string">'normal'</span>))</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(w.initializer)</div><div class="line">    print(w.eval()) <span class="comment"># 方法一</span></div><div class="line">    print(sess.run(w)) <span class="comment"># 方法二</span></div></pre></td></tr></table></figure>
+<p>下面看看这个小程序</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">w = tf.Variable(<span class="number">10</span>)</div><div class="line">w.assign(<span class="number">100</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(w.initializer)</div><div class="line">    print(w.eval())</div><div class="line">&gt;&gt; <span class="number">10</span></div></pre></td></tr></table></figure>
+<p>上面这个程度会得到10,这是因为我们虽然定义了assign操作，但是tensorflow是在session中执行操作，所以我们需要执行assign操作。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">w = tf.Variable(<span class="number">10</span>)</div><div class="line">assign_op = w.assign(<span class="number">100</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(w.initializer)</div><div class="line">    sess.run(assign_op)</div><div class="line">    print(w.eval())</div><div class="line">&gt;&gt; <span class="number">100</span></div></pre></td></tr></table></figure>
+<p>另外tensorflow的每个session是相互独立的，我们可以看看下面这个例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">W = tf.Variable(<span class="number">10</span>)</div><div class="line">sess1 = tf.Session()</div><div class="line">sess2 = tf.Session()</div><div class="line">sess1.run(W.initializer)</div><div class="line">sess2.run(W.initializer)</div><div class="line">print(sess1.run(W.assign_add(<span class="number">10</span>))) <span class="comment"># &gt;&gt; 20</span></div><div class="line">print(sess2.run(W.assign_sub(<span class="number">2</span>))) <span class="comment"># &gt;&gt; 8</span></div><div class="line">print(sess1.run(W.assign_add(<span class="number">100</span>))) <span class="comment"># &gt;&gt; 120</span></div><div class="line">print(sess2.run(W.assign_sub(<span class="number">50</span>))) <span class="comment"># &gt;&gt; -42</span></div><div class="line">sess1.close()</div><div class="line">sess2.close()</div></pre></td></tr></table></figure>
+<p>你也可以根据一个变量来定义一个变量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">w = tf.Variable(tf.truncated_normal([<span class="number">700</span>, <span class="number">10</span>]))</div><div class="line">u = tf.Variable(w * <span class="number">2</span>)</div></pre></td></tr></table></figure>
+<h2 id="占位符-Placeholders"><a href="#占位符-Placeholders" class="headerlink" title="占位符(Placeholders)"></a>占位符(Placeholders)</h2><p>tensorflow中一般有两步，第一步是定义图，第二步是在session中进行图中的计算。对于图中我们暂时不知道值的量，我们可以定义为占位符，之后再用<code>feed_dict</code>去赋值。</p>
+<p>定义占位符的方式非常简单</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tf.placeholder(dtype, shape=<span class="keyword">None</span>, name=<span class="keyword">None</span>)</div></pre></td></tr></table></figure>
+<p>dtype是必须要指定的参数，shape如果是None，说明任何大小的tensor都能够接受，使用shape=None很容易定义好图，但是在debug的时候这将成为噩梦，所以最好是指定好shape。</p>
+<p>我们可以给出下面的小例子。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">a = tf.placeholder(tf.float32, shape=[<span class="number">3</span>])</div><div class="line">b = tf.constant([<span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>], tf.float32)</div><div class="line">c = a + b</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(c, feed_dict=&#123;a: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]&#125;))</div></pre></td></tr></table></figure>
+<p>除此之外，也可以给tensorflow中的运算进行feed操作，如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">a = tf.add(<span class="number">2</span>, <span class="number">3</span>)</div><div class="line">b = tf.multiply(a, <span class="number">3</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    print(sess.run(b, feed_dict=&#123;a: <span class="number">2</span>&#125;))</div><div class="line">&gt;&gt; <span class="number">6</span></div></pre></td></tr></table></figure>
+<h2 id="lazy-loading"><a href="#lazy-loading" class="headerlink" title="lazy loading"></a>lazy loading</h2><p>lazy loading是指你推迟变量的创建直到你必须要使用他的时候。下面我们看看一般的loading和lazy loading的区别。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># normal loading</span></div><div class="line">x = tf.Variable(<span class="number">10</span>, name=<span class="string">'x'</span>)</div><div class="line">y = tf.Variable(<span class="number">20</span>, name=<span class="string">'y'</span>)</div><div class="line">z = tf.add(x, y)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variables_initializer())</div><div class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        sess.run(z)</div><div class="line"></div><div class="line"><span class="comment"># lazy loading</span></div><div class="line">x = tf.Variable(<span class="number">10</span>, name=<span class="string">'x'</span>)</div><div class="line">y = tf.Variable(<span class="number">20</span>, name=<span class="string">'y'</span>)</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(tf.global_variables_initializer())</div><div class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">10</span>):</div><div class="line">        sess.run(tf.add(x, y))</div></pre></td></tr></table></figure>
+<p>normal loading 会在图中创建x和y变量，同时创建x+y的运算，而lazy loading只会创建x和y两个变量。这不是一个bug，那么问题在哪里呢？</p>
+<p>normal loading在session中不管做多少次x+y，只需要执行z定义的加法操作就可以了，而lazy loading在session中每进行一次x+y，就会在图中创建一个加法操作，如果进行1000次x+y的运算，normal loading的计算图没有任何变化，而lazy loading的计算图会多1000个节点，每个节点都表示x+y的操作。</p>
+<p>看到了吗，这就是lazy loading造成的问题，这会严重影响图的读入速度。</p>
+<hr>
+<p>本文的内容和代码都在该<a href="https://github.com/SherlockLiao/tensorflow-beginner" target="_blank" rel="external">github</a>上</p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          
+            <a href="/tags/cs20si/" rel="tag"># cs20si</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/13/cs20si1/" rel="next" title="cs20si：tensorflow for research 学习笔记1">
+                <i class="fa fa-chevron-left"></i> cs20si：tensorflow for research 学习笔记1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/24/MXNet的动态图接口Gluon/" rel="prev" title="MXNet的动态图接口Gluon">
+                MXNet的动态图接口Gluon <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TensorBoard-可视化"><span class="nav-number">1.</span> <span class="nav-text">TensorBoard 可视化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常数类型-Constant-types"><span class="nav-number">2.</span> <span class="nav-text">常数类型(Constant types)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量-Variable"><span class="nav-number">3.</span> <span class="nav-text">变量(Variable)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#占位符-Placeholders"><span class="nav-number">4.</span> <span class="nav-text">占位符(Placeholders)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lazy-loading"><span class="nav-number">5.</span> <span class="nav-text">lazy loading</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

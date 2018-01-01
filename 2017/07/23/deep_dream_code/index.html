@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PyTorch," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="之前在一篇文章中已经讲了Deep Dream的基本原理，为了能够更清晰地理解Deep Dream，我们有必要了解一下其是如何实现的。Google官方有一个实现的版本，是使用Caffe来实现的，我们这篇文章参考Google的官方实现和XavierLinNow的实现来讲一下Deep Dream的代码。">
+<meta name="keywords" content="PyTorch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DeepDream的代码实现">
+<meta property="og:url" content="https://sherlockliao.github.io/2017/07/23/deep_dream_code/index.html">
+<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:description" content="之前在一篇文章中已经讲了Deep Dream的基本原理，为了能够更清晰地理解Deep Dream，我们有必要了解一下其是如何实现的。Google官方有一个实现的版本，是使用Caffe来实现的，我们这篇文章参考Google的官方实现和XavierLinNow的实现来讲一下Deep Dream的代码。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-05ef44c7a726d8c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-c4b21bcc9eb879b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-5e96dcd87c5ad0ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-3bfc7ae850d7042b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-22T03:21:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DeepDream的代码实现">
+<meta name="twitter:description" content="之前在一篇文章中已经讲了Deep Dream的基本原理，为了能够更清晰地理解Deep Dream，我们有必要了解一下其是如何实现的。Google官方有一个实现的版本，是使用Caffe来实现的，我们这篇文章参考Google的官方实现和XavierLinNow的实现来讲一下Deep Dream的代码。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-05ef44c7a726d8c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://sherlockliao.github.io/2017/07/23/deep_dream_code/"/>
+
+
+
+
+
+  <title>DeepDream的代码实现 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Sherlock Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">廖星宇的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/07/23/deep_dream_code/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sherlock Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DeepDream的代码实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-23T12:00:00+08:00">
+                2017-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前在一篇文章中已经讲了Deep Dream的基本原理，为了能够更清晰地理解Deep Dream，我们有必要了解一下其是如何实现的。Google官方有一个实现的<a href="https://github.com/google/deepdream" target="_blank" rel="external">版本</a>，是使用Caffe来实现的，我们这篇文章参考Google的官方实现和XavierLinNow的<a href="https://github.com/XavierLinNow/deepdream_pytorch" target="_blank" rel="external">实现</a>来讲一下Deep Dream的代码。<br><a id="more"></a></p>
+<h3 id="原理回顾"><a href="#原理回顾" class="headerlink" title="原理回顾"></a>原理回顾</h3><p>简单回顾一下Deep Dream的原理，对于一个预训练的网络，其对特定的分类任务有良好的效果，我们希望知道它到底学到了什么，如果要直接理解神经元提取的特征是很困难的，这时我们将一些与任务无关的图片输入，希望通过网络对其提取特征，然后反向传播的时候不再更新网络的参数，而是更新图片中的像素点，不断地迭代让网络越来越相信这张图片属于分类任务中的某一类。</p>
+<p>这就是Deep Dream最基本的原理，看上去是非常简单的，但是实际中运用中要应用一些训练技巧来达到更好的效果。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>首先我们需要一个预训练的网络，同时我们还需要对预训练网络中的<code>foward</code>进行调整，因为每次我们并不是对整个网络进行前向传播，我们希望得到网络的中间输出结果，而且我们希望我们能够很自由的控制这个变量。在PyTorch中这个实现是很简单的，我们使用预训练的50层的resnet，首先我们查看一下PyTorch对于resnet50的<a href="https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py" target="_blank" rel="external">官方实现</a>，我们只需要在这个官方实现的基础上修改一下就可以了，就像下面这样。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomResNet</span><span class="params">(models.resnet.ResNet)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, end_layer)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line"><span class="string">        end_layer range from 1 to 4</span></div><div class="line"><span class="string">        """</span></div><div class="line">        x = self.conv1(x)</div><div class="line">        x = self.bn1(x)</div><div class="line">        x = self.relu(x)</div><div class="line">        x = self.maxpool(x)</div><div class="line"></div><div class="line">        layers = [self.layer1, self.layer2, self.layer3, self.layer4]</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(end_layer):</div><div class="line">            x = layers[i](x)</div><div class="line">        <span class="keyword">return</span> x</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">resnet50</span><span class="params">(pretrained=False, **kwargs)</span>:</span></div><div class="line">    model = CustomResNet(Bottleneck, [<span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">3</span>], **kwargs)</div><div class="line">    <span class="keyword">if</span> pretrained:</div><div class="line">        model.load_state_dict(model_zoo.load_url(model_urls[<span class="string">'resnet50'</span>]))</div><div class="line">    <span class="keyword">return</span> model</div></pre></td></tr></table></figure>
+<p>我们定义了我们自己的ResNet模块，这个模块是继承于PyTorch中的ResNet模块，然后我们不需要改变初始化，让它去继承ResNet的初始化，只需要重新定义<code>forward</code>就可以，其中我们加入了结束层，也就是我们希望网络输出第几层的结果。</p>
+<p>定义好了预训练的网络，接下来我们就可以开始训练模型，再次说明，网络中的参数不发生改变，更新的是图片中的像素点。</p>
+<p>对于分类问题，我们使用交叉熵作为损失函数，那么在Deep Dream中我们使用什么作为损失函数呢？非常简单，之前我们讲过Deep Dream希望能够在迭代中不断地让网络更加确定这个图片属于某一类，所以损失函数就是网络结束层输出的特征向量的L2范数，我们希望最大化L2范数来使得图片经过网络之后提取的特征更像网络希望提取的特征。</p>
+<p>看着可能有点难以理解，举个例子，一朵云提取特征之后有一点点像狗的图片提取的特征，因为网络的参数不会改变，所以图片如果不改变，那么再次输入网络之后得到的特征还是跟之前一样，只是有一点点像狗的图片提取出来的特征。Deep Dream希望通过反向传播更新图片的像素点，使得提取出来的特征更大，也就是使得提取出来的特征跟狗的图片提取出来的特征更像，那么用L2范数作为损失函数，网络不断更新图片的像素点来最大化L2范数，最终使得提取的特征越来越大，我们将多次更新之后的图片输出，也就得到了Deep Dream效果之后的图片。</p>
+<p>为了得到更好的图片，我们需要应用一些小的技巧，否则得到的图片可能会存在很多噪声，或者需要很长的时间才能达到满意的效果。</p>
+<p>对于输入的图片，我们需要对其做一些随机抖动，怎么去理解呢？看看示例代码就知道了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">shift_x, shift_y = np.random.randint(-max_jitter, max_jitter + <span class="number">1</span>, <span class="number">2</span>)</div><div class="line">img = np.roll(np.roll(img, shift_x, <span class="number">-1</span>), shift_y, <span class="number">-2</span>)</div></pre></td></tr></table></figure>
+<p>max_jitter是一个整数，表示抖动的范围，随机从中取出两个整数表示x轴和y轴的抖动程度，然后np.roll表示对数组沿着一个维度进行平移，上面的代码首先对图片的第三个维度进行平移<code>shift_x</code>，然后对第二个维度进行平移<code>shift_y</code>。</p>
+<p>L2范数的计算公式是$L = x<em>1^2 + x_2^2 + \cdots + x_n^2$，里面每个x表示特征向量中的元素，它们都是图片输入的函数，所以$\frac{\partial L}{\partial p} = 2 \sum</em>{i=1}^{n} x_i \frac{\partial x_i}{\partial p}$，前面的系数2是常数，所以可以去掉，这样我们就得到了反向传播时候的剃度的计算方法。而上一篇文章我们讲了PyTorch中backward的使用，所以我们可以通过下面的方式得到所有待更新的像素点的剃度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">act_value = model.forward(img_variable, end_layer)</div><div class="line">act_value.backward(act_value.data)</div></pre></td></tr></table></figure>
+<p><code>act_value.backward(act_value.data)</code>就是上面L2范数反向传播的公式。</p>
+<p>对于得到的剃度，我们需要对学习率进行一些限制，首先将所有参数的剃度的绝对值求个平均，然后用学习率除以这个均值，这样就得到了实际用的学习率。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ratio = np.abs(img_variable.grad.data.cpu().numpy()).mean()</div><div class="line">learning_rate_use = learning_rate / ratio</div><div class="line">img_variable.data.add_(img_variable.grad.data * learning_rate_use)</div></pre></td></tr></table></figure>
+<p>最后我们还需要使用一个小技巧，就是使用多尺度的图片进行计算，如果一直使用原始的图片，可能收敛速度会比较慢，所以我们先将图片缩小进行更新，然后在放大进行更新。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(octave_n - <span class="number">1</span>):</div><div class="line">    octaves.append(</div><div class="line">        nd.zoom(</div><div class="line">            octaves[<span class="number">-1</span>], (<span class="number">1</span>, <span class="number">1</span>, <span class="number">1.0</span> / octave_scale, <span class="number">1.0</span> / octave_scale),</div><div class="line">            order=<span class="number">1</span>))</div></pre></td></tr></table></figure>
+<p><code>octave_n</code>表示多少张小图片，然后使用<code>scipy.ndimage.zoom</code>进行图片的放缩，每次放缩的比例是<code>1/octave_scale</code>，这样我们就可以图片大小递减的小图片，然后从小到大依次对图片的像素点进行更新，最后得到Deep Dream的图片。</p>
+<p>我们对一张云的图片做Deep Dream，这张图片原始是下面这样。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-05ef44c7a726d8c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>然后经过Deep Dream的效果之后变成了这样，可以看到图片中多了一些狗头，还有一些眼睛，中间左边有一个明显的塔。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-c4b21bcc9eb879b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>除此之外，我们还可以控制Deep Dream中的梦境，也就是说我们可以控制图片中出现的东西。要实现其实很简单，之前我们最大化特征向量的L2范数，这导致了图片中出现了各种各样的图片，所以要实现梦境控制，我们修改一下我们的目标函数就可以了。</p>
+<p>首先需要输入一张图片作为梦境的控制图片，将控制图片通过网络前向传播得到其特征向量，然后将原始图片输入网络也得到特征向量，这两个特征向量的大小不同，所以先将它们重新排列成新的矩阵，然后做矩阵乘法，最后选择矩阵乘法里面最大的下标，将这些下标对应的原始图片的特征向量提取出来作为新的特征向量就可以了，这些特征向量被认为是最匹配控制图片特征向量的，这样就可以得到控制的梦境，具体可以看看下面的代码实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">objective_guide</span><span class="params">(dst, guide_features)</span>:</span></div><div class="line">    x = dst.data[<span class="number">0</span>].cpu().numpy().copy()</div><div class="line">    y = guide_features.data[<span class="number">0</span>].cpu().numpy()</div><div class="line">    ch, w, h = x.shape</div><div class="line">    x = x.reshape(ch,<span class="number">-1</span>)</div><div class="line">    y = y.reshape(ch,<span class="number">-1</span>)</div><div class="line">    A = x.T.dot(y) <span class="comment"># compute the matrix of dot-products with guide features</span></div><div class="line">    result = y[:,A.argmax(<span class="number">1</span>)] <span class="comment"># select ones that match best</span></div><div class="line">    result = torch.Tensor(np.array([result.reshape(ch, w, h)], dtype=np.float)).cuda()</div><div class="line">    <span class="keyword">return</span> result</div></pre></td></tr></table></figure>
+<p>我们输入的控制图片是下面这张小猫的图片</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-5e96dcd87c5ad0ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>最后通过Deep Dream我们能够得到下面这张图片，可以看到图片中有一些猫的头，猫的眼睛和猫的鼻子，是不是很神奇呢？</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-3bfc7ae850d7042b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<hr>
+<p>本文参考Google<a href="https://github.com/google/deepdream" target="_blank" rel="external">官方实现</a>和XavierLinNow的<a href="https://github.com/XavierLinNow/deepdream_pytorch" target="_blank" rel="external">代码</a></p>
+<p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/Deep-Dream" target="_blank" rel="external">github</a>上</p>
+<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PyTorch/" rel="tag"># PyTorch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/10/backward/" rel="next" title="PyTorch中的backward">
+                <i class="fa fa-chevron-left"></i> PyTorch中的backward
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/27/summary-forward/" rel="prev" title="深度学习总结、资源与规划">
+                深度学习总结、资源与规划 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Sherlock Liao/廖星宇" />
+          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+           
+              <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理回顾"><span class="nav-number">1.</span> <span class="nav-text">原理回顾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现"><span class="nav-number">2.</span> <span class="nav-text">代码实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
