@@ -98,8 +98,8 @@
 <meta name="keywords" content="PyTorch">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PyTorch中的backward">
-<meta property="og:url" content="https://sherlockliao.github.io/2017/07/10/backward/index.html">
-<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:url" content="https://l1aoxingyu.github.io/2017/07/10/backward/index.html">
+<meta property="og:site_name" content="Liao Xingyu&#39;s Blog">
 <meta property="og:description" content="接触了PyTorch这么长的时间，也玩了很多PyTorch的骚操作，都特别简单直观地实现了，但是有一个网络训练过程中的操作之前一直没有仔细去考虑过，那就是loss.backward()，看到这个大家一定都很熟悉，loss是网络的损失函数，是一个标量，你可能会说这不就是反向传播吗，有什么好讲的。 但是不知道大家思考过没有，如果loss不是一个标量，而是一个向量，那么loss.backward()是什">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-8d6685ca09f0287b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
@@ -143,13 +143,13 @@
 
 
 
-  <link rel="canonical" href="https://sherlockliao.github.io/2017/07/10/backward/"/>
+  <link rel="canonical" href="https://l1aoxingyu.github.io/2017/07/10/backward/"/>
 
 
 
 
 
-  <title>PyTorch中的backward | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>PyTorch中的backward | Liao Xingyu's Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -179,7 +179,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Sherlock Blog</span>
+        <span class="site-title">Liao Xingyu's Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -286,16 +286,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/07/10/backward/">
+    <link itemprop="mainEntityOfPage" href="https://l1aoxingyu.github.io/2017/07/10/backward/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="name" content="Liao Xingyu/廖星宇">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sherlock Blog">
+      <meta itemprop="name" content="Liao Xingyu's Blog">
     </span>
 
     
@@ -401,7 +401,7 @@ a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3
 <hr>
 <p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/pytorch-beginner/tree/master/11-backward" target="_blank" rel="external">github</a>上</p>
 <p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
-<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/" target="_blank" rel="external">博客</a></p>
 
       
     </div>
@@ -501,8 +501,8 @@ a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
-               alt="Sherlock Liao/廖星宇" />
-          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+               alt="Liao Xingyu/廖星宇" />
+          <p class="site-author-name" itemprop="name">Liao Xingyu/廖星宇</p>
            
               <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
           
@@ -580,7 +580,7 @@ a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+  <span class="author" itemprop="copyrightHolder">Liao Xingyu/廖星宇</span>
 
   
 </div>

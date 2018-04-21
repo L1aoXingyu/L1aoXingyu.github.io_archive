@@ -98,8 +98,8 @@
 <meta name="keywords" content="TensorFlow,cs20si">
 <meta property="og:type" content="article">
 <meta property="og:title" content="cs20si: tensorflow for research学习笔记4">
-<meta property="og:url" content="https://sherlockliao.github.io/2017/09/22/cs20si-tensorflow-for-research学习笔记4/index.html">
-<meta property="og:site_name" content="Sherlock Blog">
+<meta property="og:url" content="https://l1aoxingyu.github.io/2017/09/22/cs20si-tensorflow-for-research学习笔记4/index.html">
+<meta property="og:site_name" content="Liao Xingyu&#39;s Blog">
 <meta property="og:description" content="在第三篇学习笔记中，我们实现了两个简单的模型，线性回归和logistic回归，对于模型结构简单的网络，我们不需要去处理他们的结构关系，但是在复杂的模型中，我们需要更好的安排模型的结构，这样方便我们debug和良好的可视化，接下来，我们就讨论一下如何结构化我们的模型。">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-a396ce364b9e02b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
@@ -140,13 +140,13 @@
 
 
 
-  <link rel="canonical" href="https://sherlockliao.github.io/2017/09/22/cs20si-tensorflow-for-research学习笔记4/"/>
+  <link rel="canonical" href="https://l1aoxingyu.github.io/2017/09/22/cs20si-tensorflow-for-research学习笔记4/"/>
 
 
 
 
 
-  <title>cs20si: tensorflow for research学习笔记4 | Sherlock Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>cs20si: tensorflow for research学习笔记4 | Liao Xingyu's Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -176,7 +176,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Sherlock Blog</span>
+        <span class="site-title">Liao Xingyu's Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -283,16 +283,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sherlockliao.github.io/2017/09/22/cs20si-tensorflow-for-research学习笔记4/">
+    <link itemprop="mainEntityOfPage" href="https://l1aoxingyu.github.io/2017/09/22/cs20si-tensorflow-for-research学习笔记4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sherlock Liao/廖星宇">
+      <meta itemprop="name" content="Liao Xingyu/廖星宇">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sherlock Blog">
+      <meta itemprop="name" content="Liao Xingyu's Blog">
     </span>
 
     
@@ -386,7 +386,7 @@
 </ol>
 <p>下面是一个可视化的示意图</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/3623720-a396ce364b9e02b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
-<h2 id="实例介绍"><a href="#实例介绍" class="headerlink" title="实例介绍"></a>实例介绍</h2><p>上面是一个基本的一般性描述，下面我们使用词向量和skip-gram这个具体的例子来介绍一下如何结构化模型，如果对词向量不熟悉的同学，可以查看一下我的<a href="https://sherlockliao.github.io/2017/05/27/language/">这篇文章</a>的简单介绍，更加详细的介绍可以阅读<a href="http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/" target="_blank" rel="external">这篇博文</a>或者是cs224n的<a href="http://web.stanford.edu/class/cs224n/lectures/cs224n-2017-lecture2.pdf" target="_blank" rel="external">课件</a>。</p>
+<h2 id="实例介绍"><a href="#实例介绍" class="headerlink" title="实例介绍"></a>实例介绍</h2><p>上面是一个基本的一般性描述，下面我们使用词向量和skip-gram这个具体的例子来介绍一下如何结构化模型，如果对词向量不熟悉的同学，可以查看一下我的<a href="https://sherlockliao.github.io/2017/05/27/language/" target="_blank" rel="external">这篇文章</a>的简单介绍，更加详细的介绍可以阅读<a href="http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/" target="_blank" rel="external">这篇博文</a>或者是cs224n的<a href="http://web.stanford.edu/class/cs224n/lectures/cs224n-2017-lecture2.pdf" target="_blank" rel="external">课件</a>。</p>
 <h3 id="词向量的简单介绍"><a href="#词向量的简单介绍" class="headerlink" title="词向量的简单介绍"></a>词向量的简单介绍</h3><p>词向量简单来说就是用一个向量去表示一个词语，但是这个向量并不是随机的，因为这样并没有任何意义，所以我们需要对每个词有一个特定的向量去表示他们，而有一些词的词性是相近的，比如”(love)喜欢”和”(like)爱”，对于这种词性相近的词，我们需要他们的向量表示也能够相近，如何去度量和定义向量之间的相近呢？非常简单，就是使用两个向量的夹角，夹角越小，越相近，这样就有了一个完备的定义。</p>
 <p>虽然我们知道了如何定义词向量的相似性，但是我们仍然不知道如何得到词向量，因为这显然不可能人为去赋值，为了得到词向量，需要介绍skip-gram模型。</p>
 <h3 id="skip-gram模型的简单介绍"><a href="#skip-gram模型的简单介绍" class="headerlink" title="skip-gram模型的简单介绍"></a>skip-gram模型的简单介绍</h3><p>skip-gram模型简单来讲就是在一大段话中，我们给定其中一个词语，希望预测它周围的词语，将词向量作为参数，通过这种方式来训练词向量，最后能够得到满足要求的词向量。而一般来讲，skip-gram模型都是比较简单的线性模型。另外cs224n中还介绍了Noise Contrastive Estimation(不知道怎么翻译)的方法，这里就不再详细介绍了，这只是一种负样本的取样方法。</p>
@@ -437,7 +437,7 @@
 <p>输入每个词，都能够在右边看到与之词性相近的词语分别是什么，特别方便，这个可视化的代码在<a href="https://github.com/SherlockLiao/tensorflow-beginner/blob/master/lab/word2vec_visualize.py" target="_blank" rel="external">这个文件</a>中。</p>
 <hr>
 <p>本文的全部代码都在<a href="https://github.com/SherlockLiao/tensorflow-beginner/tree/master/lab" target="_blank" rel="external">github</a></p>
-<p>欢迎访问我的<a href="https://sherlockliao.github.io/">博客</a></p>
+<p>欢迎访问我的<a href="https://sherlockliao.github.io/" target="_blank" rel="external">博客</a></p>
 <p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
 
       
@@ -549,8 +549,8 @@
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
-               alt="Sherlock Liao/廖星宇" />
-          <p class="site-author-name" itemprop="name">Sherlock Liao/廖星宇</p>
+               alt="Liao Xingyu/廖星宇" />
+          <p class="site-author-name" itemprop="name">Liao Xingyu/廖星宇</p>
            
               <p class="site-description motion-element" itemprop="description">关于人工智能和深度学习 | 廖星宇，Deep Learner & 健身爱好者 | 这里是 @Sherlock 廖星宇 的个人博客，I want to create some new things!</p>
           
@@ -644,7 +644,7 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Sherlock Liao/廖星宇</span>
+  <span class="author" itemprop="copyrightHolder">Liao Xingyu/廖星宇</span>
 
   
 </div>
