@@ -105,7 +105,7 @@
 <meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNc79gy1fqi1mtxyxdj30af0dw0tm.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNc79gy1fqi1tz84vtj30r603emxe.jpg">
 <meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79gy1fqi206fd7qj30i803g74b.jpg">
-<meta property="og:updated_time" content="2018-04-19T09:21:32.749Z">
+<meta property="og:updated_time" content="2018-04-25T06:11:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何用flask部署pytorch模型">
 <meta name="twitter:description" content="随着深度学习越来越火，各种框架也层出不穷，如何训练一个深度学习模型变得越来越简单。然而在实际的工业场景中，我们往往更加关注如何部署一个已经训练好的模型。">
@@ -360,7 +360,7 @@
 <p>目前的最新消息，Caffe2的源码已经并到pytorch中了，或许这是Facebook准备对付TensorFlow的大招，我们拭目以待。</p>
 <p>本文受到keras的一篇<a href="https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html" target="_blank" rel="external">博文</a>的启发，会教大家如何使用flask来部署训练好的pytorch模型。首先声明一下，flask我也不太会用，因为看到了keras的文章，希望分享这种思路和想法，使用一种web框架实现深度学习模型的部署。</p>
 <h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>首先确保安装了pytorch，因为需要使用flask这个web框架，所以当然需要安装flask，非常简单，使用下面的命令进行安装。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install falsk</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install flask</div></pre></td></tr></table></figure>
 <h3 id="配置REST-API"><a href="#配置REST-API" class="headerlink" title="配置REST API"></a>配置REST API</h3><p>我们知道每次启动模型，load参数是一件非常费时间的事情，而每次做前向传播的时候模型其实都是一样的，所以我们最好的办法就是load一次模型，然后做完前向传播之后仍然保留这个load好的模型，下一次有新的数据进来，我们就可以不用重新load模型，可以直接做前向传播得到结果，这样无疑节约了很多load模型的时间。所以我们需要建立一个类似于服务器的机制，将模型在服务器上load好，方便我们不断去调用模型做前向传播，那么怎么能够达到这个目的呢？我们可以使用flask来建立一个REST API来达到这一目的。</p>
 <p>REST API 是什么呢？REST 是Representational State Transfer的缩写，这是一种架构风格，这里就不再过多描述，感兴趣的同学可以自己去google一下。</p>
 <p>那么如何用flask启动这个服务呢？</p>
