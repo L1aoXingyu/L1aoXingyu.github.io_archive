@@ -105,7 +105,7 @@
 <meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcly1ftjmnnjf5kj30ks0eydhi.jpg">
 <meta property="og:image" content="https://ws2.sinaimg.cn/large/006tKfTcly1ftjn8fep6gj317m0pcgnr.jpg">
 <meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcly1ftjp5ce82wj30eu05iq2w.jpg">
-<meta property="og:updated_time" content="2018-07-25T03:00:21.393Z">
+<meta property="og:updated_time" content="2018-09-26T03:15:30.137Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个强力的ReID basemodel">
 <meta name="twitter:description" content="最近一段时间在做 ReID 相关的任务，期间小伙伴们对于 basemodel 有一些不一致的意见，有的小伙伴人为 softmax 效果比较好，有的认为 triplet hard 效果好，还有的认为 softmax 加 triplet hard 联合训练效果比较好。同时今年 CVPR2018 很多有关 ReID 文章的性能并不是特别高，比如如何看待商汤CVPR2018行人重识别的文章比softmax">
@@ -371,39 +371,56 @@
 <p><img src="https://ws3.sinaimg.cn/large/006tKfTcly1ftjp5ce82wj30eu05iq2w.jpg" width="400"></p>
 <h3 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h3><p>用 ReID model 做预测就非常简单，就去掉最后的全连接层，然后用网络提取 feature，最后算 query 和 gallery 所有图片 feature 之间的距离，根据距离去算 rank1 和 mAP 就可以得到最后的效果。 </p>
 <h2 id="Baseline-model"><a href="#Baseline-model" class="headerlink" title="Baseline model"></a>Baseline model</h2><p>前面介绍完了 ReID 的基础知识，下面我们讲一讲我们用的 basemodel，同时也验证三种 loss(softmax, triplet, softmax+triplet) 的性能表现。我们的 backbone network 是 ResNet50，这也是很多论文中使用的 model，但是我们会稍稍做一点修改，将最后一个 conv block 的 stride 从 2 改成 1，这样网络的参数并不会变化，但是可以得到比原来大一倍的 feature map，这个想法来自于 <a href="https://github.com/huanghoujing/person-reid-triplet-loss-baseline" target="_blank" rel="external">huanghoujing的triplet baseline</a>。</p>
-<h3 id="Bottleneck"><a href="#Bottleneck" class="headerlink" title="Bottleneck"></a>Bottleneck</h3><p>第二个增加的部分叫 bottleneck，也就是在全连接分类层的前面加上一个结构 (Linear(2048, 512) -&gt; bn -&gt; LeakyReLU(0.1) -&gt; Dropout(0.5))，这个结构来自于<a href="https://github.com/layumi/Person_reID_baseline_pytorch" target="_blank" rel="external">郑哲东的baseline</a>，根据郑哲东的 github，这个结构最先来自于 <a href="https://arxiv.org/abs/1703.07737" target="_blank" rel="external">In Defense of the Triplet Loss for Person Re-Identification</a> 这篇论文。</p>
+<h3 id="BatchNorm-策略"><a href="#BatchNorm-策略" class="headerlink" title="BatchNorm 策略"></a>BatchNorm 策略</h3><p>第二个增加的部分是 BatchNormalize，也就是批标准化，但是增加的 BN 层不学习 $\beta$，只学习 $\gamma$，将 $\beta$ 初始化为0，将 $\gamma$ 初始化为1，相当于对 feature normalize 到 N(0, 1) 的正态分布，然后对分布做一个 scale，但是不做 shift，这样的好处是可以让分布聚集在原点周围，而不会转移，同时对 feature 做一个可以学习的 scale，可以让 feature 自适应的调整。</p>
 <h3 id="Warmup-strategy"><a href="#Warmup-strategy" class="headerlink" title="Warmup strategy"></a>Warmup strategy</h3><p>最后一个就是我们训练模型使用的学习率策略，这个策略叫做 warmup，也就是开始让学习率特别小，然后慢慢增大，接着训练一段时间又慢慢减小，这个策略来自于 fair 的论文 <a href="https://arxiv.org/abs/1706.02677" target="_blank" rel="external">Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour</a>，同时这篇论文提供了一个多卡和学习率之间线性关系的简单证明，有兴趣的同学可以看看，里面有很多训练的 trick。</p>
-<h3 id="Loss"><a href="#Loss" class="headerlink" title="Loss"></a>Loss</h3><p>我们试验了三种 loss，分别是 softmax，triplet hard 以及 softmax + triplet hard。在训练分类的时候直接按照最简单的图像分类训练去取样本，在训练 triplet hard 以及 softmax + triplet hard 的时候，我们使用三元组采样，具体来讲在每个 batch 中我们采样 32 个人，每个人采样 4 张图片，这样每个 batch 有 128 张图片，实现上可以使用 pytorch 里 DataLoader 中的 sampler 这个函数，同时我们训练的时候使用 Adam 去优化所有的参数。</p>
-<h2 id="Experiment-Result"><a href="#Experiment-Result" class="headerlink" title="Experiment Result"></a>Experiment Result</h2><p>通过我们的实验，最后我们得到了下面的结果</p>
+<h3 id="Batch-Size-的策略"><a href="#Batch-Size-的策略" class="headerlink" title="Batch Size 的策略"></a>Batch Size 的策略</h3><p>我们调整了不同的 batch size，发现 batch size 太大会使得梯度变得比较稳定，不利于跳出局部极小点，所以才去比较小的 batch size 会有更好的效果，我们采取的是 32 或者 64 的 batch size。</p>
+<h3 id="Loss"><a href="#Loss" class="headerlink" title="Loss"></a>Loss</h3><p>我们试验了三种 loss，分别是 softmax，triplet hard 以及 softmax + triplet hard。在训练分类的时候直接按照最简单的图像分类训练去取样本，在训练 triplet hard 以及 softmax + triplet hard 的时候，我们使用三元组采样，具体来讲在每个 batch 中我们采样 16 个人，每个人采样 4 张图片，这样每个 batch 有 64 张图片，实现上可以使用 pytorch 里 DataLoader 中的 sampler 这个函数，每张图片的大小是 (384, 128)，同时我们训练的时候使用 Adam 去优化所有的参数。</p>
+<h2 id="Experiment-Result"><a href="#Experiment-Result" class="headerlink" title="Experiment Result"></a>Experiment Result</h2><p>通过我们的 ablation study，最后我们得到了下面的结果</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
-<th>loss</th>
-<th>rank1</th>
-<th>map</th>
+<th>config</th>
+<th>Market1501</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>softmax</td>
-<td>87.9%</td>
-<td>70.1%</td>
+<td>bs(32) size(384,128) softmax</td>
+<td>92.2 (78.5)</td>
 </tr>
 <tr>
-<td>triplet</td>
-<td>88.8%</td>
-<td>74.8%</td>
+<td>bs(64) size(384,128) softmax</td>
+<td>92.5 (79.6)</td>
 </tr>
 <tr>
-<td>triplet + softmax</td>
-<td>92.0%</td>
-<td>78.1%</td>
+<td>bs(32) size(256,128) softmax</td>
+<td>92.0 (78.4)</td>
+</tr>
+<tr>
+<td>bs(64) size(256,128) softmax</td>
+<td>91.7 (78.3)</td>
+</tr>
+<tr>
+<td>bs(128) size(256,128) softmax</td>
+<td>91.2 (77.4)</td>
+</tr>
+<tr>
+<td>triplet(p=32,k=4) size(256,128)</td>
+<td>88.3 (73.8)</td>
+</tr>
+<tr>
+<td>triplet(p=16,k=4)+softmax size(384,128)</td>
+<td>93.1 (82.0)</td>
+</tr>
+<tr>
+<td>triplet(p=24,k=4)+softmax size(384,128)</td>
+<td>91.7 (79.0)</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>通过上面的结果可以发现 softmax 联合 triplet hard 的效果是最好的，同时我们也做了多次试验，最后结果浮动在 1% 以内，最好是能跑到 92%。</p>
+<p>通过上面的结果可以发现 softmax 联合 triplet hard 的效果是最好的，同时我们也做了多次试验，最后结果浮动在 1% 以内，最好是能跑到 93%，最后 mAP 可以达到 82.0%。</p>
 <h2 id="Concolusion"><a href="#Concolusion" class="headerlink" title="Concolusion"></a>Concolusion</h2><p>本次对比试验主要是为了解决一个疑惑，那就是三种 loss 到底哪一种能够实现最好的结果，我们将 setting 控制成一样之后，最终得到了上面的结果，也证明了 softmax + triplet hard 能够实现最佳的性能，同时我们间接实现了一个非常强的 baseline，rank1 在 market1501 上直接能达到 92%，这可能比绝大多数论文的结果都要高，我们也希望大家能够在一个高的 baseline 上面去创新，思考一些 novelty 的方法，这样才是真正有意义的工作。</p>
 <p>最后放上我们的代码地址 <a href="https://github.com/L1aoXingyu/reid_baseline" target="_blank" rel="external">reid_baseline</a></p>
 <hr>
@@ -589,7 +606,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-person-ReID"><span class="nav-number">1.</span> <span class="nav-text">What is person ReID?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction"><span class="nav-number">1.1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Evaluatation-metric"><span class="nav-number">1.2.</span> <span class="nav-text">Evaluatation metric</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-train-and-test"><span class="nav-number">2.</span> <span class="nav-text">How to train and test</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Train"><span class="nav-number">2.1.</span> <span class="nav-text">Train</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Test"><span class="nav-number">2.2.</span> <span class="nav-text">Test</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Baseline-model"><span class="nav-number">3.</span> <span class="nav-text">Baseline model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bottleneck"><span class="nav-number">3.1.</span> <span class="nav-text">Bottleneck</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Warmup-strategy"><span class="nav-number">3.2.</span> <span class="nav-text">Warmup strategy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loss"><span class="nav-number">3.3.</span> <span class="nav-text">Loss</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experiment-Result"><span class="nav-number">4.</span> <span class="nav-text">Experiment Result</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Concolusion"><span class="nav-number">5.</span> <span class="nav-text">Concolusion</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-person-ReID"><span class="nav-number">1.</span> <span class="nav-text">What is person ReID?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction"><span class="nav-number">1.1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Evaluatation-metric"><span class="nav-number">1.2.</span> <span class="nav-text">Evaluatation metric</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-train-and-test"><span class="nav-number">2.</span> <span class="nav-text">How to train and test</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Train"><span class="nav-number">2.1.</span> <span class="nav-text">Train</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Test"><span class="nav-number">2.2.</span> <span class="nav-text">Test</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Baseline-model"><span class="nav-number">3.</span> <span class="nav-text">Baseline model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BatchNorm-策略"><span class="nav-number">3.1.</span> <span class="nav-text">BatchNorm 策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Warmup-strategy"><span class="nav-number">3.2.</span> <span class="nav-text">Warmup strategy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Batch-Size-的策略"><span class="nav-number">3.3.</span> <span class="nav-text">Batch Size 的策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loss"><span class="nav-number">3.4.</span> <span class="nav-text">Loss</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experiment-Result"><span class="nav-number">4.</span> <span class="nav-text">Experiment Result</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Concolusion"><span class="nav-number">5.</span> <span class="nav-text">Concolusion</span></a></li></ol></div>
             
 
           </div>
