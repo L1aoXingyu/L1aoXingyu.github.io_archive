@@ -2,6 +2,15 @@
 
 
 
+
+
+
+
+
+
+
+
+
   
 
 
@@ -9,8 +18,11 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
 <meta name="theme-color" content="#222">
+
+
+
 
 
 
@@ -37,36 +49,7 @@
 
 
 
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
 
 
 
@@ -75,26 +58,57 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
 
 
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
 
 
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
 
 
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
-
-
-
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
 
 
 
-<meta name="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner &amp; 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner &amp; 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sherlock&#39;s Blog">
 <meta property="og:url" content="https://l1aoxingyu.github.io/page/3/index.html">
@@ -107,29 +121,6 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Muse',
-    version: '5.1.2',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: 'Author'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
 
 
 
@@ -137,9 +128,13 @@
 
 
 
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
 
-
-  <title>Sherlock's Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Sherlock's Blog</title>
   
 
 
@@ -148,6 +143,36 @@
 
 
 
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -159,8 +184,7 @@
   
 
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left 
-   page-home 
- ">
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -169,19 +193,21 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">Sherlock's Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+    
       
         <p class="site-subtitle">sherlock的博客</p>
       
+    
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="Toggle navigation bar">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -189,65 +215,55 @@
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
+
+<nav class="site-nav">
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            Home
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            Categories
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            About
-          </a>
-        </li>
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
       
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+
+  </li>
         
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            Archives
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            Tags
-          </a>
-        </li>
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
       
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+
+  </li>
 
       
+      
     </ul>
+  
+
+  
+    
+
   
 
   
@@ -255,12 +271,20 @@
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
@@ -273,6 +297,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -282,7 +308,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -297,11 +323,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/07/23/deep_dream_code/" itemprop="url">DeepDream的代码实现</a></h1>
+                
+                <a href="/2017/07/23/deep_dream_code/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">DeepDream的代码实现</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -309,13 +344,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-23T12:00:00+08:00">
-                2017-07-23
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-07-23 12:00:00" itemprop="dateCreated datePublished" datetime="2017-07-23T12:00:00+08:00">2017-07-23</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-22 11:21:28" itemprop="dateModified" datetime="2017-08-22T11:21:28+08:00">2017-08-22</time>
+              
             
           </span>
 
@@ -350,21 +402,29 @@
         
           <p>之前在一篇文章中已经讲了Deep Dream的基本原理，为了能够更清晰地理解Deep Dream，我们有必要了解一下其是如何实现的。Google官方有一个实现的<a href="https://github.com/google/deepdream" target="_blank" rel="external">版本</a>，是使用Caffe来实现的，我们这篇文章参考Google的官方实现和XavierLinNow的<a href="https://github.com/XavierLinNow/deepdream_pytorch" target="_blank" rel="external">实现</a>来讲一下Deep Dream的代码。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/23/deep_dream_code/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/07/23/deep_dream_code/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -397,6 +457,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -406,7 +468,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -421,11 +483,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/07/10/backward/" itemprop="url">PyTorch中的backward</a></h1>
+                
+                <a href="/2017/07/10/backward/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">PyTorch中的backward</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -433,13 +504,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-10T12:00:00+08:00">
-                2017-07-10
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-07-10 12:00:00" itemprop="dateCreated datePublished" datetime="2017-07-10T12:00:00+08:00">2017-07-10</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-01-24 11:21:14" itemprop="dateModified" datetime="2018-01-24T11:21:14+08:00">2018-01-24</time>
+              
             
           </span>
 
@@ -475,21 +563,29 @@
           <p>接触了PyTorch这么长的时间，也玩了很多PyTorch的骚操作，都特别简单直观地实现了，但是有一个网络训练过程中的操作之前一直没有仔细去考虑过，那就是<code>loss.backward()</code>，看到这个大家一定都很熟悉，loss是网络的损失函数，是一个标量，你可能会说这不就是反向传播吗，有什么好讲的。</p>
 <p>但是不知道大家思考过没有，如果loss不是一个标量，而是一个向量，那么<code>loss.backward()</code>是什么结果呢？<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/10/backward/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/07/10/backward/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -522,6 +618,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -531,7 +629,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -546,11 +644,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/07/09/deep_dream/" itemprop="url">一文理解Deep Dream</a></h1>
+                
+                <a href="/2017/07/09/deep_dream/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">一文理解Deep Dream</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -558,13 +665,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-09T12:00:00+08:00">
-                2017-07-09
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-07-09 12:00:00" itemprop="dateCreated datePublished" datetime="2017-07-09T12:00:00+08:00">2017-07-09</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-22 11:21:10" itemprop="dateModified" datetime="2017-08-22T11:21:10+08:00">2017-08-22</time>
+              
             
           </span>
 
@@ -601,21 +725,29 @@
 <p><img src="http://upload-images.jianshu.io/upload_images/3623720-664b790e9f424fcb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="deepdream0.png"></p>
 <p>这些图片充满着幻觉和梦境，所以这个算法被称为Deep Dream。这个算法的由来非常有意思，因为它是意外得到的效果。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/09/deep_dream/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/07/09/deep_dream/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -648,6 +780,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -657,7 +791,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -672,11 +806,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/06/29/tensorboard/" itemprop="url">PyTorch中如何使用tensorboard可视化</a></h1>
+                
+                <a href="/2017/06/29/tensorboard/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">PyTorch中如何使用tensorboard可视化</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -684,13 +827,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-29T12:00:00+08:00">
-                2017-06-29
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-06-29 12:00:00" itemprop="dateCreated datePublished" datetime="2017-06-29T12:00:00+08:00">2017-06-29</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-22 11:27:50" itemprop="dateModified" datetime="2017-08-22T11:27:50+08:00">2017-08-22</time>
+              
             
           </span>
 
@@ -726,21 +886,29 @@
           <p>深度使用过tensorflow的同学可能都使用过tensorboard，因为tensorboard这一高级的可视化的工具，很多人对tensorflow也爱不释手，目前除了tensorflow之外还没有哪个深度学习库开发出了一套完美的可视化工具，这也是tensorflow流行的原因之一，如果不使用tensorboard，你想可视化训练流程，那么你只能自己保存变量，自己画曲线。</p>
 <p>所以有很多使用别的深度学习框架的人在研究如何将tensorboard移植到他们的框架中来，当然也有很多成功的例子，不然我也不会写这篇文章了，下面我们就来讲几种目前流行的方法。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/29/tensorboard/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/06/29/tensorboard/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -773,6 +941,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -782,7 +952,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -797,11 +967,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/06/24/vae/" itemprop="url">花式解释AutoEncoder与VAE</a></h1>
+                
+                <a href="/2017/06/24/vae/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">花式解释AutoEncoder与VAE</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -809,13 +988,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-24T12:00:00+08:00">
-                2017-06-24
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-06-24 12:00:00" itemprop="dateCreated datePublished" datetime="2017-06-24T12:00:00+08:00">2017-06-24</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-22 11:28:26" itemprop="dateModified" datetime="2017-08-22T11:28:26+08:00">2017-08-22</time>
+              
             
           </span>
 
@@ -852,21 +1048,29 @@
 <p>1)跟数据相关程度很高，这意味着自动编码器只能压缩与训练数据相似的数据，这个其实比较显然，因为使用神经网络提取的特征一般是高度相关于原始的训练集，使用人脸训练出来的自动编码器在压缩自然界动物的图片是表现就会比较差，因为它只学习到了人脸的特征，而没有能够学习到自然界图片的特征；</p>
 <p>2)压缩后数据是有损的，这是因为在降维的过程中不可避免的要丢失掉信息；<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/24/vae/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/06/24/vae/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -899,6 +1103,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -908,7 +1114,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -923,11 +1129,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/06/20/gan_math/" itemprop="url">Gan的数学推导</a></h1>
+                
+                <a href="/2017/06/20/gan_math/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">Gan的数学推导</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -935,13 +1150,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T12:00:00+08:00">
-                2017-06-20
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-06-20 12:00:00" itemprop="dateCreated datePublished" datetime="2017-06-20T12:00:00+08:00">2017-06-20</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-07-12 13:46:52" itemprop="dateModified" datetime="2018-07-12T13:46:52+08:00">2018-07-12</time>
+              
             
           </span>
 
@@ -976,21 +1208,29 @@
         
           <p>前面我们讲了一下Gan的基本思想，最近看了一下Gan的论文，又恰好看到了李宏毅老师的<a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html" target="_blank" rel="external">课程</a>，感觉里面的数学推导很有意思，所以准备写下来以备之后查阅。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/20/gan_math/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/06/20/gan_math/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1023,6 +1263,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1032,7 +1274,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1047,11 +1289,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/06/10/Gan/" itemprop="url">10分钟快速入门PyTorch (10)</a></h1>
+                
+                <a href="/2017/06/10/Gan/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">10分钟快速入门PyTorch (10)</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1059,13 +1310,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-10T12:00:00+08:00">
-                2017-06-10
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-06-10 12:00:00" itemprop="dateCreated datePublished" datetime="2017-06-10T12:00:00+08:00">2017-06-10</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-25 13:28:10" itemprop="dateModified" datetime="2017-08-25T13:28:10+08:00">2017-08-25</time>
+              
             
           </span>
 
@@ -1101,21 +1369,29 @@
           <p>前面我们已经讲完了一般的深层网络，适用于图像的卷积神经网络，适用于序列的循环神经网络。但是要知道Lecun提出第一代卷积网络Lenet的时间是1998年，而循环神经网络提出的时间更早，是在1986年。这些网络在当时并没有火起来，如今随着计算能力的加强，数据集的增多，深度学习逐渐火了起来，随着越来越多的人的研究，各种各样的神经网络都在不断进步，CNN里面出现了inception net，resnet等等，RNN演变了LSTM和GRU，虽然神经网络不断在发展，但是本质上仍然是在CNN和RNN的基础上。</p>
 <p>直到2014年，深度学习三巨头之一 Ian Goodfellow 提出了生成对抗网络(Generative Adversarial Networks, GANs)，刚开始的时候并没有引起轰动，直到16年，学界、业界对其的兴趣出现了“井喷”，多篇重磅文章陆续发表，Lecun也形容GANs“adversarial training is the coolest thing since sliced bread.” 16年12月NIPS大会上，Goodfellow做了GANs的专题报告，使得GANs成为了当今最炙手可热的研究领域，等你看完了这篇文章你就会知道为什么GANs能够成为当今人工智能领域的主要课题之一。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/10/Gan/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/06/10/Gan/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1148,6 +1424,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1157,7 +1435,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1172,11 +1450,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/06/05/lstm language/" itemprop="url">10分钟快速入门PyTorch (9)</a></h1>
+                
+                <a href="/2017/06/05/lstm language/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">10分钟快速入门PyTorch (9)</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1184,13 +1471,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-05T12:00:00+08:00">
-                2017-06-05
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-06-05 12:00:00" itemprop="dateCreated datePublished" datetime="2017-06-05T12:00:00+08:00">2017-06-05</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-28 19:56:02" itemprop="dateModified" datetime="2017-08-28T19:56:02+08:00">2017-08-28</time>
+              
             
           </span>
 
@@ -1225,21 +1529,29 @@
         
           <p>在上一节中，我们介绍了一下自然语言处理里面最基本的单边和双边的 n gram 模型，用 word embedding和n gram 模型对一句话中的某个词做预测，下面我们将使用LSTM来做判别每个词的词性，因为同一个单词有着不同的词性，比如book可以表示名词，也可以表示动词，所以我们需要训练一下网络来得到词性的判断。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/05/lstm language/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/06/05/lstm language/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1272,6 +1584,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1281,7 +1595,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1296,11 +1610,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/06/01/ngram/" itemprop="url">10分钟快速入门PyTorch (8)</a></h1>
+                
+                <a href="/2017/06/01/ngram/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">10分钟快速入门PyTorch (8)</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1308,13 +1631,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-01T12:00:00+08:00">
-                2017-06-01
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-06-01 12:00:00" itemprop="dateCreated datePublished" datetime="2017-06-01T12:00:00+08:00">2017-06-01</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-25 13:24:54" itemprop="dateModified" datetime="2017-08-25T13:24:54+08:00">2017-08-25</time>
+              
             
           </span>
 
@@ -1349,21 +1689,29 @@
         
           <p>前面一篇文章中，我们简单的介绍了自然语言处理中最简单的词向量 word embedding，这一篇文章我们将介绍如何使用word embedding做自然语言处理的词语预测。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/01/ngram/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/06/01/ngram/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1396,6 +1744,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1405,7 +1755,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1420,11 +1770,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/05/27/language/" itemprop="url">10分钟快速入门PyTorch (7)</a></h1>
+                
+                <a href="/2017/05/27/language/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/3/index.html">10分钟快速入门PyTorch (7)</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1432,13 +1791,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-27T12:00:00+08:00">
-                2017-05-27
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-05-27 12:00:00" itemprop="dateCreated datePublished" datetime="2017-05-27T12:00:00+08:00">2017-05-27</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-25 13:23:28" itemprop="dateModified" datetime="2017-08-25T13:23:28+08:00">2017-08-25</time>
+              
             
           </span>
 
@@ -1473,21 +1849,29 @@
         
           <p>上一节中我们介绍了LSTM如何处理图像分类问题，本质上是将图像看成一个序列做处理，但是RNN的长处并不是做图像分类，而是做自然语言处理，所以这一节我们将讲一下pytorch下RNN如何做自然语言处理。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/05/27/language/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/05/27/language/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1516,15 +1900,12 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
 
           </div>
-          
-
-
           
 
         </div>
@@ -1547,66 +1928,124 @@
 
       
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
-               alt="Sherlock" />
-          <p class="site-author-name" itemprop="name">Sherlock</p>
-           
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sherlock</p>
               <p class="site-description motion-element" itemprop="description">关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!</p>
+          </div>
+
           
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
         </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/archives/">
-                <span class="site-state-item-count">46</span>
-                <span class="site-state-item-name">posts</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-categories">
-              <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
-                <span class="site-state-item-name">categories</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-tags">
-              <a href="/tags/index.html">
-                <span class="site-state-item-count">25</span>
-                <span class="site-state-item-name">tags</span>
-              </a>
-            </div>
-          
-
-        </nav>
-
-        
-
-        <div class="links-of-author motion-element">
-          
-        </div>
-
-        
-        
-
-        
-        
-
-        
-
-
       </section>
 
       
@@ -1623,46 +2062,32 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy; 
-  <span itemprop="copyrightYear">2018</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Sherlock</span>
 
   
+
+  
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.3.8</div>
+
+
 
   <span class="post-meta-divider">|</span>
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv">
-      <i class="fa fa-user"></i> 访问人数
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-      
-    </span>
-  
-
-  
-    <span class="site-pv">
-      <i class="fa fa-eye"></i> 总访问量
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-      次
-    </span>
-  
-</div>
 
 
 
@@ -1682,6 +2107,11 @@
       </div>
     
 
+    
+	
+    
+
+    
   </div>
 
   
@@ -1700,7 +2130,6 @@
 
 
 
-  
 
 
 
@@ -1710,74 +2139,6 @@
 
 
 
-
-
-
-  
-  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
-
-
-
-  
-  
-
-  
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
-
-  
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
 
 
 
@@ -1787,38 +2148,39 @@
 
 
   
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
 
 
 
-
-
+  
   
 
   
 
   
 
-  
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -1836,8 +2198,50 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
+
+
+
   
 
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
 
   
 

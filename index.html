@@ -2,6 +2,15 @@
 
 
 
+
+
+
+
+
+
+
+
+
   
 
 
@@ -9,8 +18,11 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
 <meta name="theme-color" content="#222">
+
+
+
 
 
 
@@ -37,36 +49,7 @@
 
 
 
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
 
 
 
@@ -75,26 +58,57 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
 
 
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
 
 
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
 
 
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
-
-
-
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
 
 
 
-<meta name="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner &amp; 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner &amp; 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sherlock&#39;s Blog">
 <meta property="og:url" content="https://l1aoxingyu.github.io/index.html">
@@ -107,29 +121,6 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Muse',
-    version: '5.1.2',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: 'Author'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
 
 
 
@@ -137,9 +128,13 @@
 
 
 
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
 
-
-  <title>Sherlock's Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Sherlock's Blog</title>
   
 
 
@@ -148,6 +143,36 @@
 
 
 
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -159,8 +184,7 @@
   
 
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left 
-   page-home 
- ">
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -169,19 +193,21 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">Sherlock's Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+    
       
         <p class="site-subtitle">sherlock的博客</p>
       
+    
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="Toggle navigation bar">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -189,65 +215,55 @@
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
+
+<nav class="site-nav">
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            Home
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            Categories
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            About
-          </a>
-        </li>
+          
+          <li class="menu-item menu-item-home menu-item-active">
+
+    
+    
+    
       
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+
+  </li>
         
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            Archives
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            Tags
-          </a>
-        </li>
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
       
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+
+  </li>
 
       
+      
     </ul>
+  
+
+  
+    
+
   
 
   
@@ -255,12 +271,20 @@
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
@@ -273,6 +297,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -282,7 +308,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -297,11 +323,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/10/30/repulsion notes 论文笔记/" itemprop="url">Repulsion Loss 论文笔记</a></h1>
+                
+                <a href="/2018/10/30/repulsion notes 论文笔记/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">Repulsion Loss 论文笔记</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -309,13 +344,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-30T11:13:20+08:00">
-                2018-10-30
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-10-30 11:13:20" itemprop="dateCreated datePublished" datetime="2018-10-30T11:13:20+08:00">2018-10-30</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-10-31 11:41:30" itemprop="dateModified" datetime="2018-10-31T11:41:30+08:00">2018-10-31</time>
+              
             
           </span>
 
@@ -351,21 +403,29 @@
           <p>论文: Repulsion Loss: Detecting Pedestrians in a Crowd<br>论文地址: <a href="https://arxiv.org/abs/1711.07752" target="_blank" rel="external">https://arxiv.org/abs/1711.07752</a><br>代码地址: <a href="https://github.com/bailvwangzi/repulsion_loss_ssd" target="_blank" rel="external">https://github.com/bailvwangzi/repulsion_loss_ssd</a></p>
 <p>这是一篇 face++ 和同济大学联合出品的论文，主要的 motivation 是解决密集人群中的遮挡检测问题，从两个方面入手，<strong>一个方面是吸引目标框向 target 靠拢，另外一个方面是同时防止候选框向周围的目标移动。</strong></p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/30/repulsion notes 论文笔记/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/10/30/repulsion notes 论文笔记/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -398,6 +458,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -407,7 +469,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -422,11 +484,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/21/reid-basemodel/" itemprop="url">一个强力的ReID basemodel</a></h1>
+                
+                <a href="/2018/07/21/reid-basemodel/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">一个强力的ReID basemodel</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -434,13 +505,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-21T19:01:59+08:00">
-                2018-07-21
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-07-21 19:01:59" itemprop="dateCreated datePublished" datetime="2018-07-21T19:01:59+08:00">2018-07-21</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-09-26 12:56:30" itemprop="dateModified" datetime="2018-09-26T12:56:30+08:00">2018-09-26</time>
+              
             
           </span>
 
@@ -475,21 +563,29 @@
         
           <p>最近一段时间在做 ReID 相关的任务，期间小伙伴们对于 basemodel 有一些不一致的意见，有的小伙伴人为 softmax 效果比较好，有的认为 triplet hard 效果好，还有的认为 softmax 加 triplet hard 联合训练效果比较好。同时今年 CVPR2018 很多有关 ReID 文章的性能并不是特别高，比如<a href="https://www.zhihu.com/question/276744581/answer/388954134" target="_blank" rel="external">如何看待商汤CVPR2018行人重识别的文章比softmax baseline还低</a>，其实现在很多文章的 setting 都不一样，所以大家的 baseline 也不一样，而有些文章提出的方法在低的 baseline 上面有提升，放到高的 baseline 上可能还会掉点。鉴于此我们做了一个实验，试验了使用三种 loss 进行训练最后的 rank1 能到多少，同时也验证一下到底哪种 loss 组合的效果最好。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/21/reid-basemodel/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/07/21/reid-basemodel/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -522,6 +618,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -531,7 +629,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -546,11 +644,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/03/04/如何用flask部署pytorch模型/" itemprop="url">如何用flask部署pytorch模型</a></h1>
+                
+                <a href="/2018/03/04/如何用flask部署pytorch模型/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">如何用flask部署pytorch模型</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -558,13 +665,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-04T22:49:52+08:00">
-                2018-03-04
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2018-03-04 22:49:52" itemprop="dateCreated datePublished" datetime="2018-03-04T22:49:52+08:00">2018-03-04</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-07-25 10:56:54" itemprop="dateModified" datetime="2018-07-25T10:56:54+08:00">2018-07-25</time>
+              
             
           </span>
 
@@ -599,21 +723,29 @@
         
           <p>随着深度学习越来越火，各种框架也层出不穷，如何训练一个深度学习模型变得越来越简单。然而在实际的工业场景中，我们往往更加关注如何部署一个已经训练好的模型。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/04/如何用flask部署pytorch模型/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/03/04/如何用flask部署pytorch模型/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -646,6 +778,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -655,7 +789,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -670,11 +804,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/12/31/fcn/" itemprop="url">FCN 的简单实现</a></h1>
+                
+                <a href="/2017/12/31/fcn/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">FCN 的简单实现</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -682,13 +825,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T14:30:08+08:00">
-                2017-12-31
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-12-31 14:30:08 / Modified: 14:53:18" itemprop="dateCreated datePublished" datetime="2017-12-31T14:30:08+08:00">2017-12-31</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -704,11 +852,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Learning</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a></span>
 
                 
                 
@@ -748,21 +892,29 @@
 <p><img src="https://ws4.sinaimg.cn/large/006tKfTcly1fmxq9pslijj30dm0e2q9p.jpg" alt=""></p>
 <p>上面是输入的图片，下面是希望得到的效果，也就是希望能够对区域进行像素级别的划分<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/12/31/fcn/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/12/31/fcn/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -795,6 +947,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -804,7 +958,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -819,11 +973,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/26/如何找到最好的学习率/" itemprop="url">如何找到最优学习率</a></h1>
+                
+                <a href="/2017/11/26/如何找到最好的学习率/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">如何找到最优学习率</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -831,13 +994,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-26T19:18:54+08:00">
-                2017-11-26
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-11-26 19:18:54 / Modified: 21:04:24" itemprop="dateCreated datePublished" datetime="2017-11-26T19:18:54+08:00">2017-11-26</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -873,21 +1041,29 @@
           <p>经过了大量炼丹的同学都知道，超参数是一个非常玄乎的东西，比如batch size，学习率等，这些东西的设定并没有什么规律和原因，论文中设定的超参数一般都是靠经验决定的。但是超参数往往又特别重要，比如学习率，如果设置了一个太大的学习率，那么loss就爆了，设置的学习率太小，需要等待的时间就特别长，那么我们是否有一个科学的办法来决定我们的初始学习率呢？</p>
 <p>在这篇文章中，我会讲一种非常简单却有效的方法来确定合理的初始学习率。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/26/如何找到最好的学习率/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/11/26/如何找到最好的学习率/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -920,6 +1096,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -929,7 +1107,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -944,11 +1122,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/05/用Gluon炼丹小结/" itemprop="url">用Gluon炼丹体验</a></h1>
+                
+                <a href="/2017/11/05/用Gluon炼丹小结/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">用Gluon炼丹体验</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -956,13 +1143,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-05T08:47:35+08:00">
-                2017-11-05
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-11-05 08:47:35" itemprop="dateCreated datePublished" datetime="2017-11-05T08:47:35+08:00">2017-11-05</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-11-12 17:13:27" itemprop="dateModified" datetime="2017-11-12T17:13:27+08:00">2017-11-12</time>
+              
             
           </span>
 
@@ -997,21 +1201,29 @@
         
           <p>“纸上得来终觉浅，绝知此事要躬行。”这是老祖宗传下来的一句话，与其对应的一句英文便是”Get your hands dirty”，他们都表达同样一个意思，任何事情，只有实践才能够真正出真知，如果只懂嘴上功夫，那么永远无法真正成为大师。老祖宗的智慧是非常大的，这时刻提醒着我们需要亲自动手，要自己踩过一些坑，才能够明白一些原理。为什么要在开篇要说这个呢？因为这正是我用Gluon炼丹中得到的一点启发，我想这也是沐神开设<a href="https://zh.gluon.ai/" target="_blank" rel="external">动手学深度学习课程</a>的初衷之一，理论不仅要看，也要自己动手写代码，调参，这样才能真正理解deep learning。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/05/用Gluon炼丹小结/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/11/05/用Gluon炼丹小结/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1044,6 +1256,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1053,7 +1267,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1068,11 +1282,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/03/Fast Global Smooth/" itemprop="url">Fast Global Image Smoothing的实现</a></h1>
+                
+                <a href="/2017/11/03/Fast Global Smooth/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">Fast Global Image Smoothing的实现</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1080,13 +1303,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-03T20:58:02+08:00">
-                2017-11-03
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-11-03 20:58:02 / Modified: 21:00:31" itemprop="dateCreated datePublished" datetime="2017-11-03T20:58:02+08:00">2017-11-03</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -1122,21 +1350,29 @@
           <p>这次的作业是希望复现一篇论文，这篇论文的题目是<a href="http://ieeexplore.ieee.org/document/6942220/" target="_blank" rel="external">Fast Global Image Smoothing Based on Weighted Least Squares</a>。在这篇论文中，主要将全局光滑问题转换为一个加权二次能量函数，最小化这个能量函数从而实现图片光滑的效果，而这个最优化问题，可以转化为一个线性方程组的求解问题，在求解效率和求解时间上都有明显的优势，同时这还是一个全局最优的线性系统。</p>
 <p>本次作业主要对论文的基本算法<strong>Separable global smoother for 2D iamge smoothing</strong>进行了复现，使用python语言，为了加快计算速度，使用mxnet.ndarray在GPU上进行运算。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/03/Fast Global Smooth/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/11/03/Fast Global Smooth/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1169,6 +1405,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1178,7 +1416,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1193,11 +1431,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/03/Face Morph/" itemprop="url">Face Morph</a></h1>
+                
+                <a href="/2017/11/03/Face Morph/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">Face Morph</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1205,13 +1452,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-03T20:48:11+08:00">
-                2017-11-03
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-11-03 20:48:11 / Modified: 20:55:15" itemprop="dateCreated datePublished" datetime="2017-11-03T20:48:11+08:00">2017-11-03</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -1246,21 +1498,29 @@
         
           <p>face morph主要做的就是将一个人的脸和另外一个人的脸进行某种组合，从何形成一张新的脸，这张脸保留着两张脸的特性。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/03/Face Morph/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/11/03/Face Morph/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1293,6 +1553,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1302,7 +1564,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1317,11 +1579,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/23/PyTorch实现自由的数据读取/" itemprop="url">PyTorch实现自由的数据读取</a></h1>
+                
+                <a href="/2017/10/23/PyTorch实现自由的数据读取/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">PyTorch实现自由的数据读取</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1329,13 +1600,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-23T19:33:49+08:00">
-                2017-10-23
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-10-23 19:33:49 / Modified: 21:21:26" itemprop="dateCreated datePublished" datetime="2017-10-23T19:33:49+08:00">2017-10-23</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -1370,21 +1646,29 @@
         
           <p>很多前人曾说过，深度学习好比炼丹，框架就是丹炉，网络结构及算法就是单方，而数据集则是原材料，为了能够炼好丹，首先需要一个使用称手的丹炉，同时也要有好的单方和原材料，最后就需要炼丹师们有着足够的经验和技巧掌握火候和时机，这样方能炼出绝世好丹。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/23/PyTorch实现自由的数据读取/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/10/23/PyTorch实现自由的数据读取/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1417,6 +1701,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1426,7 +1712,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1441,11 +1727,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/13/数字图像处理对图像的基本操作/" itemprop="url">数字图像处理对图像的基本操作</a></h1>
+                
+                <a href="/2017/10/13/数字图像处理对图像的基本操作/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/index.html">数字图像处理对图像的基本操作</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1453,13 +1748,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-13T20:25:22+08:00">
-                2017-10-13
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-10-13 20:25:22" itemprop="dateCreated datePublished" datetime="2017-10-13T20:25:22+08:00">2017-10-13</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-10-20 13:37:54" itemprop="dateModified" datetime="2017-10-20T13:37:54+08:00">2017-10-20</time>
+              
             
           </span>
 
@@ -1494,21 +1806,29 @@
         
           <p>这学期修了一门数字图像处理的课程，虽然深度学习已经在CV领域大行其道，但是最基础的图像处理也同样需要掌握，通过这门课程，能够弥补一些图像处理的不足，这门课的作业主要会用一些matlab，python和opencv的东西。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/13/数字图像处理对图像的基本操作/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/10/13/数字图像处理对图像的基本操作/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1537,15 +1857,12 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
 
           </div>
-          
-
-
           
 
         </div>
@@ -1568,66 +1885,124 @@
 
       
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
-               alt="Sherlock" />
-          <p class="site-author-name" itemprop="name">Sherlock</p>
-           
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sherlock</p>
               <p class="site-description motion-element" itemprop="description">关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!</p>
+          </div>
+
           
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
         </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/archives/">
-                <span class="site-state-item-count">46</span>
-                <span class="site-state-item-name">posts</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-categories">
-              <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
-                <span class="site-state-item-name">categories</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-tags">
-              <a href="/tags/index.html">
-                <span class="site-state-item-count">25</span>
-                <span class="site-state-item-name">tags</span>
-              </a>
-            </div>
-          
-
-        </nav>
-
-        
-
-        <div class="links-of-author motion-element">
-          
-        </div>
-
-        
-        
-
-        
-        
-
-        
-
-
       </section>
 
       
@@ -1644,46 +2019,32 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy; 
-  <span itemprop="copyrightYear">2018</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Sherlock</span>
 
   
+
+  
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.3.8</div>
+
+
 
   <span class="post-meta-divider">|</span>
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv">
-      <i class="fa fa-user"></i> 访问人数
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-      
-    </span>
-  
-
-  
-    <span class="site-pv">
-      <i class="fa fa-eye"></i> 总访问量
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-      次
-    </span>
-  
-</div>
 
 
 
@@ -1703,6 +2064,11 @@
       </div>
     
 
+    
+	
+    
+
+    
   </div>
 
   
@@ -1721,7 +2087,6 @@
 
 
 
-  
 
 
 
@@ -1731,74 +2096,6 @@
 
 
 
-
-
-
-  
-  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
-
-
-
-  
-  
-
-  
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
-
-  
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
 
 
 
@@ -1808,38 +2105,39 @@
 
 
   
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
 
 
 
-
-
+  
   
 
   
 
   
 
-  
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -1857,8 +2155,50 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
+
+
+
   
 
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
 
   
 

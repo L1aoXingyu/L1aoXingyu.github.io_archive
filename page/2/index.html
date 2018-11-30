@@ -2,6 +2,15 @@
 
 
 
+
+
+
+
+
+
+
+
+
   
 
 
@@ -9,8 +18,11 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
 <meta name="theme-color" content="#222">
+
+
+
 
 
 
@@ -37,36 +49,7 @@
 
 
 
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
 
 
 
@@ -75,26 +58,57 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
 
 
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
 
 
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
 
 
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
-
-
-
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
 
 
 
-<meta name="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner &amp; 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner &amp; 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Sherlock&#39;s Blog">
 <meta property="og:url" content="https://l1aoxingyu.github.io/page/2/index.html">
@@ -107,29 +121,6 @@
 
 
 
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Muse',
-    version: '5.1.2',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: 'Author'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
 
 
 
@@ -137,9 +128,13 @@
 
 
 
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
 
-
-  <title>Sherlock's Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Sherlock's Blog</title>
   
 
 
@@ -148,6 +143,36 @@
 
 
 
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -159,8 +184,7 @@
   
 
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left 
-   page-home 
- ">
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -169,19 +193,21 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">Sherlock's Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
+    
       
         <p class="site-subtitle">sherlock的博客</p>
       
+    
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="Toggle navigation bar">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -189,65 +215,55 @@
   </div>
 </div>
 
-<nav class="site-nav">
-  
 
+
+<nav class="site-nav">
   
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            Home
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            Categories
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            About
-          </a>
-        </li>
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
       
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+
+  </li>
         
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            Archives
-          </a>
-        </li>
-      
         
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            Tags
-          </a>
-        </li>
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
       
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+
+  </li>
 
       
+      
     </ul>
+  
+
+  
+    
+
   
 
   
@@ -255,12 +271,20 @@
 
 
 
- </div>
+  
+
+
+
+</div>
     </header>
+
+    
+
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
+          
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
@@ -273,6 +297,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -282,7 +308,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -297,11 +323,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/10/01/Focuing-Attention论文阅读笔记/" itemprop="url">Focuing Attention论文阅读笔记</a></h1>
+                
+                <a href="/2017/10/01/Focuing-Attention论文阅读笔记/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">Focuing Attention论文阅读笔记</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -309,13 +344,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-01T10:13:04+08:00">
-                2017-10-01
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-10-01 10:13:04 / Modified: 11:59:44" itemprop="dateCreated datePublished" datetime="2017-10-01T10:13:04+08:00">2017-10-01</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -350,21 +390,29 @@
         
           <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>由于最近一直在做scene text recognition方面的任务，所以不断在阅读最新的论文，这一篇论文<a href="https://arxiv.org/pdf/1709.02054.pdf" target="_blank" rel="external">“Focusing Attention: Towards Accurate Text Recognition in Natural Images”</a>是17年9月8号出的新论文，由海康威视视觉实验室联合几个上海高校发出，提出了”attention drift”，具有一定的思考意义。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/01/Focuing-Attention论文阅读笔记/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/10/01/Focuing-Attention论文阅读笔记/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -397,6 +445,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -406,7 +456,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -421,11 +471,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/09/22/cs20si-tensorflow-for-research学习笔记4/" itemprop="url">cs20si: tensorflow for research学习笔记4</a></h1>
+                
+                <a href="/2017/09/22/cs20si-tensorflow-for-research学习笔记4/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">cs20si: tensorflow for research学习笔记4</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -433,13 +492,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-22T19:31:19+08:00">
-                2017-09-22
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-09-22 19:31:19" itemprop="dateCreated datePublished" datetime="2017-09-22T19:31:19+08:00">2017-09-22</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-09-23 10:57:10" itemprop="dateModified" datetime="2017-09-23T10:57:10+08:00">2017-09-23</time>
+              
             
           </span>
 
@@ -474,21 +550,29 @@
         
           <p>在第三篇学习笔记中，我们实现了两个简单的模型，线性回归和logistic回归，对于模型结构简单的网络，我们不需要去处理他们的结构关系，但是在复杂的模型中，我们需要更好的安排模型的结构，这样方便我们debug和良好的可视化，接下来，我们就讨论一下如何结构化我们的模型。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/22/cs20si-tensorflow-for-research学习笔记4/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/09/22/cs20si-tensorflow-for-research学习笔记4/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -521,6 +605,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -530,7 +616,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -545,11 +631,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/09/10/简单的Char RNN生成文本/" itemprop="url">简单的Char RNN生成文本</a></h1>
+                
+                <a href="/2017/09/10/简单的Char RNN生成文本/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">简单的Char RNN生成文本</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -557,13 +652,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-10T14:30:08+08:00">
-                2017-09-10
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-09-10 14:30:08 / Modified: 14:35:36" itemprop="dateCreated datePublished" datetime="2017-09-10T14:30:08+08:00">2017-09-10</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -579,11 +679,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Learning</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a></span>
 
                 
                 
@@ -621,21 +717,29 @@
           <p>我来钱庙复知世依，似我心苦难归久，相须莱共游来愁报远。近王只内蓉者征衣同处，规廷去岂无知草木飘。</p>
 <p>你可能以为上面的诗句是某个大诗人所作，事实上上面所有的内容都是循环神经网络写的，是不是感觉很神奇呢？其实这里面的原理非常简单，只需要对循环神经网络有个清楚的理解，那么就能够实现上面的效果，在读完本篇文章之后，大家都能够学会如何使用循环神经网络来创作文本。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/10/简单的Char RNN生成文本/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/09/10/简单的Char RNN生成文本/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -668,6 +772,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -677,7 +783,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -692,11 +798,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/09/02/如何在linux下制作gif图片/" itemprop="url">如何在ubuntu下制作GIF图片</a></h1>
+                
+                <a href="/2017/09/02/如何在linux下制作gif图片/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">如何在ubuntu下制作GIF图片</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -704,13 +819,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-02T15:25:20+08:00">
-                2017-09-02
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-09-02 15:25:20 / Modified: 15:43:06" itemprop="dateCreated datePublished" datetime="2017-09-02T15:25:20+08:00">2017-09-02</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -726,11 +846,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/utility/" itemprop="url" rel="index">
-                    <span itemprop="name">utility</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/utility/" itemprop="url" rel="index"><span itemprop="name">utility</span></a></span>
 
                 
                 
@@ -767,21 +883,29 @@
         
           <p>如今动态GIF图片成为了一个流行的传播方式，其比静态图更好的表达意思，同时现在很多社交网络都开始制作GIF图片，那么ubuntu下如何简单的制作一个GIF图片呢？<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/02/如何在linux下制作gif图片/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/09/02/如何在linux下制作gif图片/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -814,6 +938,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -823,7 +949,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -838,11 +964,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/30/cs20si3/" itemprop="url">cs20si：tensorflow for research 学习笔记3</a></h1>
+                
+                <a href="/2017/08/30/cs20si3/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">cs20si：tensorflow for research 学习笔记3</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -850,13 +985,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-30T14:49:08+08:00">
-                2017-08-30
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-08-30 14:49:08 / Modified: 21:13:10" itemprop="dateCreated datePublished" datetime="2017-08-30T14:49:08+08:00">2017-08-30</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -892,21 +1032,29 @@
           <h2 id="TensorFlow中的Linear-Regression"><a href="#TensorFlow中的Linear-Regression" class="headerlink" title="TensorFlow中的Linear Regression"></a>TensorFlow中的Linear Regression</h2><p>线性回归是机器学习中非常简单的问题，我们用tensorflow实现一个小例子。</p>
 <p>问题: 希望能够找到一个城市中纵火案和盗窃案之间的关系，纵火案的数量是X，盗窃案的数量是Y，我们建设存在如下线性关系，Y = wX + b。</p>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/30/cs20si3/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/08/30/cs20si3/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -939,6 +1087,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -948,7 +1098,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -963,11 +1113,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/29/Attention Is All You Need 论文阅读笔记/" itemprop="url">Attention Is All You Need 论文阅读笔记</a></h1>
+                
+                <a href="/2017/08/29/Attention Is All You Need 论文阅读笔记/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">Attention Is All You Need 论文阅读笔记</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -975,13 +1134,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-29T19:37:10+08:00">
-                2017-08-29
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-08-29 19:37:10" itemprop="dateCreated datePublished" datetime="2017-08-29T19:37:10+08:00">2017-08-29</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-30 21:41:50" itemprop="dateModified" datetime="2017-08-30T21:41:50+08:00">2017-08-30</time>
+              
             
           </span>
 
@@ -1016,21 +1192,29 @@
         
           <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>目前主流的处理序列问题都是使用复杂的循环神经网络或者卷积神经网络作为encoder和decoder，添加注意力机制能够使得其表现更好。这篇文章提出来一个新的网络结构，Transformer，仅仅只依赖注意力机制，完全没有使用循环结构和卷积结构。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/29/Attention Is All You Need 论文阅读笔记/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/08/29/Attention Is All You Need 论文阅读笔记/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1063,6 +1247,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1072,7 +1258,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1087,11 +1273,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/24/MXNet的动态图接口Gluon/" itemprop="url">MXNet的动态图接口Gluon</a></h1>
+                
+                <a href="/2017/08/24/MXNet的动态图接口Gluon/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">MXNet的动态图接口Gluon</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1099,13 +1294,18 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-24T09:59:09+08:00">
-                2017-08-24
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-08-24 09:59:09 / Modified: 13:51:36" itemprop="dateCreated datePublished" datetime="2017-08-24T09:59:09+08:00">2017-08-24</time>
             
 
             
+              
 
+              
             
           </span>
 
@@ -1141,21 +1341,29 @@
           <p>经过了3个月的开发，MXNet 0.11版本终于发布了，其中也发布了最为重要的一个更新，动态图接口Gluon，李沐大神也在CVPR17上面介绍了Gluon接口，足以看出MXNet对这次新发布的Gluon接口的重视。</p>
 <p>下面我就以一个PyTorch使用者的角度为大家介绍一个我对Gluon这个接口的看法。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/24/MXNet的动态图接口Gluon/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/08/24/MXNet的动态图接口Gluon/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1188,6 +1396,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1197,7 +1407,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1212,11 +1422,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/21/cs20si2/" itemprop="url">cs20si：tensorflow for research 学习笔记2</a></h1>
+                
+                <a href="/2017/08/21/cs20si2/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">cs20si：tensorflow for research 学习笔记2</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1224,13 +1443,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-21T12:00:00+08:00">
-                2017-08-21
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-08-21 12:00:00" itemprop="dateCreated datePublished" datetime="2017-08-21T12:00:00+08:00">2017-08-21</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-22 10:04:56" itemprop="dateModified" datetime="2017-08-22T10:04:56+08:00">2017-08-22</time>
+              
             
           </span>
 
@@ -1265,21 +1501,29 @@
         
           <h2 id="TensorBoard-可视化"><a href="#TensorBoard-可视化" class="headerlink" title="TensorBoard 可视化"></a>TensorBoard 可视化</h2><p>tensorflow不仅仅是一个计算图软件，其还包含了tensorboard可视化工具，安装tensorflow的时候会默认安装，使用方法非常简单，使用<code>writer = tf.summary.FileWriter(&#39;./graph&#39;, sess.graph)</code>就能够创建一个文件写入器，<code>./graph</code>是存储目录，<code>sess.graph</code>表示读入的图结构。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/21/cs20si2/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/08/21/cs20si2/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1312,6 +1556,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1321,7 +1567,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1336,11 +1582,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/13/cs20si1/" itemprop="url">cs20si：tensorflow for research 学习笔记1</a></h1>
+                
+                <a href="/2017/08/13/cs20si1/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">cs20si：tensorflow for research 学习笔记1</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1348,13 +1603,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-13T12:00:00+08:00">
-                2017-08-13
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-08-13 12:00:00" itemprop="dateCreated datePublished" datetime="2017-08-13T12:00:00+08:00">2017-08-13</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-22 11:19:40" itemprop="dateModified" datetime="2017-08-22T11:19:40+08:00">2017-08-22</time>
+              
             
           </span>
 
@@ -1389,21 +1661,29 @@
         
           <p>今年一月份，Stanford大学新开了一门课专门讲如何用tensorflow做科研，这门课从最基础的计算图讲起，扩展到非常流行的算法，如neural style，seq2seq等等，通过课程和作业，能够掌握tensorflow大部分的用法。因为太久没有使用tensorflow了，所以决定学学这门课重新复习一下，这是<a href="https://web.stanford.edu/class/cs20si/index.html" target="_blank" rel="external">课程网址</a>和<a href="https://github.com/chiphuyen/stanford-tensorflow-tutorials" target="_blank" rel="external">github</a>，没有官方的视频，youtube和b站上有其他人根据slide录的视频。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/13/cs20si1/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/08/13/cs20si1/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1436,6 +1716,8 @@
   
   
 
+  
+
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1445,7 +1727,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -1460,11 +1742,20 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/07/27/summary-forward/" itemprop="url">深度学习总结、资源与规划</a></h1>
+                
+                <a href="/2017/07/27/summary-forward/" class="post-title-link" itemprop="https://l1aoxingyu.github.io/page/2/index.html">深度学习总结、资源与规划</a>
+              
+            
+          </h1>
         
 
         <div class="post-meta">
           <span class="post-time">
+
+            
+            
+            
+
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1472,13 +1763,30 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-27T12:00:00+08:00">
-                2017-07-27
-              </time>
+
+              
+                
+              
+
+              <time title="Created: 2017-07-27 12:00:00" itemprop="dateCreated datePublished" datetime="2017-07-27T12:00:00+08:00">2017-07-27</time>
             
 
             
+              
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-08-22 11:27:36" itemprop="dateModified" datetime="2017-08-22T11:27:36+08:00">2017-08-22</time>
+              
             
           </span>
 
@@ -1514,21 +1822,29 @@
           <p>终于可以放假回家了，虽然只有半个月，但是还是可以好好地做个休整(陪女朋友)。</p>
 <p>这学期作为一个学数学的咸鱼，从今年4月份开始入坑深度学习，4月初写了第一篇文章<keras初体验>，4月初正式入坑github和PyTorch，过程中写了一些简单的教程和自己学习中的总结，非常感谢大家一路以来对我这个写作能力和表达能力都不是特别好的理工男的支持，万万没想到我写的PyTorch小白教程居然也在github上有了快70个star，真的是给了我这个初用github的小白极大的鼓励。<br>
           <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/27/summary-forward/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/07/27/summary-forward/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
           <!--/noindex-->
         
       
     </div>
+
+    
+
     
     
     
 
     
 
+    
+       
+    
     
 
     
@@ -1557,15 +1873,12 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
 
           </div>
-          
-
-
           
 
         </div>
@@ -1588,66 +1901,124 @@
 
       
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
-               alt="Sherlock" />
-          <p class="site-author-name" itemprop="name">Sherlock</p>
-           
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sherlock</p>
               <p class="site-description motion-element" itemprop="description">关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!</p>
+          </div>
+
           
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
         </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/archives/">
-                <span class="site-state-item-count">46</span>
-                <span class="site-state-item-name">posts</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-categories">
-              <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
-                <span class="site-state-item-name">categories</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-tags">
-              <a href="/tags/index.html">
-                <span class="site-state-item-count">25</span>
-                <span class="site-state-item-name">tags</span>
-              </a>
-            </div>
-          
-
-        </nav>
-
-        
-
-        <div class="links-of-author motion-element">
-          
-        </div>
-
-        
-        
-
-        
-        
-
-        
-
-
       </section>
 
       
@@ -1664,46 +2035,32 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy; 
-  <span itemprop="copyrightYear">2018</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Sherlock</span>
 
   
+
+  
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.3.8</div>
+
+
 
   <span class="post-meta-divider">|</span>
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.5.0</div>
+
+
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv">
-      <i class="fa fa-user"></i> 访问人数
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-      
-    </span>
-  
-
-  
-    <span class="site-pv">
-      <i class="fa fa-eye"></i> 总访问量
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-      次
-    </span>
-  
-</div>
 
 
 
@@ -1723,6 +2080,11 @@
       </div>
     
 
+    
+	
+    
+
+    
   </div>
 
   
@@ -1741,7 +2103,6 @@
 
 
 
-  
 
 
 
@@ -1751,74 +2112,6 @@
 
 
 
-
-
-
-  
-  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
-
-
-
-  
-  
-
-  
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
-
-  
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
 
 
 
@@ -1828,38 +2121,39 @@
 
 
   
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
 
 
 
-
-
+  
   
 
   
 
   
 
-  
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -1877,8 +2171,50 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
+
+
+
   
 
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
 
   
 
