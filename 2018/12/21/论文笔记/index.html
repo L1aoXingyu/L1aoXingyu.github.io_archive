@@ -108,28 +108,30 @@
 
 
 
-  <meta name="description" content="上一节中我们介绍了LSTM如何处理图像分类问题，本质上是将图像看成一个序列做处理，但是RNN的长处并不是做图像分类，而是做自然语言处理，所以这一节我们将讲一下pytorch下RNN如何做自然语言处理。">
-<meta name="keywords" content="DeepLearning,PyTorch Tutorial">
+  <meta name="description" content="论文: Instance-level Human Parsing via Part Grouping Network论文地址代码地址 这是一篇商汤和中山大学 ECCV2018 的一篇论文，我觉得论文主要有两个贡献，首先论文发布了一个新的 crowd instance-level human parsing 的数据集，其次论文提供一个 detecion-free 的 unified 结构 PGN 去">
+<meta name="keywords" content="paper reading">
 <meta property="og:type" content="article">
-<meta property="og:title" content="10分钟快速入门PyTorch (7)">
-<meta property="og:url" content="https://l1aoxingyu.github.io/2017/05/27/language/index.html">
+<meta property="og:title" content="Instance-level Human Parsing 论文笔记">
+<meta property="og:url" content="https://l1aoxingyu.github.io/2018/12/21/论文笔记/index.html">
 <meta property="og:site_name" content="Sherlock&#39;s Blog">
-<meta property="og:description" content="上一节中我们介绍了LSTM如何处理图像分类问题，本质上是将图像看成一个序列做处理，但是RNN的长处并不是做图像分类，而是做自然语言处理，所以这一节我们将讲一下pytorch下RNN如何做自然语言处理。">
+<meta property="og:description" content="论文: Instance-level Human Parsing via Part Grouping Network论文地址代码地址 这是一篇商汤和中山大学 ECCV2018 的一篇论文，我觉得论文主要有两个贡献，首先论文发布了一个新的 crowd instance-level human parsing 的数据集，其次论文提供一个 detecion-free 的 unified 结构 PGN 去">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-3e0ca4b1f96af0c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-e0c5e7482f907eda.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-08-25T05:23:28.000Z">
+<meta property="og:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/BFE28025-B130-4A84-9DFC-5C4E63464E29.png">
+<meta property="og:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/006tNbRwly1fwxl364qe6j30uw0digmc.jpg">
+<meta property="og:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/B00B8991-B01F-4EEF-8109-2CF54E8882E0.png">
+<meta property="og:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/0013D891-F551-415E-BFD6-DC85AE332678.png">
+<meta property="og:updated_time" content="2018-12-21T08:21:15.316Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="10分钟快速入门PyTorch (7)">
-<meta name="twitter:description" content="上一节中我们介绍了LSTM如何处理图像分类问题，本质上是将图像看成一个序列做处理，但是RNN的长处并不是做图像分类，而是做自然语言处理，所以这一节我们将讲一下pytorch下RNN如何做自然语言处理。">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3623720-3e0ca4b1f96af0c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="Instance-level Human Parsing 论文笔记">
+<meta name="twitter:description" content="论文: Instance-level Human Parsing via Part Grouping Network论文地址代码地址 这是一篇商汤和中山大学 ECCV2018 的一篇论文，我觉得论文主要有两个贡献，首先论文发布了一个新的 crowd instance-level human parsing 的数据集，其次论文提供一个 detecion-free 的 unified 结构 PGN 去">
+<meta name="twitter:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/BFE28025-B130-4A84-9DFC-5C4E63464E29.png">
 
 
 
 
 
 
-  <link rel="canonical" href="https://l1aoxingyu.github.io/2017/05/27/language/"/>
+  <link rel="canonical" href="https://l1aoxingyu.github.io/2018/12/21/论文笔记/"/>
 
 
 
@@ -139,7 +141,7 @@
   };
 </script>
 
-  <title>10分钟快速入门PyTorch (7) | Sherlock's Blog</title>
+  <title>Instance-level Human Parsing 论文笔记 | Sherlock's Blog</title>
   
 
 
@@ -308,7 +310,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://l1aoxingyu.github.io/2017/05/27/language/">
+    <link itemprop="mainEntityOfPage" href="https://l1aoxingyu.github.io/2018/12/21/论文笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sherlock">
@@ -325,7 +327,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">10分钟快速入门PyTorch (7)
+          <h1 class="post-title" itemprop="name headline">Instance-level Human Parsing 论文笔记
               
             
           </h1>
@@ -350,24 +352,12 @@
                 
               
 
-              <time title="Created: 2017-05-27 12:00:00" itemprop="dateCreated datePublished" datetime="2017-05-27T12:00:00+08:00">2017-05-27</time>
+              <time title="Created: 2018-12-21 11:13:20 / Modified: 16:21:15" itemprop="dateCreated datePublished" datetime="2018-12-21T11:13:20+08:00">2018-12-21</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2017-08-25 13:23:28" itemprop="dateModified" datetime="2017-08-25T13:23:28+08:00">2017-08-25</time>
               
             
           </span>
@@ -400,36 +390,37 @@
       
 
       
-        <p>上一节中我们介绍了LSTM如何处理图像分类问题，本质上是将图像看成一个序列做处理，但是RNN的长处并不是做图像分类，而是做自然语言处理，所以这一节我们将讲一下pytorch下RNN如何做自然语言处理。<br><a id="more"></a></p>
-<h2 id="Word-Embedding"><a href="#Word-Embedding" class="headerlink" title="Word Embedding"></a>Word Embedding</h2><p>在自然语言处理中词向量是很重要的，首先介绍一下词向量。</p>
-<p>之前做分类问题的时候大家应该都还记得我们会使用one-hot编码，比如一共有5类，那么属于第二类的话，它的编码就是(0, 1, 0, 0, 0)，对于分类问题，这样当然特别简明，但是对于单词，这样做就不行了，比如有1000个不同的词，那么使用one-hot这样的方法效率就很低了，所以我们必须要使用另外一种方式去定义每一个单词，这就引出了word embedding。</p>
-<p>我们可以先举三个例子，比如</p>
-<ul>
-<li>The cat likes playing ball.</li>
-<li>The kitty likes playing wool.</li>
-<li>The dog likes playing ball.</li>
-<li>The boy likes playing ball.</li>
-</ul>
-<p>假如我们使用一个二维向量(a, b)来定义一个词，其中a，b分别代表这个词的一种属性，比如a代表是否喜欢玩飞盘，b代表是否喜欢玩毛线，并且这个数值越大表示越喜欢，这样我们就可以区分这三个词了，为什么呢？</p>
-<p>比如对于cat，它的词向量就是(-1, 4)，对于kitty，它的词向量就是(-2, 5)，对于dog，它的词向量就是(3, -2)，对于boy，它的词向量就是(-2, -3)，我们怎么去定义他们之间的相似度呢，我们可以通过他们之间的夹角来定义他们的相似度。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/3623720-3e0ca4b1f96af0c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1"></p>
-<p>上面这张图就显示出了不同的词之间的夹角，我们可以发现kitty和cat是非常相似的，而dog和boy是不相似的。</p>
-<p>而对于一个词，我们自己去想它的属性不是很困难吗，所以这个时候就可以交给神经网络了，我们只需要定义我们想要的维度，比如100，然后通过神经网络去学习它的每一个属性的大小，而我们并不用关心到底这个属性代表着什么，我们只需要知道词向量的夹角越小，表示他们之间的语义更加接近。</p>
-<p>下面我们使用pytorch来实现一个word embedding</p>
-<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>在pytorch里面word embedding实现是通过一个函数来实现的<code>nn.Embedding</code></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">word_to_ix = &#123;<span class="string">'hello'</span>: <span class="number">0</span>, <span class="string">'world'</span>: <span class="number">1</span>&#125;</div><div class="line">embeds = nn.Embedding(<span class="number">2</span>, <span class="number">5</span>)</div><div class="line">hello_idx = torch.LongTensor([word_to_ix[<span class="string">'hello'</span>]])</div><div class="line">hello_idx = Variable(hello_idx)</div><div class="line">hello_embed = embeds(hello_idx)</div><div class="line">print(hello_embed)</div></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/3623720-e0c5e7482f907eda.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2"></p>
-<p>这就是我们输出的hello这个词的word embedding，下面我们一步一步来解释一下代码</p>
-<p>首先我们需要<code>word_to_ix = {&#39;hello&#39;: 0, &#39;world&#39;: 1}</code>，每个单词我们需要用一个数字去表示他，这样我们需要hello的时候，就用0来表示它。</p>
-<p>接着就是word embedding的定义<code>nn.Embedding(2, 5)</code>，这里的2表示有2个词，5表示5维，其实也就是一个2x5的矩阵，所以如果你有1000个词，每个词希望是100维，你就可以这样建立一个word embedding，<code>nn.Embedding(1000, 100)</code>。如何访问每一个词的词向量是下面两行的代码，注意这里的词向量的建立只是初始的词向量，并没有经过任何修改优化，我们需要建立神经网络通过learning的办法修改word embedding里面的参数使得word embedding每一个词向量能够表示每一个不同的词。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hello_idx = torch.LongTensor([word_to_ix[<span class="string">'hello'</span>]])</div><div class="line">hello_idx = Variable(hello_idx)</div></pre></td></tr></table></figure>
-<p>接着这两行代码表示得到一个Variable，它的值是hello这个词的index，也就是0。这里要特别注意一下我们需要Variable，因为我们需要访问nn.Embedding里面定义的元素，并且word embeding算是神经网络里面的参数，所以我们需要定义Variable。</p>
-<p><code>hello_embed = embeds(hello_idx)</code>这一行表示得到word embedding里面关于hello这个词的初始词向量，最后我们就可以print出来。</p>
-<p>以上我们介绍了word embeding在pytorch里面是如何实现的，下一节我们将介绍如何用word embedding结合n gram模型进行简单的预测。</p>
-<hr>
-<p>本文代码已经上传到了<a href="https://github.com/SherlockLiao/pytorch-beginner" target="_blank" rel="external">github</a>上</p>
-<p>欢迎查看我的知乎专栏，<a href="https://zhuanlan.zhihu.com/c_94953554" target="_blank" rel="external">深度炼丹</a></p>
-<p>欢迎访问我的<a href="https://sherlockliao.github.io/" target="_blank" rel="external">博客</a></p>
+        <p>论文: Instance-level Human Parsing via Part Grouping Network<br><a href="http://openaccess.thecvf.com/content_ECCV_2018/papers/Ke_Gong_Instance-level_Human_Parsing_ECCV_2018_paper.pdf" target="_blank" rel="external">论文地址</a><br><a href="https://github.com/Engineering-Course/CIHP_PGN" target="_blank" rel="external">代码地址</a></p>
+<p>这是一篇商汤和中山大学 ECCV2018 的一篇论文，我觉得论文主要有两个贡献，首先论文发布了一个新的 crowd instance-level human parsing 的数据集，其次论文提供一个 detecion-free 的 <strong>unified 结构 PGN</strong> 去解决多人的 human parsing 的问题。</p>
+<a id="more"></a>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>human parsing 主要做的事情就是识别人的每个部分的语意信息，其是很多任务的基础。目前对于多人的 human parsing 主要是两种做法，一种是 “parsing-by-detection”，也就是先做 detection，再对每一个 detection 的 person 做 human parsing。这样首先需要两个网络通过若干独立目标和阶段来训练，使得训练过程很复杂，同时两个网络的目标函数粒度不同，detection 是粗粒度的 bounding box，而 parsing 是细粒度的 pixel-wise part segmentation，如果用同一个 backbone，会出现一些反常的结果，比如 segmentation 会因为 detection 的原因错误地在 bbox 的外面预测了 part semantic。</p>
+<p>在本论文中，作者对这个问题 reformulate，用一个 unified 的网络对两个连续的分割任务进行分组，一个是 part-level pixel-grouping，一个是 instance-level part-grouping。首先 part-level 的分割可以解决人体的各个部分的语义，然后通过 instance-level 的分割再将不同的人分开，这个一致的网络叫做 <strong>Part Grouping Network (PGN)</strong>。</p>
+<h2 id="Part-Grouping-Network"><a href="#Part-Grouping-Network" class="headerlink" title="Part Grouping Network"></a>Part Grouping Network</h2><div align="center">
+<img src="/Users/xyliao/Documents/blog/public/assets/BFE28025-B130-4A84-9DFC-5C4E63464E29.png" width="400">
+</div>
+
+<p>整体的网络结构如上图所示，使用了 ResNet101 作为 backbone，因为 edge detection 和 semantic segmentation 都是一个 dense recognition 的任务，所以他们可以共享一个相同的 backbone。本文没有使用 multi-scale 的输入，代替的是将中间的 feature map concatenate 在一起，同时中间使用 dilated conv 来保证 feature map 的大小一致。同时本文参考了 PSPNet 的方法，为了融合不同区域的 context 来得到一个全局的 context，使用了 pyramid pooling，经过 (1, 1), (2, 2), (3, 3) 和 (6, 6) 的 avgpooling 得到了 4 个 feature map，然后再通过 conv 和 Upsampling，最后在 concatenate 在一起，如下图所示。</p>
+<div align="center">
+<img src="/Users/xyliao/Documents/blog/public/assets/006tNbRwly1fwxl364qe6j30uw0digmc.jpg" width="400">
+</div>
+
+
+<h3 id="Semantic-part-segmentation-branch"><a href="#Semantic-part-segmentation-branch" class="headerlink" title="Semantic part segmentation branch"></a>Semantic part segmentation branch</h3><p>在 semantic 的分支上，直接对 pyramid pooling 之后的结果接一个 1x1 的 conv，然后输出一个 k 个 channels，对应于目标的类别数，包括背景类。</p>
+<h3 id="Instance-aware-edge-detection-branch"><a href="#Instance-aware-edge-detection-branch" class="headerlink" title="Instance-aware edge detection branch"></a>Instance-aware edge detection branch</h3><p>在 edge detection 这个分支，会对最后三个阶段的 feature map 做一个 atrous spatial pyramid pooling，得到三个输出的 feature map，然后做一个0和1的二分类，边界就是1，非边界就是0。同时也会想上面一个分支一样，将 feature map concatenate 在一起，同时用一个 pyramid pooling 得到不同位置的增强特征，然后再通过一个 1x1 的卷积得到一个 edge 的 feature map，同样做一个二分类。</p>
+<h3 id="Refinement-branch"><a href="#Refinement-branch" class="headerlink" title="Refinement branch"></a>Refinement branch</h3><p>除了上面两个分支独立来做，还有另外一个分支联合了 segmentation 和 edge 的结果来做 refinement。用一个 1x1 的 conv 把 segmentation score map 和 edge score map 映射到了高维的 embedding 空间，然后 concat 在一起分别经过两个 pyramid pooling 再次得到 segmentation 和 edge 的 score map，最后的 loss 函数如下</p>
+<div align="center">
+<img src="/Users/xyliao/Documents/blog/public/assets/B00B8991-B01F-4EEF-8109-2CF54E8882E0.png" width="300">
+</div>
+
+<p>segmentation 用 pixel-wise cross-entropy loss，edge 用 pixel-wise sigmoid binary cross-entropy loss。</p>
+<h3 id="Instance-partition-process"><a href="#Instance-partition-process" class="headerlink" title="Instance partition process"></a>Instance partition process</h3><p>有了 instance-aware edge 和 semantic part segmentation，我们可以把这两个任务组合在一起得到最后 instance-aware human parsing 的结果，这里本文采用的是一种叫 line decoding 的方式。<br>同时扫描 part segmentation maps 和 edge maps 得到水平和竖直的线。对于水平的线，从左往右，背景的 segmentation 直接被跳过，只有扫描到前景才算，如果击中了边界，这条线就终止，直到又扫描到前景，又开始一条新的线，每条线都有独立的编号，竖直方向和水平方向做法类似。</p>
+<p>第二部分我们把竖直的线和水平的线看成一个连通图，同一条直线上的点是连通的，然后我们用 BFS 去遍历整个图，这样就可以得到一个不同的 instance，最后再组合 part segmentation 的结果，就得到了 instance part segmentation 的结果了，非常的直观。</p>
+<div align="center">
+<img src="/Users/xyliao/Documents/blog/public/assets/0013D891-F551-415E-BFD6-DC85AE332678.png" width="400">
+</div>
+
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>本文一个比较大的创新点是通过 line segmentation 的方式来替代了 detection，从结果来看应该也是可以 work 的，但是不知道这个方法是否真的具有使用价值，因为通过 detection 出来的 person bbox 在做 human parsing 的耗时应该是比在一张大图上去做 segmentation 要快的，同时应该也会更加准确，但是本文并没有对这种类似 mask-RCNN 的方法进行比较。</p>
 
       
     </div>
@@ -453,9 +444,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
-          
-            <a href="/tags/PyTorch-Tutorial/" rel="tag"># PyTorch Tutorial</a>
+            <a href="/tags/paper-reading/" rel="tag"># paper reading</a>
           
         </div>
       
@@ -468,8 +457,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/23/rnn_classifier/" rel="next" title="10分钟快速入门PyTorch (6)">
-                <i class="fa fa-chevron-left"></i> 10分钟快速入门PyTorch (6)
+              <a href="/2018/10/30/repulsion notes 论文笔记/" rel="next" title="Repulsion Loss 论文笔记">
+                <i class="fa fa-chevron-left"></i> Repulsion Loss 论文笔记
               </a>
             
           </div>
@@ -477,10 +466,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/01/ngram/" rel="prev" title="10分钟快速入门PyTorch (8)">
-                10分钟快速入门PyTorch (8) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -665,7 +650,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Word-Embedding"><span class="nav-number">1.</span> <span class="nav-text">Word Embedding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code"><span class="nav-number">2.</span> <span class="nav-text">Code</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part-Grouping-Network"><span class="nav-number">2.</span> <span class="nav-text">Part Grouping Network</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Semantic-part-segmentation-branch"><span class="nav-number">2.1.</span> <span class="nav-text">Semantic part segmentation branch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Instance-aware-edge-detection-branch"><span class="nav-number">2.2.</span> <span class="nav-text">Instance-aware edge detection branch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Refinement-branch"><span class="nav-number">2.3.</span> <span class="nav-text">Refinement branch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Instance-partition-process"><span class="nav-number">2.4.</span> <span class="nav-text">Instance partition process</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a></li></ol></div>
             
 
           </div>
