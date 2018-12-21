@@ -116,15 +116,15 @@
 <meta property="og:site_name" content="Sherlock&#39;s Blog">
 <meta property="og:description" content="论文: Instance-level Human Parsing via Part Grouping Network论文地址代码地址 这是一篇商汤和中山大学 ECCV2018 的一篇论文，我觉得论文主要有两个贡献，首先论文发布了一个新的 crowd instance-level human parsing 的数据集，其次论文提供一个 detecion-free 的 unified 结构 PGN 去">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/BFE28025-B130-4A84-9DFC-5C4E63464E29.png">
-<meta property="og:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/006tNbRwly1fwxl364qe6j30uw0digmc.jpg">
-<meta property="og:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/B00B8991-B01F-4EEF-8109-2CF54E8882E0.png">
-<meta property="og:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/0013D891-F551-415E-BFD6-DC85AE332678.png">
-<meta property="og:updated_time" content="2018-12-21T08:23:51.553Z">
+<meta property="og:image" content="https://l1aoxingyu.github.io/2018/12/21/assets/BFE28025-B130-4A84-9DFC-5C4E63464E29.png">
+<meta property="og:image" content="https://l1aoxingyu.github.io/2018/12/21/assets/006tNbRwly1fwxl364qe6j30uw0digmc.jpg">
+<meta property="og:image" content="https://l1aoxingyu.github.io/2018/12/21/assets/B00B8991-B01F-4EEF-8109-2CF54E8882E0.png">
+<meta property="og:image" content="https://l1aoxingyu.github.io/2018/12/21/assets/0013D891-F551-415E-BFD6-DC85AE332678.png">
+<meta property="og:updated_time" content="2018-12-21T08:31:50.513Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Instance-level Human Parsing 论文笔记">
 <meta name="twitter:description" content="论文: Instance-level Human Parsing via Part Grouping Network论文地址代码地址 这是一篇商汤和中山大学 ECCV2018 的一篇论文，我觉得论文主要有两个贡献，首先论文发布了一个新的 crowd instance-level human parsing 的数据集，其次论文提供一个 detecion-free 的 unified 结构 PGN 去">
-<meta name="twitter:image" content="https://l1aoxingyu.github.io/Users/xyliao/Documents/blog/public/assets/BFE28025-B130-4A84-9DFC-5C4E63464E29.png">
+<meta name="twitter:image" content="https://l1aoxingyu.github.io/2018/12/21/assets/BFE28025-B130-4A84-9DFC-5C4E63464E29.png">
 
 
 
@@ -352,7 +352,7 @@
                 
               
 
-              <time title="Created: 2018-12-21 11:13:20 / Modified: 16:23:51" itemprop="dateCreated datePublished" datetime="2018-12-21T11:13:20+08:00">2018-12-21</time>
+              <time title="Created: 2018-12-21 11:13:20 / Modified: 16:31:50" itemprop="dateCreated datePublished" datetime="2018-12-21T11:13:20+08:00">2018-12-21</time>
             
 
             
@@ -396,12 +396,12 @@
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>human parsing 主要做的事情就是识别人的每个部分的语意信息，其是很多任务的基础。目前对于多人的 human parsing 主要是两种做法，一种是 “parsing-by-detection”，也就是先做 detection，再对每一个 detection 的 person 做 human parsing。这样首先需要两个网络通过若干独立目标和阶段来训练，使得训练过程很复杂，同时两个网络的目标函数粒度不同，detection 是粗粒度的 bounding box，而 parsing 是细粒度的 pixel-wise part segmentation，如果用同一个 backbone，会出现一些反常的结果，比如 segmentation 会因为 detection 的原因错误地在 bbox 的外面预测了 part semantic。</p>
 <p>在本论文中，作者对这个问题 reformulate，用一个 unified 的网络对两个连续的分割任务进行分组，一个是 part-level pixel-grouping，一个是 instance-level part-grouping。首先 part-level 的分割可以解决人体的各个部分的语义，然后通过 instance-level 的分割再将不同的人分开，这个一致的网络叫做 <strong>Part Grouping Network (PGN)</strong>。</p>
 <h2 id="Part-Grouping-Network"><a href="#Part-Grouping-Network" class="headerlink" title="Part Grouping Network"></a>Part Grouping Network</h2><div align="center">
-<img src="/Users/xyliao/Documents/blog/public/assets/BFE28025-B130-4A84-9DFC-5C4E63464E29.png" width="400">
+<img src="../assets/BFE28025-B130-4A84-9DFC-5C4E63464E29.png" width="400">
 </div>
 
 <p>整体的网络结构如上图所示，使用了 ResNet101 作为 backbone，因为 edge detection 和 semantic segmentation 都是一个 dense recognition 的任务，所以他们可以共享一个相同的 backbone。本文没有使用 multi-scale 的输入，代替的是将中间的 feature map concatenate 在一起，同时中间使用 dilated conv 来保证 feature map 的大小一致。同时本文参考了 PSPNet 的方法，为了融合不同区域的 context 来得到一个全局的 context，使用了 pyramid pooling，经过 (1, 1), (2, 2), (3, 3) 和 (6, 6) 的 avgpooling 得到了 4 个 feature map，然后再通过 conv 和 Upsampling，最后在 concatenate 在一起，如下图所示。</p>
 <div align="center">
-<img src="/Users/xyliao/Documents/blog/public/assets/006tNbRwly1fwxl364qe6j30uw0digmc.jpg" width="400">
+<img src="../assets/006tNbRwly1fwxl364qe6j30uw0digmc.jpg" width="400">
 </div>
 
 
@@ -409,14 +409,14 @@
 <h3 id="Instance-aware-edge-detection-branch"><a href="#Instance-aware-edge-detection-branch" class="headerlink" title="Instance-aware edge detection branch"></a>Instance-aware edge detection branch</h3><p>在 edge detection 这个分支，会对最后三个阶段的 feature map 做一个 atrous spatial pyramid pooling，得到三个输出的 feature map，然后做一个0和1的二分类，边界就是1，非边界就是0。同时也会想上面一个分支一样，将 feature map concatenate 在一起，同时用一个 pyramid pooling 得到不同位置的增强特征，然后再通过一个 1x1 的卷积得到一个 edge 的 feature map，同样做一个二分类。</p>
 <h3 id="Refinement-branch"><a href="#Refinement-branch" class="headerlink" title="Refinement branch"></a>Refinement branch</h3><p>除了上面两个分支独立来做，还有另外一个分支联合了 segmentation 和 edge 的结果来做 refinement。用一个 1x1 的 conv 把 segmentation score map 和 edge score map 映射到了高维的 embedding 空间，然后 concat 在一起分别经过两个 pyramid pooling 再次得到 segmentation 和 edge 的 score map，最后的 loss 函数如下</p>
 <div align="center">
-<img src="/Users/xyliao/Documents/blog/public/assets/B00B8991-B01F-4EEF-8109-2CF54E8882E0.png" width="300">
+<img src="../assets/B00B8991-B01F-4EEF-8109-2CF54E8882E0.png" width="300">
 </div>
 
 <p>segmentation 用 pixel-wise cross-entropy loss，edge 用 pixel-wise sigmoid binary cross-entropy loss。</p>
 <h3 id="Instance-partition-process"><a href="#Instance-partition-process" class="headerlink" title="Instance partition process"></a>Instance partition process</h3><p>有了 instance-aware edge 和 semantic part segmentation，我们可以把这两个任务组合在一起得到最后 instance-aware human parsing 的结果，这里本文采用的是一种叫 line decoding 的方式。<br>同时扫描 part segmentation maps 和 edge maps 得到水平和竖直的线。对于水平的线，从左往右，背景的 segmentation 直接被跳过，只有扫描到前景才算，如果击中了边界，这条线就终止，直到又扫描到前景，又开始一条新的线，每条线都有独立的编号，竖直方向和水平方向做法类似。</p>
 <p>第二部分我们把竖直的线和水平的线看成一个连通图，同一条直线上的点是连通的，然后我们用 BFS 去遍历整个图，这样就可以得到一个不同的 instance，最后再组合 part segmentation 的结果，就得到了 instance part segmentation 的结果了，非常的直观。</p>
 <div align="center">
-<img src="/Users/xyliao/Documents/blog/public/assets/0013D891-F551-415E-BFD6-DC85AE332678.png" width="400">
+<img src="../assets/0013D891-F551-415E-BFD6-DC85AE332678.png" width="400">
 </div>
 
 
