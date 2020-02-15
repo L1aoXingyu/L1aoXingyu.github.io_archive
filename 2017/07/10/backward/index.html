@@ -16,7 +16,7 @@
 
 <html class="theme-next muse use-motion" lang="en">
 <head>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+  <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
 <meta name="theme-color" content="#222">
@@ -113,7 +113,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="PyTorch中的backward">
 <meta property="og:url" content="https://l1aoxingyu.github.io/2017/07/10/backward/index.html">
-<meta property="og:site_name" content="Sherlock&#39;s Blog">
+<meta property="og:site_name" content="LiaoXingyu&#39;s Blog">
 <meta property="og:description" content="接触了PyTorch这么长的时间，也玩了很多PyTorch的骚操作，都特别简单直观地实现了，但是有一个网络训练过程中的操作之前一直没有仔细去考虑过，那就是loss.backward()，看到这个大家一定都很熟悉，loss是网络的损失函数，是一个标量，你可能会说这不就是反向传播吗，有什么好讲的。 但是不知道大家思考过没有，如果loss不是一个标量，而是一个向量，那么loss.backward()是什">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-8d6685ca09f0287b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
@@ -123,7 +123,7 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-71bc5cfaf3e17b03.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-1610417f9de55d94.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3623720-69f16dded384d39c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-01-24T03:21:14.158Z">
+<meta property="og:updated_time" content="2019-03-29T00:51:22.816Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PyTorch中的backward">
 <meta name="twitter:description" content="接触了PyTorch这么长的时间，也玩了很多PyTorch的骚操作，都特别简单直观地实现了，但是有一个网络训练过程中的操作之前一直没有仔细去考虑过，那就是loss.backward()，看到这个大家一定都很熟悉，loss是网络的损失函数，是一个标量，你可能会说这不就是反向传播吗，有什么好讲的。 但是不知道大家思考过没有，如果loss不是一个标量，而是一个向量，那么loss.backward()是什">
@@ -144,7 +144,7 @@
   };
 </script>
 
-  <title>PyTorch中的backward | Sherlock's Blog</title>
+  <title>PyTorch中的backward | LiaoXingyu's Blog</title>
   
 
 
@@ -182,7 +182,7 @@
       .logo-line-after i { right: initial; }
     }
   </style>
-</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</noscript>
 
 </head>
 
@@ -193,7 +193,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -204,13 +204,13 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Sherlock's Blog</span>
+        <span class="site-title">LiaoXingyu's Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
     
       
-        <p class="site-subtitle">sherlock的博客</p>
+        <p class="site-subtitle">廖星宇的博客</p>
       
     
   </div>
@@ -316,13 +316,13 @@
     <link itemprop="mainEntityOfPage" href="https://l1aoxingyu.github.io/2017/07/10/backward/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sherlock">
-      <meta itemprop="description" content="关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!">
+      <meta itemprop="name" content="LiaoXingyu">
+      <meta itemprop="description" content="关于计算机视觉，深度学习和机器学习 | LiaoXingyu，Deep Learner & 健身爱好者 | 这里是 @xingyu 的个人博客，I want to create some new things!">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Sherlock's Blog">
+      <meta itemprop="name" content="LiaoXingyu's Blog">
     </span>
 
     
@@ -372,7 +372,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-01-24 11:21:14" itemprop="dateModified" datetime="2018-01-24T11:21:14+08:00">2018-01-24</time>
+                <time title="Modified: 2019-03-29 08:51:22" itemprop="dateModified" datetime="2019-03-29T08:51:22+08:00">2019-03-29</time>
               
             
           </span>
@@ -414,20 +414,20 @@
 <p>首先我们开始做一个简单的实验，就是复习一下标量的形式<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># simple gradient</span></div><div class="line">a = v(t.FloatTensor([<span class="number">2</span>, <span class="number">3</span>]), requires_grad=<span class="keyword">True</span>)</div><div class="line">b = a + <span class="number">3</span></div><div class="line">c = b * b * <span class="number">3</span></div><div class="line">out = c.mean()</div><div class="line">out.backward()</div><div class="line">print(<span class="string">'*'</span>*<span class="number">10</span>)</div><div class="line">print(<span class="string">'=====simple gradient======'</span>)</div><div class="line">print(<span class="string">'input'</span>)</div><div class="line">print(a.data)</div><div class="line">print(<span class="string">'compute result is'</span>)</div><div class="line">print(out.data[<span class="number">0</span>])</div><div class="line">print(<span class="string">'input gradients are'</span>)</div><div class="line">print(a.grad.data)</div></pre></td></tr></table></figure></p>
 <p>很简单，我们把数学表达式写出来，传入的参数$x_1 = 2, x_2 = 3$，特别注意<code>Variable</code>里面默认的参数<code>requires_grad=False</code>，所以这里我们要重新传入<code>requires_grad=True</code>让它成为一个叶子节点。</p>
 <script type="math/tex; mode=display">
-a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3)^2) \quad out=\frac{3*((x_1+3)^2 + (x_2 + 3)^2)}{2}</script><p>那么我们对其求偏导也很简单</p>
+a = (x\_1, x\_2) \quad b = (x\_1 + 3, x\_2 + 3) \quad c = (3 \* (x\_1+3)^2, 3*(x\_2 + 3)^2) \quad out=\frac{3*((x\_1+3)^2 + (x\_2 + 3)^2)}{2}</script><p>那么我们对其求偏导也很简单</p>
 <script type="math/tex; mode=display">
-\frac{\partial out}{\partial x_1} = 3(x_1 + 3)|_{x_1=2}=15 \quad \frac{\partial out}{\partial x_2} = 3(x_2 + 3)|_{x_2=3} = 18</script><p>这样依靠简单的微积分知识我们就能够算出他们的结果，运行一下程序，确保结果一致，ok。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/3623720-88235a73faaf8a46.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+\frac{\partial out}{\partial x\_1} = 3(x\_1 + 3)|_{x_1=2}=15 \quad \frac{\partial out}{\partial x_2} = 3(x_2 + 3)|_{x\_2=3} = 18</script><p>这样依靠简单的微积分知识我们就能够算出他们的结果，运行一下程序，确保结果一致，ok。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-88235a73faaf8a46.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste\_Image.png"></p>
 <p>下面我们研究一下如何能够对非标量的情况下使用backward，下面开始做实验（瞎试）。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">m = v(t.FloatTensor([[<span class="number">2</span>, <span class="number">3</span>]]), requires_grad=<span class="keyword">True</span>)</div><div class="line">n = v(t.zeros(<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">n[<span class="number">0</span>, <span class="number">0</span>] = m[<span class="number">0</span>, <span class="number">0</span>] ** <span class="number">2</span></div><div class="line">n[<span class="number">0</span>, <span class="number">1</span>] = m[<span class="number">0</span>, <span class="number">1</span>] ** <span class="number">3</span></div></pre></td></tr></table></figure>
 <p>首先我们定义好输入$m = (x_1, x_2) = (2, 3)$，然后我们做的操作就是$n = (x_1^2, x_2^3)$，这样我们就定义好了一个向量输出，结果第一项只和$x_1$有关，结果第二项只和$x_2$有关，那么求解这个梯度，我们知道$\frac{\partial n_1}{\partial x_1} = 2 x_1 = 4, \frac{\partial n_2}{\partial x_2} = 3 x_2^2 = 27$ ，下面我们开始探究如何能够让他调用backward。</p>
 <p>第一想法就是里面这个参数是要求梯度的对象，我们这样调用<code>n.backward(m.data)</code>，有有报错诶，是不是成功了，我真的是个天才，这么难的东西都能想到，等等，我好想看到了一个很神奇的结果。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/3623720-2e1e7ef5d6818726.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-2e1e7ef5d6818726.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste\_Image.png"></p>
 <p>这是什么鬼，这跟说好的结果不一样啊，我们想要的结果是4和27,现在给我们的结果是8和81,为什么会出现这样神奇的结果呢，想不通啊。我们看看我们传入的参数是<code>m.data</code>，这是一个(2, 3)的向量，我们希望得到的梯度是(4, 27)，好像(4x2=8, 27x3=81)，我的内心毫无波动，甚至有点想笑，似乎backward将我传入的参数<code>m.data</code>乘上了得到的梯度，既然要乘上我传入的参数，那么我就给你传入1,这样总能得到我想要的结果了吧，<code>n.backward(t.FloatTensor([[1, 1]]))</code>，看看结果呢</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/3623720-13d98d030a20337d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="backwardresult2.png"></p>
 <p>哇，跟我们想要的结果一样诶，撒花，我们解决了一个大问题，就是这么简单，扔进去一个1就可以了，这个问题也没有那么难嘛，哈哈哈。</p>
 <p>似乎又有一点不对，如果这么简单那么写PyTorch的人为什么不把这一步直接集成进去，那我们不就不会遇到这个问题了嘛。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/3623720-71bc5cfaf3e17b03.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-71bc5cfaf3e17b03.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste\_Image.png"></p>
 <p>我们来试试另外一种情况</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">m = v(t.FloatTensor([[<span class="number">2</span>, <span class="number">3</span>]]), requires_grad=<span class="keyword">True</span>)</div><div class="line">j = t.zeros(<span class="number">2</span> ,<span class="number">2</span>)</div><div class="line">k = v(t.zeros(<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">m.grad.data.zero_()</div><div class="line">k[<span class="number">0</span>, <span class="number">0</span>] = m[<span class="number">0</span>, <span class="number">0</span>] ** <span class="number">2</span> + <span class="number">3</span> * m[<span class="number">0</span> ,<span class="number">1</span>]</div><div class="line">k[<span class="number">0</span>, <span class="number">1</span>] = m[<span class="number">0</span>, <span class="number">1</span>] ** <span class="number">2</span> + <span class="number">2</span> * m[<span class="number">0</span>, <span class="number">0</span>]</div></pre></td></tr></table></figure>
 <p>上面的代码写成数学表达式就是$m = (x_1=2, x_2=3), k = (x_1^2 + 3x_2, x_2^2+2x_1)$，么我们直接对k反向传播<code>k.backward(t.FloatTensor([[1, 1]])</code>，结果是什么呢？</p>
@@ -440,7 +440,7 @@ a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3
 <p>我们知道了这个操作具体是怎么完成的，我们就可以求求我们需要的这个jacobian矩阵了，非常简单。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># jacobian</span></div><div class="line">j = t.zeros(<span class="number">2</span> ,<span class="number">2</span>)</div><div class="line">k = v(t.zeros(<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">m.grad.data.zero_()</div><div class="line">k[<span class="number">0</span>, <span class="number">0</span>] = m[<span class="number">0</span>, <span class="number">0</span>] ** <span class="number">2</span> + <span class="number">3</span> * m[<span class="number">0</span> ,<span class="number">1</span>]</div><div class="line">k[<span class="number">0</span>, <span class="number">1</span>] = m[<span class="number">0</span>, <span class="number">1</span>] ** <span class="number">2</span> + <span class="number">2</span> * m[<span class="number">0</span>, <span class="number">0</span>]</div><div class="line">k.backward(t.FloatTensor([[<span class="number">1</span>, <span class="number">0</span>]]), retain_variables=<span class="keyword">True</span>)</div><div class="line">j[:, <span class="number">0</span>] = m.grad.data</div><div class="line">m.grad.data.zero_()</div><div class="line">k.backward(t.FloatTensor([[<span class="number">0</span>, <span class="number">1</span>]]))</div><div class="line">j[:, <span class="number">1</span>] = m.grad.data</div><div class="line">print(<span class="string">'jacobian matrix is'</span>)</div><div class="line">print(j)</div></pre></td></tr></table></figure>
 <p>我们可以得到如下结果</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/3623720-69f16dded384d39c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3623720-69f16dded384d39c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste\_Image.png"></p>
 <p>这里我们要注意<code>backward()</code>里面另外的一个参数<code>retain_variables=True</code>，这个参数默认是False，也就是反向传播之后这个计算图的内存会被释放，这样就没办法进行第二次反向传播了，所以我们需要设置为True，因为这里我们需要进行两次反向传播求得jacobian矩阵。</p>
 <p>最后我们再举一个矩阵乘法的例子试验一下我们的结果</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">x = t.FloatTensor([<span class="number">2</span>, <span class="number">1</span>]).view(<span class="number">1</span>, <span class="number">2</span>)</div><div class="line">x = v(x, requires_grad=<span class="keyword">True</span>)</div><div class="line">y = v(t.FloatTensor([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>]]))</div><div class="line"></div><div class="line">z = t.mm(x, y)</div><div class="line">jacobian = t.zeros((<span class="number">2</span>, <span class="number">2</span>))</div><div class="line">z.backward(t.FloatTensor([[<span class="number">1</span>, <span class="number">0</span>]]), retain_variables=<span class="keyword">True</span>)  <span class="comment"># dz1/dx1, dz2/dx1</span></div><div class="line">jacobian[:, <span class="number">0</span>] = x.grad.data</div><div class="line">x.grad.data.zero_()</div><div class="line">z.backward(t.FloatTensor([[<span class="number">0</span>, <span class="number">1</span>]]))  <span class="comment"># dz1/dx2, dz2/dx2</span></div><div class="line">jacobian[:, <span class="number">1</span>] = x.grad.data</div><div class="line">print(<span class="string">'=========jacobian========'</span>)</div><div class="line">print(<span class="string">'x'</span>)</div><div class="line">print(x.data)</div><div class="line">print(<span class="string">'y'</span>)</div><div class="line">print(y.data)</div><div class="line">print(<span class="string">'compute result'</span>)</div><div class="line">print(z.data)</div><div class="line">print(<span class="string">'jacobian matrix is'</span>)</div><div class="line">print(jacobian)</div></pre></td></tr></table></figure>
@@ -547,8 +547,8 @@ a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">Sherlock</p>
-              <p class="site-description motion-element" itemprop="description">关于计算机视觉和深度学习 | Sherlock，Deep Learner & 健身爱好者 | 这里是 @Sherlock 的个人博客，I want to create some new things!</p>
+              <p class="site-author-name" itemprop="name">LiaoXingyu</p>
+              <p class="site-description motion-element" itemprop="description">关于计算机视觉，深度学习和机器学习 | LiaoXingyu，Deep Learner & 健身爱好者 | 这里是 @xingyu 的个人博客，I want to create some new things!</p>
           </div>
 
           
@@ -677,11 +677,11 @@ a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Sherlock</span>
+  <span class="author" itemprop="copyrightHolder">LiaoXingyu</span>
 
   
 
@@ -689,7 +689,7 @@ a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3
 </div>
 
 
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.3.8</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.4.4</div>
 
 
 
@@ -799,24 +799,7 @@ a = (x_1, x_2) \quad b = (x_1 + 3, x_2 + 3) \quad c = (3 * (x_1+3)^2, 3*(x_2 + 3
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
 
 
 
